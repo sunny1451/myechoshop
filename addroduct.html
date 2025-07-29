@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artmart Admin Studio</title>
+  <title>Echo Store Admin Studio</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -56,7 +56,7 @@
 </head>
 <body class="bg-gray-100 font-inter">
   <div class="container mx-auto p-4 max-w-5xl">
-    <h1 class="text-3xl font-semibold text-gray-800 mb-8 text-center">🛍️ Artmart Admin Studio</h1>
+    <h1 class="text-3xl font-semibold text-gray-800 mb-8 text-center">🛍️ Echo Store Admin Studio</h1>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Form Section -->
       <div class="bg-white p-8 rounded-xl shadow-lg">
@@ -101,8 +101,8 @@
           <div class="floating-label-group">
             <select id="category" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
               <option value="" disabled selected>Select Category</option>
-              <option value="Decor">Decor</option>
               <option value="Dresses">Dresses</option>
+              <option value="Decor">Decor</option>
               <option value="Shoes">Shoes</option>
               <option value="Animal">Animal</option>
             </select>
@@ -137,9 +137,25 @@
             </div>
           </div>
           <div class="floating-label-group">
+            <input type="text" id="color" class="floating-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" ">
+            <label class="floating-label">Color (Optional)</label>
+          </div>
+          <div class="floating-label-group">
             <input type="text" id="dimensions" class="floating-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" ">
-            <label class="floating-label">Dimensions (e.g., 10.1 x 29.2 x 13.7 cm)</label>
+            <label class="floating-label">Dimensions (e.g., 10.1 x 29.2 x 13.7 cm, Optional)</label>
             <p id="dimensions-error" class="text-red-500 text-sm mt-1 hidden">Dimensions format is invalid</p>
+          </div>
+          <div class="floating-label-group">
+            <input type="text" id="material" class="floating-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" ">
+            <label class="floating-label">Material (Optional)</label>
+          </div>
+          <div class="floating-label-group">
+            <input type="text" id="occasion" class="floating-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" ">
+            <label class="floating-label">Occasion (Optional)</label>
+          </div>
+          <div class="floating-label-group">
+            <input type="text" id="finish" class="floating-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" ">
+            <label class="floating-label">Finish (Optional)</label>
           </div>
           <div class="floating-label-group">
             <input type="text" id="special-features" class="floating-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" ">
@@ -180,6 +196,10 @@
           <p id="preview-location" class="text-sm text-gray-600">Location</p>
           <div id="preview-delivery" class="text-sm text-gray-600 mt-2"></div>
           <p id="preview-dimensions" class="text-sm text-gray-600 mt-2">Dimensions</p>
+          <p id="preview-color" class="text-sm text-gray-600 mt-2">Color</p>
+          <p id="preview-material" class="text-sm text-gray-600 mt-2">Material</p>
+          <p id="preview-occasion" class="text-sm text-gray-600 mt-2">Occasion</p>
+          <p id="preview-finish" class="text-sm text-gray-600 mt-2">Finish</p>
           <div id="preview-features" class="flex flex-wrap gap-2 mt-2"></div>
           <p id="preview-description" class="text-sm text-gray-600 mt-4">Description</p>
         </div>
@@ -208,6 +228,17 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Check for file:// protocol
+    if (window.location.protocol === "file:") {
+      Swal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: "This app requires a server for Firebase Authentication and Firestore. Please host it using a local server or Firebase Hosting.",
+        confirmButtonColor: "#2563eb"
+      });
+      document.getElementById("upload-btn").disabled = true;
+    }
+
     // ImgBB API Key
     const IMGBB_API_KEY = "01400454f4aafb70d1c9beddec5cbbc5";
 
@@ -220,7 +251,7 @@
           text: "Please log in to access the admin panel.",
           confirmButtonColor: "#2563eb"
         }).then(() => {
-          window.location.href = "login.html";
+          window.location.href = "sign.html";
         });
       }
     });
@@ -240,7 +271,11 @@
     const payOnDelivery = document.getElementById("pay-on-delivery");
     const freeDelivery = document.getElementById("free-delivery");
     const returnable = document.getElementById("returnable");
+    const color = document.getElementById("color");
     const dimensions = document.getElementById("dimensions");
+    const material = document.getElementById("material");
+    const occasion = document.getElementById("occasion");
+    const finish = document.getElementById("finish");
     const specialFeatures = document.getElementById("special-features");
     const description = document.getElementById("description");
     const uploadBtn = document.getElementById("upload-btn");
@@ -272,6 +307,10 @@
       location: document.getElementById("preview-location"),
       delivery: document.getElementById("preview-delivery"),
       dimensions: document.getElementById("preview-dimensions"),
+      color: document.getElementById("preview-color"),
+      material: document.getElementById("preview-material"),
+      occasion: document.getElementById("preview-occasion"),
+      finish: document.getElementById("preview-finish"),
       features: document.getElementById("preview-features"),
       description: document.getElementById("preview-description")
     };
@@ -371,9 +410,21 @@
     payOnDelivery.addEventListener("change", updateDeliveryPreview);
     freeDelivery.addEventListener("change", updateDeliveryPreview);
     returnable.addEventListener("change", updateDeliveryPreview);
+    color.addEventListener("input", () => {
+      preview.color.textContent = color.value || "Color";
+    });
     dimensions.addEventListener("input", () => {
       preview.dimensions.textContent = dimensions.value || "Dimensions";
       errors.dimensions.classList.add("hidden");
+    });
+    material.addEventListener("input", () => {
+      preview.material.textContent = material.value || "Material";
+    });
+    occasion.addEventListener("input", () => {
+      preview.occasion.textContent = occasion.value || "Occasion";
+    });
+    finish.addEventListener("input", () => {
+      preview.finish.textContent = finish.value || "Finish";
     });
     specialFeatures.addEventListener("input", () => {
       const features = specialFeatures.value.split(",").map(f => f.trim()).filter(f => f);
@@ -436,6 +487,7 @@
 
     // Upload to ImgBB and Firestore
     uploadBtn.addEventListener("click", async () => {
+      if (window.location.protocol === "file:") return;
       if (!validateForm()) return;
 
       uploadBtn.classList.add("uploading");
@@ -484,12 +536,12 @@
           specs: {
             theme: category.value === "Animal" ? "Animal" : "",
             brand: brand.value || "",
-            color: "",
-            material: "",
-            occasion: "",
+            color: color.value || "",
+            material: material.value || "",
+            occasion: occasion.value || "",
             dimensions: dimensions.value || "",
             specialFeature: specialFeatures.value || "",
-            finish: ""
+            finish: finish.value || ""
           },
           description: description.value,
           imageUrl: imageUrl,
@@ -559,6 +611,10 @@
       preview.location.textContent = "Location";
       preview.delivery.textContent = "No delivery options selected";
       preview.dimensions.textContent = "Dimensions";
+      preview.color.textContent = "Color";
+      preview.material.textContent = "Material";
+      preview.occasion.textContent = "Occasion";
+      preview.finish.textContent = "Finish";
       preview.features.innerHTML = "";
       preview.description.textContent = "Description";
       Object.values(errors).forEach(error => error.classList.add("hidden"));
