@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echo Store - Products</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .filter-panel {
+      transition: transform 0.3s ease;
+    }
+    .filter-panel.hidden {
+      transform: translateX(-100%);
+    }
+    .empty-state {
+      transition: opacity 0.3s ease;
+    }
+    @media (max-width: 1024px) {
+      .grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .filter-panel { transform: translateX(-100%); }
+      .filter-toggle:checked ~ .filter-panel { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body class="font-roboto bg-gray-100">
+  <!-- Top Navigation Bar -->
+  <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-10 p-4 flex justify-between items-center">
+    <div class="text-2xl font-bold text-gray-800">Echo Store</div>
+    <div class="relative">
+      <input type="text" id="search-bar" placeholder="Search products..." class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button class="absolute right-2 top-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+    </div>
+    <div class="space-x-4">
+      <button class="text-gray-600 hover:text-blue-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18M3 7h18M3 12h18m-6 5h6"></path></svg></button>
+      <button class="text-gray-600 hover:text-blue-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button>
+    </div>
+  </nav>
+
+  <!-- Filter Sidebar and Toggle -->
+  <input type="checkbox" id="filter-toggle" class="hidden">
+  <label for="filter-toggle" class="fixed top-20 left-4 bg-blue-500 text-white p-2 rounded-full z-10 lg:hidden">Filters</label>
+  <div class="fixed top-0 left-0 h-full bg-white w-64 p-4 shadow-lg filter-panel lg:static lg:block lg:transform-none z-20">
+    <h3 class="text-lg font-semibold mb-4">Filters</h3>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Category</label>
+        <div id="category-filters" class="space-y-2"></div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Price</label>
+        <select id="price-filter" class="w-full p-2 border rounded-md">
+          <option value="">All</option>
+          <option value="0-100">₹0 - ₹100</option>
+          <option value="100-500">₹100 - ₹500</option>
+          <option value="500+">₹500+</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Location</label>
+        <div id="location-filters" class="space-y-2"></div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Delivery</label>
+        <div class="space-y-2">
+          <label><input type="checkbox" id="free-delivery-filter" value="free"> Free Delivery</label>
+          <label><input type="checkbox" id="pay-delivery-filter" value="pay"> Pay on Delivery</label>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Rating</label>
+        <input type="range" id="rating-filter" min="0" max="5" step="0.5" value="0" class="w-full">
+        <span id="rating-value">0★</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Grid Display -->
+  <div class="container mx-auto pt-24 pb-8 px-4 lg:pl-64">
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <div id="empty-state" class="empty-state hidden text-center text-gray-500 mt-10">
+      😢 No products found.<br>Try adjusting filters or check back later.
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Check for file:// protocol
+    if (window.location.protocol === "file:") {
+      document.getElementById("product-grid").innerHTML = '<div class="text-center text-red-500 mt-10">This app requires a server for Firebase Firestore. Please host it using a local server or Firebase Hosting.</div>';
+      document.querySelectorAll(".filter-panel input, .filter-panel select").forEach(el => el.disabled = true);
+    } else {
+      // Real-time data fetch
+      const productsRef = collection(db, "products");
+      const q = query(productsRef);
+      const productGrid = document.getElementById("product-grid");
+      const emptyState = document.getElementById("empty-state");
+      let products = [];
+
+      onSnapshot(q, (snapshot) => {
+        products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderProducts();
+        updateFilters();
+      });
+
+      // Filter elements
+      const categoryFilters = document.getElementById("category-filters");
+      const locationFilters = document.getElementById("location-filters");
+      const priceFilter = document.getElementById("price-filter");
+      const freeDeliveryFilter = document.getElementById("free-delivery-filter");
+      const payDeliveryFilter = document.getElementById("pay-delivery-filter");
+      const ratingFilter = document.getElementById("rating-filter");
+      const ratingValue = document.getElementById("rating-value");
+
+      // Update rating display
+      ratingFilter.addEventListener("input", () => {
+        ratingValue.textContent = `${ratingFilter.value}★`;
+        renderProducts();
+      });
+
+      // Update filters dynamically
+      function updateFilters() {
+        const categories = [...new Set(products.map(p => p.category || "Uncategorized"))];
+        categoryFilters.innerHTML = categories.map(cat => `<label><input type="checkbox" name="category" value="${cat}"> ${cat}</label>`).join("");
+        const locations = [...new Set(products.map(p => p.sourceLocation || "Unknown"))];
+        locationFilters.innerHTML = locations.map(loc => `<label><input type="checkbox" name="location" value="${loc}"> ${loc}</label>`).join("");
+        document.querySelectorAll("input[name='category'], input[name='location']").forEach(el => el.addEventListener("change", renderProducts));
+        [priceFilter, freeDeliveryFilter, payDeliveryFilter].forEach(el => el.addEventListener("change", renderProducts));
+      }
+
+      // Render products with filters
+      function renderProducts() {
+        const selectedCategories = Array.from(document.querySelectorAll("input[name='category']:checked")).map(cb => cb.value);
+        const selectedLocations = Array.from(document.querySelectorAll("input[name='location']:checked")).map(cb => cb.value);
+        const priceRange = priceFilter.value.split("-");
+        const minPrice = priceRange[0] === "" ? 0 : parseInt(priceRange[0]);
+        const maxPrice = priceRange[1] === "+" ? Infinity : parseInt(priceRange[1]) || Infinity;
+        const freeDelivery = freeDeliveryFilter.checked;
+        const payDelivery = payDeliveryFilter.checked;
+        const minRating = parseFloat(ratingFilter.value);
+
+        const filteredProducts = products.filter(p => {
+          const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category || "Uncategorized");
+          const matchesLocation = selectedLocations.length === 0 || selectedLocations.includes(p.sourceLocation || "Unknown");
+          const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
+          const matchesDelivery = (!freeDelivery || p.delivery?.freeDelivery) && (!payDelivery || p.delivery?.payOnDelivery);
+          const matchesRating = p.rating >= minRating;
+          return matchesCategory && matchesLocation && matchesPrice && matchesDelivery && matchesRating;
+        });
+
+        productGrid.innerHTML = "";
+        if (filteredProducts.length === 0) {
+          emptyState.classList.remove("hidden");
+        } else {
+          emptyState.classList.add("hidden");
+          filteredProducts.forEach(product => {
+            const card = document.createElement("div");
+            card.className = "card bg-white p-4 rounded-lg shadow-md hover:shadow-lg";
+            card.innerHTML = `
+              <img src="${product.imageUrl || 'https://via.placeholder.com/300'}" alt="${product.name}" class="w-full h-48 object-cover rounded-md mb-2">
+              <h3 class="text-lg font-semibold">${product.name || "Unnamed"}</h3>
+              <p class="text-sm text-gray-600">Brand: ${product.brand || "N/A"}</p>
+              <div class="flex items-center mt-1">
+                <span class="text-yellow-500">⭐ ${product.rating || 0}.0</span>
+                <span class="text-sm text-gray-500 ml-2">(${product.ratingsCount || 0} ratings)</span>
+              </div>
+              <div class="flex items-center mt-1">
+                <span class="text-lg font-bold text-gray-800">₹${product.price || 0}</span>
+                <span class="text-sm text-gray-500 line-through ml-2">₹${product.originalPrice || 0}</span>
+                <span class="text-sm text-green-600 ml-2">${product.discount || ""}</span>
+              </div>
+              <p class="text-sm text-green-600 mt-1">${product.delivery?.freeDelivery ? "✅ Free Delivery" : ""}</p>
+              <p class="text-sm text-gray-600 mt-1">${product.returnable ? `🔁 ${product.returnable} Return` : ""}</p>
+              <p class="text-sm text-gray-600 mt-1">📍 ${product.sourceLocation || "Unknown"}</p>
+              <div class="mt-2 space-x-2">
+                <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View Details</button>
+                <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Add to Cart</button>
+              </div>
+            `;
+            productGrid.appendChild(card);
+          });
+        }
+      }
+    }
+  </script>
+</body>
+</html>
