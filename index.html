@@ -165,7 +165,7 @@
           Swal.fire({
             icon: "error",
             title: "reCAPTCHA Error",
-            text: "Failed to load reCAPTCHA. Please check your network and try again.",
+            text: "Failed to load reCAPTCHA. Please check your network or ensure you're running on a server (http://localhost, not file://).",
             confirmButtonColor: "#2563eb"
           });
         }
@@ -178,7 +178,7 @@
         Swal.fire({
           icon: "error",
           title: "reCAPTCHA Render Error",
-          text: "Failed to render reCAPTCHA. Please ensure you're running on a server (not file://).",
+          text: "Failed to render reCAPTCHA. Please ensure you're running on a server (http://localhost, not file://).",
           confirmButtonColor: "#2563eb"
         });
       });
@@ -187,7 +187,7 @@
       Swal.fire({
         icon: "error",
         title: "Initialization Error",
-        text: "Failed to initialize reCAPTCHA. Please check your Firebase configuration and ensure you're running on a server.",
+        text: "Failed to initialize reCAPTCHA. Please ensure you're running on a server (http://localhost, not file://).",
         confirmButtonColor: "#2563eb"
       });
     }
@@ -223,11 +223,11 @@
         console.error("Error sending OTP:", error);
         let errorMessage = "Failed to send OTP. Please try again.";
         if (error.code === "auth/invalid-phone-number") {
-          errorMessage = "Invalid phone number format.";
+          errorMessage = "Invalid phone number format. Use +[country code][10-digit number].";
         } else if (error.code === "auth/too-many-requests") {
           errorMessage = "Too many requests. Please wait and try again.";
         } else if (error.code === "auth/internal-error") {
-          errorMessage = "Internal error. Ensure you're running on a server (not file://) and check Firebase configuration.";
+          errorMessage = "Internal error. Ensure you're running on a server (http://localhost, not file://).";
         }
         Swal.fire({
           icon: "error",
@@ -330,7 +330,7 @@
         Swal.fire({
           icon: "error",
           title: "reCAPTCHA Error",
-          text: "Failed to re-render reCAPTCHA. Please refresh the page.",
+          text: "Failed to re-render reCAPTCHA. Please ensure you're running on a server (http://localhost, not file://).",
           confirmButtonColor: "#2563eb"
         });
       });
