@@ -11,7 +11,7 @@
     .floating-label-group {
       position: relative;
       margin-bottom: 1.5rem;
-    } 
+    }
     .floating-label {
       position: absolute;
       left: 12px;
@@ -65,13 +65,13 @@
             <option value="+1">+1</option>
             <option value="+44">+44</option>
           </select>
-          <input type="tel" id="phone-number" class="floating-input block w-full border border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" " maxlength="10">
+          <input type="tel" id="phone" class="floating-input block w-full border border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" " maxlength="10">
           <label class="floating-label">Mobile Number</label>
         </div>
         <p id="phone-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid 10-digit phone number</p>
       </div>
       <div id="recaptcha-container" class="mb-4"></div>
-      <button id="send-otp-btn" class="send-btn bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center w-full" disabled>
+      <button id="send-otp-btn" class="send-btn bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center w-full" onclick="sendOTP()" disabled>
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
         Send OTP
       </button>
@@ -93,7 +93,7 @@
         <p id="resend-timer" class="text-gray-600 text-sm mt-2 text-center">Resend OTP in <span id="timer-count">30</span>s</p>
         <button id="resend-otp-btn" class="text-blue-600 text-sm mt-2 hidden hover:underline" disabled>Resend OTP</button>
       </div>
-      <button id="verify-otp-btn" class="verify-btn bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center w-full">
+      <button id="verify-otp-btn" class="verify-btn bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center w-full" onclick="verifyOTP()">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         Verify & Continue
       </button>
@@ -129,7 +129,7 @@
     // DOM Elements
     const phoneSection = document.getElementById("phone-section");
     const otpSection = document.getElementById("otp-section");
-    const phoneNumberInput = document.getElementById("phone-number");
+    const phoneNumberInput = document.getElementById("phone");
     const countryCode = document.getElementById("country-code");
     const sendOtpBtn = document.getElementById("send-otp-btn");
     const verifyOtpBtn = document.getElementById("verify-otp-btn");
@@ -193,7 +193,7 @@
     }
 
     // Send OTP
-    sendOtpBtn.addEventListener("click", async () => {
+    window.sendOTP = async function () {
       const phone = phoneNumberInput.value.replace(/\D/g, "");
       if (!phone || phone.length !== 10) {
         phoneError.classList.remove("hidden");
@@ -207,6 +207,7 @@
         const fullPhoneNumber = `${countryCode.value}${phone}`;
         console.log("Sending OTP to:", fullPhoneNumber);
         confirmationResult = await signInWithPhoneNumber(auth, fullPhoneNumber, window.recaptchaVerifier);
+        window.confirmationResult = confirmationResult;
         phoneSection.classList.add("hidden");
         otpSection.classList.remove("hidden");
         otpInputs[0].focus();
@@ -214,7 +215,7 @@
         Swal.fire({
           icon: "success",
           title: "OTP Sent",
-          text: "Please check your phone for the OTP.",
+          text: `OTP sent to ${fullPhoneNumber}`,
           timer: 1500,
           showConfirmButton: false
         });
@@ -238,25 +239,10 @@
         sendOtpBtn.classList.remove("loading");
         sendOtpBtn.disabled = false;
       }
-    });
-
-    // OTP Input Handling
-    otpInputs.forEach((input, index) => {
-      input.addEventListener("input", () => {
-        if (input.value.length === 1 && index < otpInputs.length - 1) {
-          otpInputs[index + 1].focus();
-        }
-        otpError.classList.add("hidden");
-      });
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && !input.value && index > 0) {
-          otpInputs[index - 1].focus();
-        }
-      });
-    });
+    };
 
     // Verify OTP
-    verifyOtpBtn.addEventListener("click", async () => {
+    window.verifyOTP = async function () {
       const otp = Array.from(otpInputs).map(input => input.value).join("");
       if (otp.length !== 6) {
         otpError.textContent = "Please enter a 6-digit OTP";
@@ -267,12 +253,13 @@
       verifyOtpBtn.disabled = true;
 
       try {
-        await confirmationResult.confirm(otp);
-        localStorage.setItem("artmart_user", JSON.stringify(auth.currentUser));
+        const result = await window.confirmationResult.confirm(otp);
+        const user = result.user;
+        localStorage.setItem("artmart_user", JSON.stringify(user));
         Swal.fire({
           icon: "success",
           title: "Login Successful",
-          text: "Redirecting to dashboard...",
+          text: `User verified: ${user.phoneNumber}. Redirecting to dashboard...`,
           timer: 1500,
           showConfirmButton: false
         }).then(() => {
@@ -288,10 +275,31 @@
         }
         otpError.textContent = errorMessage;
         otpError.classList.remove("hidden");
+        Swal.fire({
+          icon: "error",
+          title: "OTP Error",
+          text: errorMessage,
+          confirmButtonColor: "#2563eb"
+        });
       } finally {
         verifyOtpBtn.classList.remove("loading");
         verifyOtpBtn.disabled = false;
       }
+    };
+
+    // OTP Input Handling
+    otpInputs.forEach((input, index) => {
+      input.addEventListener("input", () => {
+        if (input.value.length === 1 && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+        otpError.classList.add("hidden");
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
     });
 
     // Resend OTP Timer
