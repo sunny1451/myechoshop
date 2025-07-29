@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artmart Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    .floating-label-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    } 
+    .floating-label {
+      position: absolute;
+      left: 12px;
+      top: 10px;
+      color: #6b7280;
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+    .floating-input:focus + .floating-label,
+    .floating-input:not(:placeholder-shown) + .floating-label {
+      top: -20px;
+      left: 8px;
+      font-size: 0.75rem;
+      color: #2563eb;
+    }
+    .otp-input {
+      width: 2.5rem;
+      text-align: center;
+      font-size: 1.25rem;
+    }
+    .send-btn, .verify-btn {
+      position: relative;
+      overflow: hidden;
+    }
+    .send-btn.loading::after, .verify-btn.loading::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-inter flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">🔒 Login to Artmart</h1>
+    
+    <!-- Phone Number Input -->
+    <div id="phone-section">
+      <div class="floating-label-group mb-6">
+        <div class="flex">
+          <select id="country-code" class="border border-gray-300 rounded-l-md p-3 focus:ring-blue-500 focus:border-blue-500">
+            <option value="+91">+91</option>
+            <option value="+1">+1</option>
+            <option value="+44">+44</option>
+          </select>
+          <input type="tel" id="phone-number" class="floating-input block w-full border border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" placeholder=" " maxlength="10">
+          <label class="floating-label">Mobile Number</label>
+        </div>
+        <p id="phone-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid 10-digit phone number</p>
+      </div>
+      <div id="recaptcha-container" class="mb-4"></div>
+      <button id="send-otp-btn" class="send-btn bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center w-full" disabled>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        Send OTP
+      </button>
+    </div>
+
+    <!-- OTP Input -->
+    <div id="otp-section" class="hidden">
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Enter 6-digit OTP</label>
+        <div class="flex space-x-2 justify-center">
+          <input type="text" class="otp-input border border-gray-300 rounded-md p-2" maxlength="1">
+          <input type="text" class="otp-input border border-gray-300 rounded-md p-2" maxlength="1">
+          <input type="text" class="otp-input border border-gray-300 rounded-md p-2" maxlength="1">
+          <input type="text" class="otp-input border border-gray-300 rounded-md p-2" maxlength="1">
+          <input type="text" class="otp-input border border-gray-300 rounded-md p-2" maxlength="1">
+          <input type="text" class="otp-input border border-gray-300 rounded-md p-2" maxlength="1">
+        </div>
+        <p id="otp-error" class="text-red-500 text-sm mt-2 hidden">Invalid or expired OTP</p>
+        <p id="resend-timer" class="text-gray-600 text-sm mt-2 text-center">Resend OTP in <span id="timer-count">30</span>s</p>
+        <button id="resend-otp-btn" class="text-blue-600 text-sm mt-2 hidden hover:underline" disabled>Resend OTP</button>
+      </div>
+      <button id="verify-otp-btn" class="verify-btn bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition flex items-center justify-center w-full">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        Verify & Continue
+      </button>
+    </div>
+
+    <!-- Terms & Privacy -->
+    <p class="text-gray-600 text-sm mt-6 text-center">
+      By signing in, you agree to our <a href="#" class="text-blue-600 hover:underline">Terms</a> & <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
+    </p>
+    <div class="flex items-center justify-center mt-4">
+      <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-2.761 0-5 2.239-5 5h10c0-2.761-2.239-5-5-5z"></path></svg>
+      <span class="text-sm text-gray-600">Secure Login</span>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.appspot.com",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // DOM Elements
+    const phoneSection = document.getElementById("phone-section");
+    const otpSection = document.getElementById("otp-section");
+    const phoneNumberInput = document.getElementById("phone-number");
+    const countryCode = document.getElementById("country-code");
+    const sendOtpBtn = document.getElementById("send-otp-btn");
+    const verifyOtpBtn = document.getElementById("verify-otp-btn");
+    const resendOtpBtn = document.getElementById("resend-otp-btn");
+    const timerCount = document.getElementById("timer-count");
+    const phoneError = document.getElementById("phone-error");
+    const otpError = document.getElementById("otp-error");
+    const otpInputs = document.querySelectorAll(".otp-input");
+
+    let confirmationResult = null;
+    let resendTimer = 30;
+
+    // Initialize reCAPTCHA
+    try {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        size: "normal", // Use 'normal' for testing, switch to 'invisible' for production
+        callback: (response) => {
+          console.log("reCAPTCHA solved:", response);
+          sendOtpBtn.disabled = false;
+        },
+        'expired-callback': () => {
+          console.log("reCAPTCHA expired");
+          sendOtpBtn.disabled = true;
+          Swal.fire({
+            icon: "error",
+            title: "reCAPTCHA Expired",
+            text: "Please refresh the page and try again.",
+            confirmButtonColor: "#2563eb"
+          });
+        },
+        'error-callback': (error) => {
+          console.error("reCAPTCHA error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "reCAPTCHA Error",
+            text: "Failed to load reCAPTCHA. Please check your network and try again.",
+            confirmButtonColor: "#2563eb"
+          });
+        }
+      });
+      window.recaptchaVerifier.render().then(widgetId => {
+        console.log("reCAPTCHA rendered successfully, widget ID:", widgetId);
+        window.recaptchaWidgetId = widgetId;
+      }).catch((error) => {
+        console.error("reCAPTCHA render error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "reCAPTCHA Render Error",
+          text: "Failed to render reCAPTCHA. Please ensure you're running on a server (not file://).",
+          confirmButtonColor: "#2563eb"
+        });
+      });
+    } catch (error) {
+      console.error("reCAPTCHA initialization error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Initialization Error",
+        text: "Failed to initialize reCAPTCHA. Please check your Firebase configuration and ensure you're running on a server.",
+        confirmButtonColor: "#2563eb"
+      });
+    }
+
+    // Send OTP
+    sendOtpBtn.addEventListener("click", async () => {
+      const phone = phoneNumberInput.value.replace(/\D/g, "");
+      if (!phone || phone.length !== 10) {
+        phoneError.classList.remove("hidden");
+        return;
+      }
+      phoneError.classList.add("hidden");
+      sendOtpBtn.classList.add("loading");
+      sendOtpBtn.disabled = true;
+
+      try {
+        const fullPhoneNumber = `${countryCode.value}${phone}`;
+        console.log("Sending OTP to:", fullPhoneNumber);
+        confirmationResult = await signInWithPhoneNumber(auth, fullPhoneNumber, window.recaptchaVerifier);
+        phoneSection.classList.add("hidden");
+        otpSection.classList.remove("hidden");
+        otpInputs[0].focus();
+        startResendTimer();
+        Swal.fire({
+          icon: "success",
+          title: "OTP Sent",
+          text: "Please check your phone for the OTP.",
+          timer: 1500,
+          showConfirmButton: false
+        });
+      } catch (error) {
+        console.error("Error sending OTP:", error);
+        let errorMessage = "Failed to send OTP. Please try again.";
+        if (error.code === "auth/invalid-phone-number") {
+          errorMessage = "Invalid phone number format.";
+        } else if (error.code === "auth/too-many-requests") {
+          errorMessage = "Too many requests. Please wait and try again.";
+        } else if (error.code === "auth/internal-error") {
+          errorMessage = "Internal error. Ensure you're running on a server (not file://) and check Firebase configuration.";
+        }
+        Swal.fire({
+          icon: "error",
+          title: "OTP Error",
+          text: errorMessage,
+          confirmButtonColor: "#2563eb"
+        });
+      } finally {
+        sendOtpBtn.classList.remove("loading");
+        sendOtpBtn.disabled = false;
+      }
+    });
+
+    // OTP Input Handling
+    otpInputs.forEach((input, index) => {
+      input.addEventListener("input", () => {
+        if (input.value.length === 1 && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+        otpError.classList.add("hidden");
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+
+    // Verify OTP
+    verifyOtpBtn.addEventListener("click", async () => {
+      const otp = Array.from(otpInputs).map(input => input.value).join("");
+      if (otp.length !== 6) {
+        otpError.textContent = "Please enter a 6-digit OTP";
+        otpError.classList.remove("hidden");
+        return;
+      }
+      verifyOtpBtn.classList.add("loading");
+      verifyOtpBtn.disabled = true;
+
+      try {
+        await confirmationResult.confirm(otp);
+        localStorage.setItem("artmart_user", JSON.stringify(auth.currentUser));
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "Redirecting to dashboard...",
+          timer: 1500,
+          showConfirmButton: false
+        }).then(() => {
+          window.location.href = "index.html"; // Redirect to dashboard or home
+        });
+      } catch (error) {
+        console.error("Error verifying OTP:", error);
+        let errorMessage = "Invalid or expired OTP. Please try again.";
+        if (error.code === "auth/invalid-verification-code") {
+          errorMessage = "Incorrect OTP. Please check and try again.";
+        } else if (error.code === "auth/code-expired") {
+          errorMessage = "OTP has expired. Please request a new one.";
+        }
+        otpError.textContent = errorMessage;
+        otpError.classList.remove("hidden");
+      } finally {
+        verifyOtpBtn.classList.remove("loading");
+        verifyOtpBtn.disabled = false;
+      }
+    });
+
+    // Resend OTP Timer
+    function startResendTimer() {
+      resendTimer = 30;
+      timerCount.textContent = resendTimer;
+      resendOtpBtn.disabled = true;
+      resendOtpBtn.classList.add("hidden");
+      const timer = setInterval(() => {
+        resendTimer--;
+        timerCount.textContent = resendTimer;
+        if (resendTimer <= 0) {
+          clearInterval(timer);
+          resendOtpBtn.classList.remove("hidden");
+          resendOtpBtn.disabled = false;
+          timerCount.parentElement.classList.add("hidden");
+        }
+      }, 1000);
+    }
+
+    resendOtpBtn.addEventListener("click", () => {
+      phoneSection.classList.remove("hidden");
+      otpSection.classList.add("hidden");
+      otpInputs.forEach(input => input.value = "");
+      timerCount.parentElement.classList.remove("hidden");
+      window.recaptchaVerifier.render().catch((error) => {
+        console.error("reCAPTCHA re-render error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "reCAPTCHA Error",
+          text: "Failed to re-render reCAPTCHA. Please refresh the page.",
+          confirmButtonColor: "#2563eb"
+        });
+      });
+    });
+
+    // Auto-focus on phone number input
+    phoneNumberInput.focus();
+  </script>
+</body>
+</html>
