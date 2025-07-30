@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1E40AF">
+  <meta name="description" content="Echo Shop - Your one-stop online store in India for electronics, fashion, beauty, and more with real-time deals and fast delivery.">
+  <meta name="keywords" content="online shopping India, electronics, fashion, beauty, deals, Echo Shop">
+  <meta name="robots" content="index, follow">
+  <title>Echo Shop - Online Shopping in India</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <style>
+    :root {
+      --amazon-dark: #1A252F;
+      --amazon-accent: #FF9900;
+      --amazon-accent-hover: #E67E00;
+      --amazon-secondary: #FFD814;
+      --amazon-light: #F5F6F5;
+      --text-primary: #0F1111;
+      --text-secondary: #666666;
+      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.15);
+      --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.25);
+      --gradient-primary: linear-gradient(135deg, #1A252F, #2A3F5F);
+      --gradient-accent: linear-gradient(135deg, #FF9900, #FFAC33);
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--amazon-light);
+      color: var(--text-primary);
+      margin: 0;
+      overflow-x: hidden;
+      line-height: 1.6;
+      font-size: 1.1rem;
+    }
+
+    .navbar {
+      background: var(--gradient-primary);
+      padding: 1rem 2.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-base);
+      height: 80px;
+    }
+
+    .navbar-btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow-base);
+      animation: pulse 2s infinite;
+    }
+
+    .navbar-btn:hover {
+      background: linear-gradient(135deg, #E67E00, #FFAC33);
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .search-bar {
+      display: flex;
+      width: 70%;
+      max-width: 800px;
+      margin: 1.5rem auto;
+      background-color: #FFF;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-base);
+      height: 65px;
+      border: 2px solid transparent;
+      background: linear-gradient(#FFF, #FFF) padding-box, var(--gradient-accent) border-box;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .search-bar:focus-within {
+      box-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
+    }
+
+    .search-bar select {
+      background-color: #F0F2F2;
+      border: none;
+      padding: 1.2rem;
+      font-size: 1.1rem;
+      border-right: 2px solid #DDD;
+      appearance: none;
+      cursor: pointer;
+      color: var(--text-primary);
+      transition: background 0.3s ease;
+    }
+
+    .search-bar select:hover {
+      background-color: #E5E7E7;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 1.2rem 1.2rem 1.2rem 2.5rem;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>') no-repeat 0.8rem center;
+    }
+
+    .search-bar button {
+      background: var(--gradient-accent);
+      color: #FFF;
+      border: none;
+      padding: 1.2rem 2rem;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background: linear-gradient(135deg, #E67E00, #FFAC33);
+      transform: scale(1.05);
+    }
+
+    .banner {
+      height: 500px;
+      position: relative;
+      overflow: hidden;
+      margin: 2rem 0;
+      border-radius: 10px;
+      box-shadow: var(--shadow-base);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .swiper-slide {
+      min-height: 500px;
+    }
+
+    .banner-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(26, 37, 47, 0.8), transparent);
+      color: #FFF;
+      padding: 2rem;
+      text-align: left;
+      font-size: 1.5rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .card {
+      background-color: #FFF;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-base);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      opacity: 0;
+      transform: translateY(30px);
+      width: 100%;
+      max-width: 350px;
+      margin: 0 auto;
+      border: 1px solid #E5E7E7;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card img {
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover img {
+      transform: scale(1.05);
+    }
+
+    .btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #E67E00, #FFAC33);
+      transform: scale(1.1);
+    }
+
+    .btn-secondary {
+      background: #4B5563;
+      color: #FFF;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #6B7280;
+      transform: scale(1.1);
+    }
+
+    .deal-timer {
+      color: #B12704;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-shadow: 0 0 2px rgba(177, 39, 4, 0.3);
+    }
+
+    .inventory-count {
+      color: #007600;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-shadow: 0 0 2px rgba(0, 118, 0, 0.3);
+    }
+
+    .lazy-load {
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .lazy-load.visible {
+      opacity: 1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+      justify-items: center;
+    }
+
+    .category-scroll {
+      display: flex;
+      overflow-x: auto;
+      padding: 1rem;
+      gap: 1.5rem;
+      scrollbar-width: thin;
+      justify-content: center;
+    }
+
+    .category-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .category-scroll::-webkit-scrollbar-thumb {
+      background: var(--amazon-accent);
+      border-radius: 4px;
+    }
+
+    .category-item {
+      flex: 0 0 auto;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .category-item:hover {
+      transform: rotate(5deg) scale(1.1);
+    }
+
+    .category-item a {
+      display: block;
+      border-radius: 50%;
+      padding: 0.5rem;
+      box-shadow: var(--shadow-base);
+    }
+
+    .category-item img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #FFF;
+      transition: transform 0.3s ease;
+    }
+
+    .category-item img:hover {
+      transform: scale(1.1);
+    }
+
+    .category-item p {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-top: 0.5rem;
+    }
+
+    .footer {
+      background: var(--amazon-dark);
+      color: #FFF;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--amazon-secondary);
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        padding: 1rem;
+        height: auto;
+      }
+      .search-bar {
+        width: 90%;
+        margin: 1rem 0;
+        height: 55px;
+      }
+      .navbar-btn {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.8rem;
+      }
+      .banner {
+        height: 300px;
+      }
+      .swiper-slide {
+        min-height: 300px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+      .card {
+        max-width: 300px;
+      }
+      .category-item img {
+        width: 120px;
+        height: 120px;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .search-bar {
+        width: 80%;
+        height: 60px;
+      }
+      .banner {
+        height: 400px;
+      }
+      .swiper-slide {
+        min-height: 400px;
+      }
+      .card {
+        max-width: 320px;
+      }
+      .grid {
+        grid-template-columns: repeat(2, minmax(280px, 1fr));
+      }
+    }
+
+    @media (min-width: 1025px) {
+      .navbar {
+        padding: 1.5rem 3rem;
+      }
+      .search-bar {
+        height: 70px;
+      }
+      .card {
+        max-width: 350px;
+      }
+      .grid {
+        grid-template-columns: repeat(2, minmax(300px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Top Navbar -->
+  <nav class="navbar flex items-center justify-between" role="navigation" aria-label="Main navigation">
+    <div class="flex items-center space-x-6">
+      <span class="text-2xl font-poppins font-bold text-white">Echo Shop</span>
+      <button id="location-btn" class="navbar-btn" aria-label="Change location">
+        <span>📍</span> Kukatpally, Hyderabad <span class="ml-1">▼</span>
+      </button>
+    </div>
+    <div class="w-1/3 relative">
+      <div class="search-bar flex items-center">
+        <select id="category-dropdown" class="text-gray-700 focus:outline-none" aria-label="Select category">
+          <option value="">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Beauty">Beauty</option>
+          <option value="Home & Kitchen">Home & Kitchen</option>
+          <option value="Personalised Gifts">Personalised Gifts</option>
+        </select>
+        <input id="search-bar" type="text" placeholder="Search Echo Shop..." class="text-gray-700 focus:ring-0" aria-label="Search products" autocomplete="off">
+        <button class="bg-yellow-500 text-white p-2 rounded-r-md hover:bg-yellow-600" aria-label="Search">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </button>
+        <div id="search-suggestions" class="absolute w-full bg-white shadow-lg rounded-b-md hidden" role="listbox"></div>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button id="auth-status" class="navbar-btn" role="link" tabindex="0">Hello, Sign In</button>
+      <div class="relative">
+        <button id="account-btn" class="navbar-btn" aria-haspopup="true" aria-expanded="false">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          Account & Lists <span class="ml-1">▼</span>
+        </button>
+        <div id="account-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2" role="menu">
+          <a href="#" id="gmail-signin" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Sign in with Gmail</a>
+          <a href="#" id="phone-signin" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Sign in with Phone</a>
+          <a href="profile.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Profile</a>
+          <a href="wishlist.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Wishlist</a>
+        </div>
+      </div>
+      <a href="orders.html" class="navbar-btn" role="link">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+        Orders
+      </a>
+      <a href="cart.html" class="navbar-btn" aria-label="View cart">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        Cart <span id="cart-count" class="ml-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Banner Carousel -->
+  <div class="mt-20" role="region" aria-label="Banner carousel">
+    <div class="swiper banner-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide banner" style="background-image: url('https://via.placeholder.com/1200x300?text=Banner+1');">
+          <div class="banner-overlay absolute bottom-0 left-0 p-4">
+            <h2 class="text-xl font-semibold">Up to 70% off | Fashion Deals</h2>
+            <button class="btn mt-2" onclick="filterCategory('Fashion')">Shop Now</button>
+          </div>
+        </div>
+        <div class="swiper-slide banner" style="background-image: url('https://via.placeholder.com/1200x300?text=Banner+2');">
+          <div class="banner-overlay absolute bottom-0 left-0 p-4">
+            <h2 class="text-xl font-semibold">Buy 2, Save ₹150</h2>
+            <button class="btn mt-2" onclick="filterCategory('Electronics')">Shop Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+
+  <!-- Category Round Images Section -->
+  <section class="category-scroll" role="region" aria-label="Category selection">
+    <div class="category-item">
+      <a href="products.html?category=Personalised+Gifts"><img src="https://www.fnp.com/images/pr/l/v20240206183742/jade-plant-in-personalised-heart-planter_1.jpg" alt="Personalised Gifts"></a>
+      <p>Personalised Gifts</p>
+    </div>
+    <div class="category-item">
+      <a href="products.html?category=Electronics"><img src="https://images.unsplash.com/photo-1516321318423-3b6e2971e46f?q=80&w=1500" alt="Electronics"></a>
+      <p>Electronics</p>
+    </div>
+    <div class="category-item">
+      <a href="products.html?category=Fashion"><img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=1500" alt="Fashion"></a>
+      <p>Fashion</p>
+    </div>
+    <div class="category-item">
+      <a href="products.html?category=Beauty"><img src="https://images.unsplash.com/photo-1596462502278-27bf71533255?q=80&w=1500" alt="Beauty"></a>
+      <p>Beauty</p>
+    </div>
+    <div class="category-item">
+      <a href="products.html?category=Home+%26+Kitchen"><img src="https://images.unsplash.com/photo-1556911220-bff31c4c6e36?q=80&w=1500" alt="Home & Kitchen"></a>
+      <p>Home & Kitchen</p>
+    </div>
+  </section>
+
+  <!-- Featured Products Grid -->
+  <section class="grid" role="region" aria-label="Featured products">
+    <div class="card lazy-load">
+      <img src="https://i.ibb.co/zTYyC9N/th.jpg" alt="blue" class="w-full h-56 object-cover rounded">
+      <h3 class="text-lg font-semibold mt-2">blue</h3>
+      <p class="text-sm text-gray-600">Brand: tshirt</p>
+      <p class="text-sm text-gray-600">₹100 <span class="line-through text-gray-400">₹200</span> (50% off)</p>
+      <p class="text-sm text-yellow-500">⭐ 4.0 (0 ratings)</p>
+      <p class="text-sm text-green-600">✅ Free Delivery</p>
+      <p class="text-sm text-gray-600">best for the children</p>
+      <p class="text-sm text-gray-500">📍 Charminar</p>
+      <div class="flex space-x-2 mt-2">
+        <button class="btn" onclick="addToCart('blue', 'blue', 100, 'Charminar', 'tshirt', 'best for the children', '50%', 'https://i.ibb.co/zTYyC9N/th.jpg', 200, 4, 0, { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: '10 days' }, { bank: '', cashback: '', partner: '' }, { brand: 'tshirt', color: '', dimensions: '', finish: '', material: '', occasion: '', specialFeature: 'good', theme: '' })">Add to Cart</button>
+        <button class="btn-secondary" onclick="viewDetails('blue')">View Details</button>
+      </div>
+    </div>
+    <div class="card lazy-load">
+      <img src="https://images.unsplash.com/photo-1605518216938-7c31b7b14a91?q=80&w=1500" alt="shows" class="w-full h-56 object-cover rounded">
+      <h3 class="text-lg font-semibold mt-2">shows</h3>
+      <p class="text-sm text-gray-600">Brand: Footwear</p>
+      <p class="text-sm text-gray-600">₹500 <span class="line-through text-gray-400">₹700</span> (29% off)</p>
+      <p class="text-sm text-yellow-500">☆ 0 (0 ratings)</p>
+      <p class="text-sm text-green-600">✅ Free Delivery</p>
+      <p class="text-sm text-gray-600">good and strong</p>
+      <p class="text-sm text-gray-500">📍 KPHB</p>
+      <div class="flex space-x-2 mt-2">
+        <button class="btn" onclick="addToCart('shows', 'shows', 500, 'KPHB', 'Footwear', 'good and strong', '29%', 'https://images.unsplash.com/photo-1605518216938-7c31b7b14a91?q=80&w=1500', 700, 0, 0, { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: '10 days' }, { bank: '', cashback: '', partner: '' }, { brand: 'Footwear', color: '', dimensions: '', finish: '', material: '', occasion: '', specialFeature: 'good', theme: '' })">Add to Cart</button>
+        <button class="btn-secondary" onclick="viewDetails('shows')">View Details</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="text-center">
+      <p class="text-lg font-poppins">Echo Shop</p>
+      <p class="text-sm">Your one-stop online store for electronics, fashion, beauty, and more.</p>
+      <div class="mt-2">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="terms.html">Terms</a>
+      </div>
+      <p class="mt-2">Support: +91-1234567890 | <a href="mailto:support@echoshop.in">support@echoshop.in</a></p>
+    </div>
+  </footer>
+
+  <!-- Firebase and JavaScript -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS",
+      databaseURL: "https://myechostore.firebaseio.com"
+    };
+
+    // Initialize Firebase
+    let app, db, auth, storage, analytics;
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+      storage = getStorage(app);
+      analytics = getAnalytics(app);
+      console.log("Firebase initialized successfully");
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+    }
+
+    const provider = new GoogleAuthProvider();
+
+    // Authentication
+    onAuthStateChanged(auth, (user) => {
+      const authStatus = document.getElementById("auth-status");
+      if (user) {
+        authStatus.textContent = `Hello, ${user.displayName || user.email || "User"}!`;
+        authStatus.href = "profile.html";
+      } else {
+        authStatus.href = "#";
+        authStatus.textContent = "Hello, Sign In";
+      }
+    });
+
+    // Gmail Sign-In
+    document.getElementById("gmail-signin").addEventListener("click", (e) => {
+      e.preventDefault();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log("Signed in with Gmail:", result.user);
+        })
+        .catch((error) => {
+          console.error("Gmail sign-in error:", error.message);
+        });
+    });
+
+    // Phone Sign-In
+    document.getElementById("phone-signin").addEventListener("click", (e) => {
+      e.preventDefault();
+      const phoneNumber = prompt("Enter your phone number (e.g., +91XXXXXXXXXX):");
+      if (phoneNumber) {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('phone-signin', {
+          'size': 'invisible'
+        });
+        signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+          .then((confirmationResult) => {
+            const code = prompt("Enter the OTP sent to your phone:");
+            return confirmationResult.confirm(code);
+          })
+          .then((result) => {
+            console.log("Signed in with Phone:", result.user);
+          })
+          .catch((error) => {
+            console.error("Phone sign-in error:", error.message);
+          });
+      }
+    });
+
+    // Account Dropdown Toggle
+    document.getElementById("account-btn").addEventListener("click", () => {
+      const dropdown = document.getElementById("account-dropdown");
+      dropdown.classList.toggle("hidden");
+    });
+
+    // Location Update
+    document.getElementById("location-btn").addEventListener("click", () => {
+      const newLocation = prompt("Enter your location:");
+      if (newLocation) {
+        document.getElementById("location-btn").innerHTML = `<span>📍</span> ${newLocation} <span class="ml-1">▼</span>`;
+        if (auth.currentUser) {
+          db.collection("users").doc(auth.currentUser.uid).set({ location: newLocation }, { merge: true })
+            .catch((error) => console.error("Error updating location:", error.message));
+        }
+      }
+    });
+
+    // Swiper for Banner Carousel
+    const swiper = new Swiper('.banner-swiper', {
+      loop: true,
+      slidesPerView: 1,
+      spaceBetween: 0,
+      autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+    });
+
+    // Load Featured Products
+    const loadProducts = async () => {
+      const productsGrid = document.querySelector(".grid");
+      const q = query(collection(db, "products"), limit(8));
+      try {
+        onSnapshot(q, (snapshot) => {
+          productsGrid.innerHTML = "";
+          snapshot.forEach((doc) => {
+            const product = doc.data();
+            const card = document.createElement("div");
+            card.className = "card lazy-load";
+            card.innerHTML = `
+              <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-56 object-cover rounded">
+              <h3 class="text-lg font-semibold mt-2">${product.name}</h3>
+              <p class="text-sm text-gray-600">Brand: ${product.specs.brand || "Unknown"}</p>
+              <p class="text-sm text-gray-600">₹${product.price} <span class="line-through text-gray-400">₹${product.originalPrice}</span> (${product.discount})</p>
+              <p class="text-sm text-yellow-500">⭐ ${product.rating} (${product.ratingsCount} ratings)</p>
+              <p class="text-sm text-green-600">${product.delivery.freeDelivery ? "✅ Free Delivery" : product.delivery.payOnDelivery ? "Pay on Delivery" : ""}</p>
+              <p class="text-sm text-gray-600">${product.description || ""}</p>
+              <p class="text-sm text-gray-500">📍 ${product.sourceLocation || "Unknown"}</p>
+              <div class="flex space-x-2 mt-2">
+                <button class="btn" onclick="addToCart('${doc.id}', '${product.name}', ${product.price}, '${product.sourceLocation}', '${product.specs.brand}', '${product.description}', '${product.discount}', '${product.imageUrl}', ${product.originalPrice}, ${product.rating}, ${product.ratingsCount}, ${JSON.stringify(product.delivery)}, ${JSON.stringify(product.offers)}, ${JSON.stringify(product.specs)})">Add to Cart</button>
+                <button class="btn-secondary" onclick="viewDetails('${doc.id}')">View Details</button>
+              </div>
+            `;
+            productsGrid.appendChild(card);
+            setTimeout(() => card.classList.add("visible"), 100);
+          });
+        }, (error) => {
+          console.error("Error fetching products:", error.message);
+        });
+      } catch (error) {
+        console.error("Error querying products:", error.message);
+      }
+    };
+
+    // Filter Category
+    window.filterCategory = (category) => {
+      window.location.href = `products.html?category=${encodeURIComponent(category)}`;
+    };
+
+    // Add to Cart
+    window.addToCart = (productId, name, price, sourceLocation, brand, description, discount, imageUrl, originalPrice, rating, ratingsCount, delivery, offers, specs) => {
+      const user = auth.currentUser;
+      const parsedDelivery = typeof delivery === 'string' ? JSON.parse(delivery) : delivery;
+      const parsedOffers = typeof offers === 'string' ? JSON.parse(offers) : offers;
+      const parsedSpecs = typeof specs === 'string' ? JSON.parse(specs) : specs;
+      const createdAt = new Date("2025-07-29T23:20:38+05:30");
+      if (user) {
+        db.collection("carts").doc(user.uid).collection("items").doc(productId).set({
+          productId,
+          name,
+          price,
+          sourceLocation,
+          brand,
+          description,
+          discount,
+          imageUrl,
+          originalPrice,
+          rating,
+          ratingsCount,
+          delivery: parsedDelivery,
+          offers: parsedOffers,
+          specs: parsedSpecs,
+          createdAt,
+          quantity: 1,
+          timestamp: new Date()
+        }).then(() => {
+          console.log("Added to cart:", name);
+        }).catch((error) => {
+          console.error("Error adding to cart:", error.message);
+        });
+      } else {
+        let cart = JSON.parse(localStorage.getItem("cart") || "{}");
+        cart[productId] = {
+          productId,
+          name,
+          price,
+          sourceLocation,
+          brand,
+          description,
+          discount,
+          imageUrl,
+          originalPrice,
+          rating,
+          ratingsCount,
+          delivery: parsedDelivery,
+          offers: parsedOffers,
+          specs: parsedSpecs,
+          createdAt,
+          quantity: (cart[productId]?.quantity || 0) + 1
+        };
+        localStorage.setItem("cart", JSON.stringify(cart));
+        console.log("Added to localStorage cart:", name);
+      }
+      updateCartCount();
+    };
+
+    // View Details
+    window.viewDetails = (productId) => {
+      window.location.href = `product-detail.html?id=${productId}`;
+    };
+
+    // Update Cart Count
+    const updateCartCount = () => {
+      const user = auth.currentUser;
+      if (user) {
+        onSnapshot(collection(db, "carts", user.uid, "items"), (snapshot) => {
+          document.getElementById("cart-count").textContent = snapshot.size;
+        }, (error) => {
+          console.error("Error updating cart count:", error.message);
+        });
+      } else {
+        const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+        const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById("cart-count").textContent = count;
+      }
+    };
+
+    // Search Functionality
+    document.getElementById("search-bar").addEventListener("input", async (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const suggestions = document.getElementById("search-suggestions");
+      if (searchTerm.length < 3) {
+        suggestions.classList.add("hidden");
+        return;
+      }
+      try {
+        const q = query(collection(db, "products"), where("name", ">=", searchTerm), where("name", "<=", searchTerm + "\uf8ff"), limit(5));
+        const snapshot = await getDocs(q);
+        suggestions.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const product = doc.data();
+          const div = document.createElement("div");
+          div.className = "p-2 hover:bg-gray-100 cursor-pointer";
+          div.textContent = product.name;
+          div.onclick = () => {
+            window.location.href = `product-detail.html?id=${doc.id}`;
+          };
+          suggestions.appendChild(div);
+        });
+        suggestions.classList.remove("hidden");
+      } catch (error) {
+        console.error("Error searching products:", error.message);
+      }
+    });
+
+    // Load Banners from Firebase
+    const loadBanners = async () => {
+      const swiperWrapper = document.querySelector(".swiper-wrapper");
+      try {
+        const q = query(collection(db, "banners"), orderBy("createdAt", "desc"), limit(4));
+        onSnapshot(q, (snapshot) => {
+          swiperWrapper.innerHTML = "";
+          if (snapshot.empty) {
+            // Fallback banners if Firebase returns no data
+            const fallbackBanners = [
+              { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+1', title: 'Up to 70% off | Fashion Deals', category: 'Fashion' },
+              { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+2', title: 'Buy 2, Save ₹150', category: 'Electronics' }
+            ];
+            fallbackBanners.forEach((banner) => {
+              const slide = document.createElement("div");
+              slide.className = "swiper-slide banner";
+              slide.style.backgroundImage = `url('${banner.imageUrl}')`;
+              slide.innerHTML = `
+                <div class="banner-overlay absolute bottom-0 left-0 p-4">
+                  <h2 class="text-xl font-semibold">${banner.title}</h2>
+                  <button class="btn mt-2" onclick="filterCategory('${banner.category}')">Shop Now</button>
+                </div>
+              `;
+              swiperWrapper.appendChild(slide);
+            });
+          } else {
+            snapshot.forEach((doc) => {
+              const banner = doc.data();
+              console.log("Fetched banner:", banner); // Debugging
+              const slide = document.createElement("div");
+              slide.className = "swiper-slide banner";
+              slide.style.backgroundImage = `url('${banner.imageUrl || 'https://via.placeholder.com/1200x300?text=Fallback+Banner'}')`;
+              slide.innerHTML = `
+                <div class="banner-overlay absolute bottom-0 left-0 p-4">
+                  <h2 class="text-xl font-semibold">${banner.title || 'Shop Now'}</h2>
+                  <button class="btn mt-2" onclick="filterCategory('${banner.category || 'All'}')">Shop Now</button>
+                </div>
+              `;
+              swiperWrapper.appendChild(slide);
+            });
+          }
+          swiper.update();
+        }, (error) => {
+          console.error("Error fetching banners:", error.message);
+          // Fallback banners on error
+          const fallbackBanners = [
+            { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+1', title: 'Up to 70% off | Fashion Deals', category: 'Fashion' },
+            { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+2', title: 'Buy 2, Save ₹150', category: 'Electronics' }
+          ];
+          fallbackBanners.forEach((banner) => {
+            const slide = document.createElement("div");
+            slide.className = "swiper-slide banner";
+            slide.style.backgroundImage = `url('${banner.imageUrl}')`;
+            slide.innerHTML = `
+              <div class="banner-overlay absolute bottom-0 left-0 p-4">
+                <h2 class="text-xl font-semibold">${banner.title}</h2>
+                <button class="btn mt-2" onclick="filterCategory('${banner.category}')">Shop Now</button>
+              </div>
+            `;
+            swiperWrapper.appendChild(slide);
+          });
+          swiper.update();
+        });
+      } catch (error) {
+        console.error("Error querying banners:", error.message);
+      }
+    };
+
+    // Initialize
+    loadProducts();
+    loadBanners();
+    updateCartCount();
+  </script>
+</body>
+</html>
