@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1E40AF">
+  <meta name="description" content="Echo Shop - Premium electronics and fashion with fast delivery and exclusive deals.">
+  <meta name="keywords" content="online shopping, electronics, product details, Echo Shop, India">
+  <meta name="robots" content="index, follow">
+  <title>Echo Shop - Shows</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/swiper@8.4.7/swiper-bundle.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/swiper@8.4.7/swiper-bundle.min.css">
+  <style>
+    :root {
+      --primary-dark: #1A252F;
+      --primary-accent: #1E40AF;
+      --accent-hover: #1E3A8A;
+      --secondary-accent: #3B82F6;
+      --light-bg: #FFFFFF;
+      --text-primary: #0F1111;
+      --text-secondary: #4B5563;
+      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --gradient-primary: linear-gradient(135deg, #1A252F, #2A3F5F);
+      --gradient-accent: linear-gradient(135deg, #1E40AF, #3B82F6);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-primary);
+      margin: 0;
+      overflow-x: hidden;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    .navbar {
+      background: var(--gradient-primary);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-base);
+      height: 80px;
+    }
+
+    .navbar-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #FFF;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-logo:hover {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      color: #FFF;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--secondary-accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover {
+      color: var(--secondary-accent);
+    }
+
+    .navbar-btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow-base);
+    }
+
+    .navbar-btn:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .search-bar {
+      display: flex;
+      width: 35%;
+      max-width: 400px;
+      background-color: #FFF;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-base);
+      height: 45px;
+      border: 2px solid var(--primary-accent);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .search-bar:focus-within {
+      box-shadow: 0 0 10px rgba(30, 64, 175, 0.3);
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 0.8rem 1rem 0.8rem 2.5rem;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>') no-repeat 0.8rem center;
+    }
+
+    .search-bar button {
+      background: var(--gradient-accent);
+      color: #FFF;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+    }
+
+    .product-container {
+      display: grid;
+      grid-template-columns: 35% 45% 20%;
+      gap: 1.5rem;
+      padding: 2rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .product-images .swiper {
+      max-width: 100%;
+      height: 450px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-base);
+    }
+
+    .product-images .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      transition: transform 0.4s ease;
+    }
+
+    .product-images .swiper-slide img:hover {
+      transform: scale(1.15);
+    }
+
+    .product-details {
+      padding: 1.5rem;
+      background: #FFF;
+      border-radius: 12px;
+      box-shadow: var(--shadow-base);
+    }
+
+    .quick-actions {
+      padding: 1.5rem;
+      background: #FFF;
+      border-radius: 12px;
+      box-shadow: var(--shadow-base);
+      position: sticky;
+      top: 90px;
+      align-self: start;
+    }
+
+    .btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, background 0.3s ease;
+      width: 100%;
+      margin: 0.5rem 0;
+      animation: pulse 2s infinite;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+    }
+
+    .btn-buy {
+      background: #FF2D55;
+      color: #FFF;
+    }
+
+    .btn-buy:hover {
+      background: #E02447;
+      transform: scale(1.05);
+    }
+
+    .btn-wishlist.active {
+      background: #10B981;
+      color: #FFF;
+    }
+
+    .btn-wishlist.active:hover {
+      background: #059669;
+    }
+
+    .btn-details {
+      background: #6B7280;
+      color: #FFF;
+    }
+
+    .btn-details:hover {
+      background: #4B5563;
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .quantity-selector button {
+      background: #E5E7EB;
+      border: none;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .quantity-selector button:hover {
+      background: #D1D5DB;
+    }
+
+    .variant-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .variant-selector input[type="radio"] {
+      display: none;
+    }
+
+    .variant-selector label {
+      padding: 0.6rem 1.2rem;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .variant-selector input:checked + label {
+      background: var(--gradient-accent);
+      color: #FFF;
+      border-color: transparent;
+    }
+
+    .variant-selector label:hover {
+      background: #F3F4F6;
+    }
+
+    .feature-highlights li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.75rem 0;
+      font-size: 0.9rem;
+    }
+
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .collapsible-content.open {
+      max-height: 1000px;
+    }
+
+    .review-tile {
+      background: #F9FAFB;
+      padding: 1.25rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-base);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .review-tile.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .review-form {
+      background: #FFF;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-base);
+      margin: 1rem 0;
+    }
+
+    .star-rating input {
+      display: none;
+    }
+
+    .star-rating label {
+      font-size: 1.5rem;
+      color: #D1D5DB;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      color: #FBBF24;
+    }
+
+    .recommended-products .swiper-slide {
+      background: #EFF6FF;
+      border: 2px solid var(--primary-accent);
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: var(--shadow-base);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .recommended-products .swiper-slide:hover {
+      transform: translateY(-5px);
+    }
+
+    .recommended-products .swiper-slide img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .skeleton {
+      background: #E5E7EB;
+      animation: skeleton-loading 1s linear infinite alternate;
+    }
+
+    @keyframes skeleton-loading {
+      0% { background-color: #E5E7EB; }
+      100% { background-color: #D1D5DB; }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10B981;
+      color: #FFF;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .error-message {
+      background: #FEE2E2;
+      color: #B91C1C;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      margin: 2rem auto;
+      max-width: 600px;
+    }
+
+    .footer {
+      background: var(--primary-dark);
+      color: #FFF;
+      padding: 2.5rem 3rem;
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--secondary-accent);
+      text-decoration: none;
+      margin: 0 1rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #FFF;
+    }
+
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        padding: 1rem;
+        height: auto;
+        gap: 1rem;
+      }
+      .nav-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .search-bar {
+        width: 100%;
+        height: 40px;
+      }
+      .product-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+      .product-images .swiper {
+        height: 300px;
+      }
+      .quick-actions {
+        position: static;
+      }
+      .recommended-products .swiper-slide {
+        width: 100%;
+      }
+      .review-form {
+        padding: 1rem;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .product-container {
+        grid-template-columns: 1fr;
+      }
+      .quick-actions {
+        position: static;
+      }
+      .product-images .swiper {
+        height: 400px;
+      }
+    }
+
+    @media (min-width: 1025px) {
+      .product-container {
+        grid-template-columns: 35% 45% 20%;
+      }
+      .product-images .swiper {
+        height: 450px;
+      }
+      .recommended-products .swiper-slide {
+        width: 33.33%;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-logo">Echo Shop</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Categories</a>
+      <a href="deals.html">Deals</a>
+      <a href="contact.html">Support</a>
+    </div>
+    <div class="search-bar flex items-center">
+      <input id="search-bar" type="text" placeholder="Search Echo Shop..." class="text-gray-700 focus:ring-0" aria-label="Search products" autocomplete="off">
+      <button aria-label="Search">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </button>
+      <div id="search-suggestions" class="absolute w-full bg-white shadow-lg rounded-b-md hidden" role="listbox"></div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button id="auth-status" class="navbar-btn" role="link" tabindex="0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        Hello, sunnykothakonda@gmail.com!
+      </button>
+      <a href="cart.html" class="navbar-btn" aria-label="View cart">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        Cart <span id="cart-count" class="ml-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center">2</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Product Section -->
+  <section class="product-container" role="region" aria-label="Product details">
+    <!-- Left: Images -->
+    <div class="product-images">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide skeleton"><img src="https://ik.imagekit.io/echoshop/shows.jpg?tr=w-400,h-400" alt="shows main" data-src="https://i.ibb.co/v6dWNSTN/Questblitz-Men-s-Running-Shoes.jpg?tr=w-800,h-800" class="lazy"></div>
+          <div class="swiper-slide skeleton"><img src="https://ik.imagekit.io/echoshop/shows_side.jpg?tr=w-400,h-400" alt="shows side" data-src="https://i.ibb.co/v6dWNSTN/Questblitz-Men-s-Running-Shoes.jpg?tr=w-800,h-800,rot-45" class="lazy"></div>
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+
+    <!-- Center: Details -->
+    <div class="product-details">
+      <h1 class="text-2xl font-semibold" id="product-title">shows</h1>
+      <p class="text-sm text-yellow-500" id="product-rating">⭐ 0 (0 ratings)</p>
+      <p class="text-sm text-gray-500">300+ bought this month</p>
+      <p class="text-xl font-bold" id="product-price">₹100 <span class="line-through text-gray-400">₹200</span> <span class="text-green-600">(50% off)</span></p>
+      <p class="text-sm text-green-600 font-semibold" id="product-stock">In Stock</p>
+      <p class="text-sm mt-1">Brand: <span id="product-brand">tshirt</span></p>
+      <div class="delivery-info mt-2">
+        <p class="text-sm"><span class="text-green-600">✅ Free Delivery</span> by Wed, Aug 6</p>
+        <p class="text-sm">Express Delivery by Mon, Aug 4</p>
+        <div class="flex items-center gap-2 mt-1">
+          <span class="text-gray-500">📍</span>
+          <span id="product-location" class="text-sm">Charminar</span>
+          <button class="text-blue-600 text-sm hover:underline" onclick="updateLocation()">Update</button>
+        </div>
+      </div>
+      <p class="text-sm mt-2">Sold by: Echo Retail <span class="text-green-600">🔒 Secure Transaction</span></p>
+      <div class="variant-selector">
+        <h3 class="text-sm font-semibold">Color</h3>
+        <div>
+          <input type="radio" name="color" id="color-blue" value="Blue" checked>
+          <label for="color-blue">Blue</label>
+        </div>
+        <h3 class="text-sm font-semibold mt-2">Size</h3>
+        <div>
+          <input type="radio" name="size" id="size-m" value="M" checked>
+          <label for="size-m">M</label>
+        </div>
+        <div>
+          <input type="radio" name="size" id="size-l" value="L">
+          <label for="size-l">L</label>
+        </div>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-sm font-semibold">Offers & Discounts</h3>
+        <div class="flex flex-wrap gap-2 mt-2">
+          <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">₹75 Cashback on UPI</span>
+          <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">EMI starting ₹50/month</span>
+          <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">10% off with HDFC Card</span>
+          <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">GST Invoice Available</span>
+          <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Only 5 left in stock</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Quick Actions -->
+    <div class="quick-actions">
+      <div class="quantity-selector">
+        <button onclick="updateQuantity(-1)">-</button>
+        <span id="quantity">1</span>
+        <button onclick="updateQuantity(1)">+</button>
+      </div>
+      <button class="btn" onclick="addToCart()">Add to Cart</button>
+      <button class="btn btn-buy" onclick="buyNow()">Buy Now</button>
+      <button class="btn btn-details" onclick="viewDetails()">View Details</button>
+      <button class="btn btn-wishlist" id="wishlist-btn" onclick="toggleWishlist()">
+        <svg id="wishlist-icon" class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        <span id="wishlist-text">Add to Wishlist</span>
+      </button>
+      <label class="flex items-center gap-2 mt-2">
+        <input type="checkbox" id="gift-option" class="form-checkbox">
+        <span class="text-sm">Add Gift Options</span>
+      </label>
+    </div>
+  </section>
+
+  <!-- Feature Highlights -->
+  <section class="max-w-1400px mx-auto p-3" role="region" aria-label="Feature highlights">
+    <h2 class="text-lg font-semibold">Key Features</h2>
+    <ul class="feature-highlights">
+      <li><svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span><strong>Strong Build</strong> for long-lasting use</span></li>
+      <li><svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-10H7a4 4 0 01-4 4z"></path></svg> <span><strong>Breathable Design</strong> for comfort</span></li>
+      <li><svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> <span><strong>Vibrant Display</strong> with lasting colors</span></li>
+    </ul>
+  </section>
+
+  <!-- Product Description -->
+  <section class="max-w-1400px mx-auto p-3" role="region" aria-label="Product description">
+    <h2 class="text-lg font-semibold">Product Description</h2>
+    <div id="description-content" class="collapsible-content">
+      <p class="text-sm">Good and strong, these shoes are designed for durability and comfort, perfect for active use.</p>
+      <h3 class="text-md font-semibold mt-2">Technical Specs</h3>
+      <p class="text-sm">Brand: tshirt, Size: M/L, Color: Blue</p>
+    </div>
+    <button class="text-blue-600 text-sm hover:underline" onclick="toggleDescription()">Show More</button>
+  </section>
+
+  <!-- Warranty & Support -->
+  <section class="max-w-1400px mx-auto p-3" role="region" aria-label="Warranty and support">
+    <h2 class="text-lg font-semibold">Warranty & Support</h2>
+    <p class="text-sm">1-Year Warranty</p>
+    <p class="text-sm">10 Days Replacement Policy</p>
+    <p class="text-sm">Fulfilled by Echo Shop</p>
+  </section>
+
+  <!-- Customer Reviews -->
+  <section class="max-w-1400px mx-auto p-3" role="region" aria-label="Customer reviews">
+    <h2 class="text-lg font-semibold">Customer Reviews</h2>
+    <div class="flex items-center gap-2">
+      <p class="text-sm text-yellow-500" id="product-rating">⭐ 0 (0 ratings)</p>
+      <input type="text" id="review-filter" placeholder="Filter reviews..." class="border p-1 rounded text-sm w-48">
+    </div>
+    <div class="review-form">
+      <h3 class="text-sm font-semibold">Write a Review</h3>
+      <div class="star-rating flex gap-1 my-2">
+        <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+        <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+        <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+        <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+        <input type="radio" name="rating" id="star1" value="1" checked><label for="star1">★</label>
+      </div>
+      <textarea id="review-text" class="w-full p-2 border rounded text-sm" placeholder="Your review..." rows="4"></textarea>
+      <input type="file" id="review-image" accept="image/*" class="my-2 text-sm">
+      <button class="btn" onclick="submitReview()">Submit Review</button>
+    </div>
+    <div id="review-tiles">
+      <p class="text-sm">No reviews yet.</p>
+    </div>
+  </section>
+
+  <!-- Recommended Products -->
+  <section class="max-w-1400px mx-auto p-3" role="region" aria-label="Recommended products">
+    <h2 class="text-lg font-semibold">You May Also Like</h2>
+    <div class="swiper recommended-products">
+      <div class="swiper-wrapper" id="recommended-products"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="text-center">
+      <p class="text-lg font-poppins">Echo Shop</p>
+      <p class="text-sm">Your one-stop online store for electronics, fashion, beauty, and more.</p>
+      <div class="mt-2">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="terms.html">Return Policy</a>
+        <a href="payment.html">Payment Methods</a>
+      </div>
+      <div class="mt-2">
+        <a href="#" class="inline-block mx-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3V2z"></path></svg></a>
+        <a href="#" class="inline-block mx-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path></svg></a>
+      </div>
+      <p class="mt-2">Support: +91-1234567890 | <a href="mailto:support@echoshop.in">support@echoshop.in</a></p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">Action Completed!</div>
+
+  <!-- Error Message -->
+  <div id="error-message" class="error-message hidden">Failed to load product. Please try again later.</div>
+
+  <!-- Firebase and JavaScript -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS",
+      databaseURL: "https://myechostore.firebaseio.com"
+    };
+
+    // Check Environment
+    if (!['http:', 'https:', 'chrome-extension:'].includes(window.location.protocol)) {
+      document.getElementById('error-message').textContent = 'This page must be served over http or https.';
+      document.getElementById('error-message').classList.remove('hidden');
+      throw new Error('Unsupported protocol. Use http or https.');
+    }
+
+    if (!window.localStorage) {
+      document.getElementById('error-message').textContent = 'Web storage is not enabled in this browser.';
+      document.getElementById('error-message').classList.remove('hidden');
+      throw new Error('Web storage is not enabled.');
+    }
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const analytics = getAnalytics(app);
+    const provider = new GoogleAuthProvider();
+
+    // Get Product ID
+    const productId = 'shows';
+
+    // Fallback Product Data
+    const fallbackProduct = {
+      name: 'shows',
+      price: 100,
+      originalPrice: 200,
+      discount: '50%',
+      rating: 0,
+      ratingsCount: 0,
+      sourceLocation: 'Charminar',
+      description: 'good and strong',
+      imageUrl: 'https://i.ibb.co/v6dWNSTN/Questblitz-Men-s-Running-Shoes.jpg',
+      stock: 5,
+      createdAt: new Date("2025-07-29T23:53:44+05:30"),
+      brand: 'tshirt',
+      delivery: { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: '' },
+      offers: { bank: '', cashback: '', partner: '' },
+      specs: { brand: 'tshirt', color: 'Blue', dimensions: '', finish: '', material: '', occasion: '', specialFeature: 'strong', theme: '' }
+    };
+
+    // Load Product Data (Real-Time)
+    const loadProduct = () => {
+      const docRef = doc(db, "products", productId);
+      onSnapshot(docRef, (docSnap) => {
+        let product = fallbackProduct;
+        if (docSnap.exists()) {
+          product = { ...docSnap.data(), productId };
+        }
+        document.getElementById('product-title').textContent = product.name || 'shows';
+        document.getElementById('product-price').innerHTML = `₹${product.price} <span class="line-through text-gray-400">₹${product.originalPrice}</span> <span class="text-green-600">(${product.discount})</span>`;
+        document.getElementById('product-stock').textContent = product.stock > 0 ? 'In Stock' : 'Out of Stock';
+        document.getElementById('product-location').textContent = product.sourceLocation || 'Charminar';
+        document.getElementById('product-brand').textContent = product.brand || 'tshirt';
+        document.getElementById('description-content').innerHTML = `
+          <p class="text-sm">${product.description || 'Good and strong, these shoes are designed for durability and comfort, perfect for active use.'}</p>
+          <h3 class="text-md font-semibold mt-2">Technical Specs</h3>
+          <p class="text-sm">Brand: ${product.specs.brand || 'tshirt'}, Size: ${product.specs.size || 'M/L'}, Color: ${product.specs.color || 'Blue'}</p>
+        `;
+        const swiperWrapper = document.querySelector('.product-images .swiper-wrapper');
+        swiperWrapper.innerHTML = `
+          <div class="swiper-slide"><img src="${product.imageUrl}?tr=w-400,h-400" alt="${product.name}" data-src="${product.imageUrl}?tr=w-800,h-800" class="lazy"></div>
+          <div class="swiper-slide"><img src="${product.imageUrl}?tr=w-400,h-400,rot-45" alt="${product.name} side" data-src="${product.imageUrl}?tr=w-800,h-800,rot-45" class="lazy"></div>
+        `;
+        document.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton'));
+        document.getElementById('error-message').classList.add('hidden');
+        gsap.from('.product-details', { opacity: 0, y: 30, duration: 0.8, delay: 0.2 });
+        gsap.from('.quick-actions', { opacity: 0, x: 30, duration: 0.8, delay: 0.4 });
+        gsap.from('.product-images', { opacity: 0, x: -30, duration: 0.8, delay: 0.4 });
+      }, (error) => {
+        console.error("Error loading product:", error.message);
+        document.getElementById('product-title').textContent = fallbackProduct.name;
+        document.getElementById('product-price').innerHTML = `₹${fallbackProduct.price} <span class="line-through text-gray-400">₹${fallbackProduct.originalPrice}</span> <span class="text-green-600">(${fallbackProduct.discount})</span>`;
+        document.getElementById('product-stock').textContent = fallbackProduct.stock > 0 ? 'In Stock' : 'Out of Stock';
+        document.getElementById('product-location').textContent = fallbackProduct.sourceLocation;
+        document.getElementById('product-brand').textContent = fallbackProduct.brand;
+        document.getElementById('description-content').innerHTML = `
+          <p class="text-sm">${fallbackProduct.description}</p>
+          <h3 class="text-md font-semibold mt-2">Technical Specs</h3>
+          <p class="text-sm">Brand: ${fallbackProduct.specs.brand}, Size: M/L, Color: Blue</p>
+        `;
+        const swiperWrapper = document.querySelector('.product-images .swiper-wrapper');
+        swiperWrapper.innerHTML = `
+          <div class="swiper-slide"><img src="${fallbackProduct.imageUrl}?tr=w-400,h-400" alt="${fallbackProduct.name}" data-src="${fallbackProduct.imageUrl}?tr=w-800,h-800" class="lazy"></div>
+          <div class="swiper-slide"><img src="${fallbackProduct.imageUrl}?tr=w-400,h-400,rot-45" alt="${fallbackProduct.name} side" data-src="${fallbackProduct.imageUrl}?tr=w-800,h-800,rot-45" class="lazy"></div>
+        `;
+        document.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton'));
+      });
+    };
+
+    // Load Recommended Products
+    const loadRecommendedProducts = () => {
+      const recommendedWrapper = document.getElementById('recommended-products');
+      const q = query(collection(db, "products"), limit(4));
+      onSnapshot(q, (snapshot) => {
+        recommendedWrapper.innerHTML = '';
+        if (snapshot.empty) {
+          recommendedWrapper.innerHTML = '<p class="text-sm">No recommended products available.</p>';
+        } else {
+          snapshot.forEach((doc) => {
+            if (doc.id !== productId) { // Exclude current product
+              const product = { ...doc.data(), productId: doc.id };
+              const slide = document.createElement('div');
+              slide.className = 'swiper-slide';
+              slide.innerHTML = `
+                <img src="${product.imageUrl || 'https://ik.imagekit.io/echoshop/placeholder.jpg?tr=w-200,h-200'}" alt="${product.name}">
+                <p class="text-sm font-semibold">${product.name}</p>
+                <p class="text-sm">₹${product.price} <span class="text-green-600">(${product.discount})</span></p>
+              `;
+              recommendedWrapper.appendChild(slide);
+            }
+          });
+          recommendedSwiper.update();
+        }
+      }, (error) => {
+        console.error("Error loading recommended products:", error.message);
+        recommendedWrapper.innerHTML = '<p class="text-sm">No recommended products available.</p>';
+      });
+    };
+
+    // Lazy Load Images
+    const lazyLoadImages = () => {
+      const images = document.querySelectorAll('img.lazy');
+      images.forEach(img => {
+        img.src = img.dataset.src;
+        img.classList.remove('lazy');
+        gsap.from(img, { opacity: 0, y: 20, duration: 0.5 });
+      });
+    };
+
+    // Update Quantity
+    let quantity = 1;
+    window.updateQuantity = (delta) => {
+      quantity = Math.max(1, quantity + delta);
+      document.getElementById('quantity').textContent = quantity;
+    };
+
+    // Add to Cart
+    window.addToCart = async () => {
+      if (!['http:', 'https:', 'chrome-extension:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https.", false);
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) {
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (error) {
+          console.error("Sign-in error:", error.message);
+          showToast(`Sign-in required: ${error.message}`, false);
+        }
+        return;
+      }
+      try {
+        const docRef = doc(db, "products", productId);
+        const docSnap = await getDoc(docRef);
+        let product = fallbackProduct;
+        if (docSnap.exists()) {
+          product = { ...docSnap.data(), productId };
+        }
+        const giftOption = document.getElementById('gift-option').checked;
+        await setDoc(doc(db, "carts", user.uid, "items", productId), {
+          productId,
+          name: product.name,
+          price: product.price,
+          sourceLocation: product.sourceLocation,
+          description: product.description,
+          discount: product.discount,
+          imageUrl: product.imageUrl,
+          originalPrice: product.originalPrice,
+          rating: product.rating,
+          ratingsCount: product.ratingsCount,
+          brand: product.brand,
+          delivery: product.delivery,
+          offers: product.offers,
+          specs: product.specs,
+          createdAt: product.createdAt,
+          quantity,
+          giftOption,
+          timestamp: new Date()
+        });
+        showToast("Added to Cart!");
+        updateCartCount();
+      } catch (error) {
+        console.error("Error adding to cart:", error.message);
+        showToast(`Error: ${error.message}`, false);
+      }
+    };
+
+    // Buy Now
+    window.buyNow = async () => {
+      if (!['http:', 'https:', 'chrome-extension:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https.", false);
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) {
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (error) {
+          console.error("Sign-in error:", error.message);
+          showToast(`Sign-in required: ${error.message}`, false);
+        }
+        return;
+      }
+      try {
+        const docRef = doc(db, "products", productId);
+        const docSnap = await getDoc(docRef);
+        let product = fallbackProduct;
+        if (docSnap.exists()) {
+          product = { ...docSnap.data(), productId };
+        }
+        const giftOption = document.getElementById('gift-option').checked;
+        const orderId = `${productId}_${Date.now()}`;
+        await setDoc(doc(db, "orders", user.uid, "items", orderId), {
+          productId,
+          name: product.name,
+          price: product.price,
+          sourceLocation: product.sourceLocation,
+          description: product.description,
+          discount: product.discount,
+          imageUrl: product.imageUrl,
+          originalPrice: product.originalPrice,
+          rating: product.rating,
+          ratingsCount: product.ratingsCount,
+          brand: product.brand,
+          delivery: product.delivery,
+          offers: product.offers,
+          specs: product.specs,
+          createdAt: product.createdAt,
+          quantity,
+          giftOption,
+          timestamp: new Date(),
+          status: "pending"
+        });
+        showToast("Order Placed! Redirecting to checkout...");
+        setTimeout(() => {
+          window.location.href = `checkout.html?orderId=${orderId}`;
+        }, 1500);
+      } catch (error) {
+        console.error("Error placing order:", error.message);
+        showToast(`Error: ${error.message}`, false);
+      }
+    };
+
+    // View Details
+    window.viewDetails = () => {
+      window.location.href = `details.html?id=${productId}`;
+    };
+
+    // Toggle Wishlist
+    let isWishlisted = false;
+    window.toggleWishlist = async () => {
+      if (!['http:', 'https:', 'chrome-extension:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https.", false);
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) {
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (error) {
+          console.error("Sign-in error:", error.message);
+          showToast(`Sign-in required: ${error.message}`, false);
+        }
+        return;
+      }
+      try {
+        isWishlisted = !isWishlisted;
+        const wishlistBtn = document.getElementById('wishlist-btn');
+        const wishlistIcon = document.getElementById('wishlist-icon');
+        const wishlistText = document.getElementById('wishlist-text');
+        if (isWishlisted) {
+          await setDoc(doc(db, "wishlists", user.uid, "items", productId), { productId, timestamp: new Date() });
+          wishlistBtn.classList.add('active');
+          wishlistIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>';
+          wishlistText.textContent = 'Wishlisted';
+          showToast("Added to Wishlist!");
+        } else {
+          await setDoc(doc(db, "wishlists", user.uid, "items", productId), {}, { merge: false });
+          wishlistBtn.classList.remove('active');
+          wishlistIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>';
+          wishlistText.textContent = 'Add to Wishlist';
+          showToast("Removed from Wishlist!");
+        }
+        gsap.from(wishlistBtn, { scale: 1.2, duration: 0.3 });
+      } catch (error) {
+        console.error("Error toggling wishlist:", error.message);
+        showToast(`Error: ${error.message}`, false);
+      }
+    };
+
+    // Submit Review
+    window.submitReview = async () => {
+      if (!['http:', 'https:', 'chrome-extension:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https.", false);
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) {
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (error) {
+          console.error("Sign-in error:", error.message);
+          showToast(`Sign-in required: ${error.message}`, false);
+        }
+        return;
+      }
+      const rating = document.querySelector('input[name="rating"]:checked').value;
+      const text = document.getElementById('review-text').value.trim();
+      const imageFile = document.getElementById('review-image').files[0];
+      if (!text) {
+        showToast("Please enter a review text.", false);
+        return;
+      }
+      try {
+        let imageUrl = '';
+        if (imageFile) {
+          const reader = new FileReader();
+          reader.readAsDataURL(imageFile);
+          await new Promise((resolve) => {
+            reader.onload = () => {
+              imageUrl = reader.result;
+              resolve();
+            };
+          });
+        }
+        const reviewId = `${user.uid}_${Date.now()}`;
+        await setDoc(doc(db, "products", productId, "reviews", reviewId), {
+          username: user.displayName || user.email.split('@')[0],
+          rating: parseInt(rating),
+          text,
+          imageUrl,
+          timestamp: new Date()
+        });
+        showToast("Review submitted!");
+        document.getElementById('review-text').value = '';
+        document.getElementById('review-image').value = '';
+        document.getElementById('star1').checked = true;
+      } catch (error) {
+        console.error("Error submitting review:", error.message);
+        showToast(`Error: ${error.message}`, false);
+      }
+    };
+
+    // Update Location
+    window.updateLocation = () => {
+      const newLocation = prompt("Enter your location:");
+      if (newLocation) {
+        document.getElementById('product-location').textContent = newLocation;
+        if (auth.currentUser) {
+          setDoc(doc(db, "users", auth.currentUser.uid), { location: newLocation }, { merge: true });
+        }
+      }
+    };
+
+    // Toggle Description
+    window.toggleDescription = () => {
+      const content = document.getElementById('description-content');
+      if (content) {
+        content.classList.toggle('open');
+        const toggleButton = document.querySelector('button[onclick="toggleDescription()"]');
+        if (toggleButton) {
+          toggleButton.textContent = content.classList.contains('open') ? 'Show Less' : 'Show More';
+        }
+        if (content.classList.contains('open')) {
+          gsap.from('#description-content', { opacity: 0, y: 20, duration: 0.5 });
+        }
+      }
+    };
+
+    // Show Toast
+    const showToast = (message, success = true) => {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = success ? '#10B981' : '#EF4444';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    };
+
+    // Update Cart Count
+    const updateCartCount = () => {
+      const user = auth.currentUser;
+      if (user) {
+        onSnapshot(collection(db, "carts", user.uid, "items"), (snapshot) => {
+          document.getElementById("cart-count").textContent = snapshot.size;
+        }, (error) => {
+          console.error("Error updating cart count:", error.message);
+        });
+      } else {
+        const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+        const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById("cart-count").textContent = count;
+      }
+    };
+
+    // Authentication
+    onAuthStateChanged(auth, async (user) => {
+      const authStatus = document.getElementById("auth-status");
+      if (user) {
+        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, ${user.email || "User"}!`;
+        authStatus.onclick = () => window.location.href = "profile.html";
+        const wishlistDoc = await getDoc(doc(db, "wishlists", user.uid, "items", productId));
+        if (wishlistDoc.exists()) {
+          isWishlisted = true;
+          const wishlistBtn = document.getElementById('wishlist-btn');
+          const wishlistIcon = document.getElementById('wishlist-icon');
+          const wishlistText = document.getElementById('wishlist-text');
+          wishlistBtn.classList.add('active');
+          wishlistIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>';
+          wishlistText.textContent = 'Wishlisted';
+        }
+      } else {
+        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, Sign In`;
+        authStatus.onclick = () => signInWithRedirect(auth, provider);
+      }
+      updateCartCount();
+    });
+
+    // Handle Redirect Result
+    getRedirectResult(auth).then((result) => {
+      if (result) {
+        showToast("Signed in successfully!");
+        updateCartCount();
+      }
+    }).catch((error) => {
+      console.error("Error handling redirect result:", error.message);
+      showToast(`Sign-in error: ${error.message}`, false);
+    });
+
+    // Search Functionality
+    document.getElementById("search-bar").addEventListener("input", async (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const suggestions = document.getElementById("search-suggestions");
+      if (searchTerm.length < 3) {
+        suggestions.classList.add("hidden");
+        return;
+      }
+      try {
+        const q = query(collection(db, "products"), where("name", ">=", searchTerm), where("name", "<=", searchTerm + "\uf8ff"), limit(5));
+        const snapshot = await getDocs(q);
+        suggestions.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const product = doc.data();
+          const div = document.createElement("div");
+          div.className = "p-2 hover:bg-gray-100 cursor-pointer";
+          div.textContent = product.name;
+          div.onclick = () => {
+            window.location.href = `product.html?id=${doc.id}`;
+          };
+          suggestions.appendChild(div);
+        });
+        suggestions.classList.remove('hidden');
+      } catch (error) {
+        console.error("Error searching products:", error.message);
+      }
+    });
+
+    // Load Reviews (Real-Time)
+    const loadReviews = () => {
+      const reviewTiles = document.getElementById('review-tiles');
+      const ratingDisplay = document.getElementById('product-rating');
+      const q = query(collection(db, "products", productId, "reviews"), orderBy("timestamp", "desc"), limit(5));
+      onSnapshot(q, (snapshot) => {
+        reviewTiles.innerHTML = "";
+        if (snapshot.empty) {
+          reviewTiles.innerHTML = '<p class="text-sm">No reviews yet.</p>';
+          ratingDisplay.textContent = `⭐ 0 (0 ratings)`;
+        } else {
+          let totalRating = 0;
+          let count = 0;
+          snapshot.forEach((doc) => {
+            const review = doc.data();
+            totalRating += review.rating;
+            count++;
+            const tile = document.createElement("div");
+            tile.className = "review-tile";
+            tile.innerHTML = `
+              <p class="text-sm font-semibold">${review.username} <span class="text-green-600">Verified</span></p>
+              <p class="text-sm text-yellow-500">${"★".repeat(Math.floor(review.rating))}☆ ${review.rating}</p>
+              <p class="text-sm">${review.text}</p>
+              ${review.imageUrl ? `<img src="${review.imageUrl}?tr=w-100,h-100" class="w-24 h-24 mt-2 rounded">` : ''}
+            `;
+            reviewTiles.appendChild(tile);
+            setTimeout(() => tile.classList.add('visible'), 100);
+          });
+          const avgRating = (totalRating / count).toFixed(1);
+          ratingDisplay.textContent = `⭐ ${avgRating} (${count} ratings)`;
+        }
+      }, (error) => {
+        console.error("Error loading reviews:", error.message);
+        reviewTiles.innerHTML = '<p class="text-sm">No reviews yet.</p>';
+        ratingDisplay.textContent = `⭐ 0 (0 ratings)`;
+      });
+    };
+
+    // Filter Reviews
+    document.getElementById('review-filter').addEventListener('input', async (e) => {
+      const filter = e.target.value.toLowerCase();
+      const reviewTiles = document.getElementById('review-tiles');
+      try {
+        const q = query(collection(db, "products", productId, "reviews"), where("text", ">=", filter), where("text", "<=", filter + "\uf8ff"), limit(5));
+        const snapshot = await getDocs(q);
+        reviewTiles.innerHTML = "";
+        if (snapshot.empty) {
+          reviewTiles.innerHTML = '<p class="text-sm">No matching reviews.</p>';
+        } else {
+          snapshot.forEach((doc) => {
+            const review = doc.data();
+            const tile = document.createElement("div");
+            tile.className = "review-tile";
+            tile.innerHTML = `
+              <p class="text-sm font-semibold">${review.username} <span class="text-green-600">Verified</span></p>
+              <p class="text-sm text-yellow-500">${"★".repeat(Math.floor(review.rating))}☆ ${review.rating}</p>
+              <p class="text-sm">${review.text}</p>
+              ${review.imageUrl ? `<img src="${review.imageUrl}?tr=w-100,h-100" class="w-24 h-24 mt-2 rounded">` : ''}
+            `;
+            reviewTiles.appendChild(tile);
+            setTimeout(() => tile.classList.add('visible'), 100);
+          });
+        }
+      } catch (error) {
+        console.error("Error filtering reviews:", error.message);
+        reviewTiles.innerHTML = '<p class="text-sm">No matching reviews.</p>';
+      }
+    });
+
+    // Initialize Swiper
+    const productSwiper = new Swiper('.product-images .swiper', {
+      loop: true,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+    });
+
+    const recommendedSwiper = new Swiper('.recommended-products', {
+      slidesPerView: 2,
+      spaceBetween: 20,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        640: { slidesPerView: 1 },
+        1025: { slidesPerView: 3 }
+      }
+    });
+
+    // Variant Selection
+    document.querySelectorAll('.variant-selector input').forEach(input => {
+      input.addEventListener('change', () => {
+        const price = document.getElementById('product-price');
+        if (input.name === 'size' && input.value === 'L') {
+          price.innerHTML = `₹110 <span class="line-through text-gray-400">₹200</span> <span class="text-green-600">(45% off)</span>`;
+        } else {
+          price.innerHTML = `₹100 <span class="line-through text-gray-400">₹200</span> <span class="text-green-600">(50% off)</span>`;
+        }
+        gsap.from(price, { opacity: 0, y: 10, duration: 0.3 });
+      });
+    });
+
+    // Initialize
+    loadProduct();
+    loadRecommendedProducts();
+    loadReviews();
+    updateCartCount();
+    setTimeout(lazyLoadImages, 1000);
+  </script>
+</body>
+</html>
