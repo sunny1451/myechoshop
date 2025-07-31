@@ -339,6 +339,14 @@
       text-decoration: underline;
     }
 
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
     @media (max-width: 640px) {
       .navbar {
         flex-direction: column;
@@ -442,20 +450,25 @@
           Account & Lists <span class="ml-1">▼</span>
         </button>
         <div id="account-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2" role="menu">
-          <a href="https://localworkers.xyz/profile.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Profile</a>
+          <a href="profile.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Profile</a>
           <a href="wishlist.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Wishlist</a>
+          <a href="orders.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Orders</a>
+          <a href="#" id="sign-out" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Sign Out</a>
         </div>
       </div>
       <a href="orders.html" class="navbar-btn" role="link">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
         Orders
       </a>
-      <a href="https://localworkers.xyz/cart.html" class="navbar-btn" aria-label="View cart">
+      <a href="cart.html" class="navbar-btn" aria-label="View cart">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
         Cart <span id="cart-count" class="ml-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center">0</span>
       </a>
     </div>
   </nav>
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" id="loadingSpinner">Loading...</div>
 
   <!-- Main Banner Carousel -->
   <div class="mt-20" role="region" aria-label="Banner carousel">
@@ -483,72 +496,29 @@
   <!-- Category Round Images Section -->
   <section class="category-scroll" role="region" aria-label="Category selection">
     <div class="category-item">
-      <a href="https://localworkers.xyz/product.html?category=Personalised+Gifts"><img src="https://awesomealice.com/wp-content/uploads/2019/10/Personalized-christmas-gifts-for-kids.jpg" alt="Personalised Gifts"></a>
+      <a href="product.html?category=Personalised+Gifts"><img src="https://awesomealice.com/wp-content/uploads/2019/10/Personalized-christmas-gifts-for-kids.jpg" alt="Personalised Gifts"></a>
       <p>Personalised Gifts</p>
     </div>
     <div class="category-item">
-      <a href="https://localworkers.xyz/product.html?category=Electronics"><img src="https://business.amazon.in/assets/in/24th-jan/705_Website_Blog_Appliances_1450x664.jpg.transform/1450x664/image.jpg" alt="Electronics"></a>
+      <a href="product.html?category=Electronics"><img src="https://business.amazon.in/assets/in/24th-jan/705_Website_Blog_Appliances_1450x664.jpg.transform/1450x664/image.jpg" alt="Electronics"></a>
       <p>Electronics</p>
     </div>
     <div class="category-item">
-      <a href="https://localworkers.xyz/product.html?category=Fashion"><img src="https://i.pinimg.com/originals/46/b7/8c/46b78c1e705eb631ded0f23fafb5422e.jpg" alt="Fashion"></a>
+      <a href="product.html?category=Fashion"><img src="https://i.pinimg.com/originals/46/b7/8c/46b78c1e705eb631ded0f23fafb5422e.jpg" alt="Fashion"></a>
       <p>Fashion</p>
     </div>
     <div class="category-item">
-      <a href="https://localworkers.xyz/product.html?category=Beauty"><img src="https://images.pexels.com/photos/3018845/pexels-photo-3018845.jpeg?cs=srgb&dl=cosmetic-products-3018845.jpg&fm=jpg" alt="Beauty"></a>
+      <a href="product.html?category=Beauty"><img src="https://images.pexels.com/photos/3018845/pexels-photo-3018845.jpeg?cs=srgb&dl=cosmetic-products-3018845.jpg&fm=jpg" alt="Beauty"></a>
       <p>Beauty</p>
     </div>
     <div class="category-item">
-      <a href="https://localworkers.xyz/product.html?category=Home+%26+Kitchen"><img src="http://4.bp.blogspot.com/-V9ntBSGfVT8/UuYK1YtcNqI/AAAAAAAAA0o/9jXiItkgmm0/s1600/Kitchen-items.jpg" alt="Home & Kitchen"></a>
+      <a href="product.html?category=Home+%26+Kitchen"><img src="http://4.bp.blogspot.com/-V9ntBSGfVT8/UuYK1YtcNqI/AAAAAAAAA0o/9jXiItkgmm0/s1600/Kitchen-items.jpg" alt="Home & Kitchen"></a>
       <p>Home & Kitchen</p>
     </div>
   </section>
 
   <!-- Featured Products Grid -->
-  <section class="grid" role="region" aria-label="Featured products">
-    <div class="card lazy-load">
-      <img src="https://images.unsplash.com/photo-1628755126578-4e0a683d7b0d?q=80&w=1500" alt="Girls bag" class="w-full h-56 object-cover rounded">
-      <h3 class="text-lg font-semibold mt-2">Girls bag</h3>
-      <p class="text-sm text-gray-600">Brand: peilijia</p>
-      <p class="text-sm text-gray-600">₹300 <span class="line-through text-gray-400">₹1000</span> (70% off)</p>
-      <p class="text-sm text-yellow-500">☆ 0 (0 ratings)</p>
-      <p class="text-sm text-green-600">✅ Free Delivery</p>
-      <p class="text-sm text-gray-600">this bag is made in china and it a very good product then we never see use and test</p>
-      <p class="text-sm text-gray-500">📍 KPHB</p>
-      <div class="flex space-x-2 mt-2">
-        <button class="btn" onclick="addToCart('girls_bag', 'Girls bag', 300, 'KPHB', 'peilijia', 'this bag is made in china and it a very good product then we never see use and test', '70%', 'https://images.unsplash.com/photo-1628755126578-4e0a683d7b0d?q=80&w=1500', 1000, 0, 0, { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: '10 days' }, { bank: '', cashback: '', partner: '' }, { brand: 'peilijia', color: '', dimensions: '', finish: '', material: '', occasion: '', specialFeature: 'good', theme: '' })">Add to Cart</button>
-        <button class="btn-secondary" onclick="viewDetails('girls_bag')">View Details</button>
-      </div>
-    </div>
-    <div class="card lazy-load">
-      <img src="https://i.ibb.co/zTYyC9N/th.jpg" alt="blue" class="w-full h-56 object-cover rounded">
-      <h3 class="text-lg font-semibold mt-2">blue</h3>
-      <p class="text-sm text-gray-600">Brand: tshirt</p>
-      <p class="text-sm text-gray-600">₹100 <span class="line-through text-gray-400">₹200</span> (50% off)</p>
-      <p class="text-sm text-yellow-500">⭐ 4.0 (0 ratings)</p>
-      <p class="text-sm text-green-600">✅ Free Delivery</p>
-      <p class="text-sm text-gray-600">best for the children</p>
-      <p class="text-sm text-gray-500">📍 Charminar</p>
-      <div class="flex space-x-2 mt-2">
-        <button class="btn" onclick="addToCart('blue', 'blue', 100, 'Charminar', 'tshirt', 'best for the children', '50%', 'https://i.ibb.co/zTYyC9N/th.jpg', 200, 4, 0, { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: '10 days' }, { bank: '', cashback: '', partner: '' }, { brand: 'tshirt', color: '', dimensions: '', finish: '', material: '', occasion: '', specialFeature: 'good', theme: '' })">Add to Cart</button>
-        <button class="btn-secondary" onclick="viewDetails('blue')">View Details</button>
-      </div>
-    </div>
-    <div class="card lazy-load">
-      <img src="https://images.unsplash.com/photo-1605518216938-7c31b7b14a91?q=80&w=1500" alt="shows" class="w-full h-56 object-cover rounded">
-      <h3 class="text-lg font-semibold mt-2">shows</h3>
-      <p class="text-sm text-gray-600">Brand: Footwear</p>
-      <p class="text-sm text-gray-600">₹500 <span class="line-through text-gray-400">₹700</span> (29% off)</p>
-      <p class="text-sm text-yellow-500">☆ 0 (0 ratings)</p>
-      <p class="text-sm text-green-600">✅ Free Delivery</p>
-      <p class="text-sm text-gray-600">good and strong</p>
-      <p class="text-sm text-gray-500">📍 KPHB</p>
-      <div class="flex space-x-2 mt-2">
-        <button class="btn" onclick="addToCart('shows', 'shows', 500, 'KPHB', 'Footwear', 'good and strong', '29%', 'https://images.unsplash.com/photo-1605518216938-7c31b7b14a91?q=80&w=1500', 700, 0, 0, { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: '10 days' }, { bank: '', cashback: '', partner: '' }, { brand: 'Footwear', color: '', dimensions: '', finish: '', material: '', occasion: '', specialFeature: 'good', theme: '' })">Add to Cart</button>
-        <button class="btn-secondary" onclick="viewDetails('shows')">View Details</button>
-      </div>
-    </div>
-  </section>
+  <section class="grid" role="region" aria-label="Featured products" id="productsGrid"></section>
 
   <!-- Footer -->
   <footer class="footer">
@@ -560,15 +530,15 @@
         <a href="contact.html">Contact</a>
         <a href="terms.html">Terms</a>
       </div>
-      <p class="mt-2">Support: +91 7093297758 | <a href="mailto:support@echoshop.in">sunnykothakonda@gmail.com</a></p>
+      <p class="mt-2">Support: +91 7093297758 | <a href="mailto:sunnykothakonda@gmail.com">sunnykothakonda@gmail.com</a></p>
     </div>
   </footer>
 
   <!-- Firebase and JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, query, getDocs, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithPhoneNumber, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -594,24 +564,44 @@
       console.log("Firebase initialized successfully");
     } catch (error) {
       console.error("Firebase initialization error:", error);
+      alert("Failed to initialize Firebase: " + error.message);
     }
 
     const provider = new GoogleAuthProvider();
+    let isAuthInitialized = false;
+
+    // Show/Hide Loading Spinner
+    function toggleLoadingSpinner(show) {
+      const spinner = document.getElementById("loadingSpinner");
+      const productsGrid = document.getElementById("productsGrid");
+      spinner.style.display = show ? "block" : "none";
+      productsGrid.style.display = show ? "none" : "grid";
+    }
 
     // Authentication
     onAuthStateChanged(auth, (user) => {
-      const authStatus = document.getElementById("auth-status");
-      if (user) {
-        authStatus.textContent = `Hello, ${user.displayName || user.email || "User"}!`;
-        authStatus.href = "profile.html";
-      } else {
-        authStatus.href = "#";
-        authStatus.textContent = "Hello, Sign In";
+      if (!isAuthInitialized) {
+        isAuthInitialized = true;
+        toggleLoadingSpinner(false);
+        const authStatus = document.getElementById("auth-status");
+        if (user) {
+          authStatus.textContent = `Hello, ${user.displayName || user.email || "User"}!`;
+          authStatus.href = "profile.html";
+        } else {
+          authStatus.href = "#";
+          authStatus.textContent = "Hello, Sign In";
+        }
+        updateCartCount();
       }
+    }, (error) => {
+      console.error("Auth state error:", error);
+      alert("Authentication error: " + error.message);
+      toggleLoadingSpinner(false);
     });
 
     // Gmail Sign-In
-    document.getElementById("gmail-signin").addEventListener("click", (e) => {
+    document.getElementById("auth-status").addEventListener("click", (e) => {
+      if (auth.currentUser) return; // Already signed in
       e.preventDefault();
       signInWithPopup(auth, provider)
         .then((result) => {
@@ -619,11 +609,12 @@
         })
         .catch((error) => {
           console.error("Gmail sign-in error:", error.message);
+          alert("Gmail sign-in error: " + error.message);
         });
     });
 
     // Phone Sign-In
-    document.getElementById("phone-signin").addEventListener("click", (e) => {
+    document.getElementById("phone-signin")?.addEventListener("click", (e) => {
       e.preventDefault();
       const phoneNumber = prompt("Enter your phone number (e.g., +91XXXXXXXXXX):");
       if (phoneNumber) {
@@ -640,8 +631,23 @@
           })
           .catch((error) => {
             console.error("Phone sign-in error:", error.message);
+            alert("Phone sign-in error: " + error.message);
           });
       }
+    });
+
+    // Sign Out
+    document.getElementById("sign-out").addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth)
+        .then(() => {
+          console.log("Signed out successfully");
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          console.error("Sign out error:", error.message);
+          alert("Sign out error: " + error.message);
+        });
     });
 
     // Account Dropdown Toggle
@@ -672,8 +678,8 @@
         disableOnInteraction: false,
       },
       navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+        nextEl: '.swiper-button-prev',
+        prevEl: '.swiper-button-next',
       },
       pagination: {
         el: '.swiper-pagination',
@@ -683,43 +689,140 @@
 
     // Load Featured Products
     const loadProducts = async () => {
-      const productsGrid = document.querySelector(".grid");
-      const q = query(collection(db, "products"), limit(8));
+      const productsGrid = document.getElementById("productsGrid");
+      toggleLoadingSpinner(true);
       try {
+        const q = query(collection(db, "products"));
         onSnapshot(q, (snapshot) => {
           productsGrid.innerHTML = "";
-          snapshot.forEach((doc) => {
-            const product = doc.data();
-            const card = document.createElement("div");
-            card.className = "card lazy-load";
-            card.innerHTML = `
-              <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-56 object-cover rounded">
-              <h3 class="text-lg font-semibold mt-2">${product.name}</h3>
-              <p class="text-sm text-gray-600">Brand: ${product.specs.brand || "Unknown"}</p>
-              <p class="text-sm text-gray-600">₹${product.price} <span class="line-through text-gray-400">₹${product.originalPrice}</span> (${product.discount})</p>
-              <p class="text-sm text-yellow-500">⭐ ${product.rating} (${product.ratingsCount} ratings)</p>
-              <p class="text-sm text-green-600">${product.delivery.freeDelivery ? "✅ Free Delivery" : product.delivery.payOnDelivery ? "Pay on Delivery" : ""}</p>
-              <p class="text-sm text-gray-600">${product.description || ""}</p>
-              <p class="text-sm text-gray-500">📍 ${product.sourceLocation || "Unknown"}</p>
-              <div class="flex space-x-2 mt-2">
-                <button class="btn" onclick="addToCart('${doc.id}', '${product.name}', ${product.price}, '${product.sourceLocation}', '${product.specs.brand}', '${product.description}', '${product.discount}', '${product.imageUrl}', ${product.originalPrice}, ${product.rating}, ${product.ratingsCount}, ${JSON.stringify(product.delivery)}, ${JSON.stringify(product.offers)}, ${JSON.stringify(product.specs)})">Add to Cart</button>
-                <button class="btn-secondary" onclick="viewDetails('${doc.id}')">View Details</button>
-              </div>
-            `;
-            productsGrid.appendChild(card);
-            setTimeout(() => card.classList.add("visible"), 100);
-          });
+          if (snapshot.empty) {
+            // Fallback to hardcoded products
+            const fallbackProducts = [
+              {
+                productId: "girls_bag",
+                name: "Girls bag",
+                price: 300,
+                originalPrice: 1000,
+                discount: "70%",
+                imageUrl: "https://images.unsplash.com/photo-1628755126578-4e0a683d7b0d?q=80&w=1500",
+                sourceLocation: "KPHB",
+                brand: "peilijia",
+                description: "this bag is made in china and it a very good product then we never see use and test",
+                rating: 0,
+                ratingsCount: 0,
+                delivery: { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: "10 days" },
+                offers: { bank: "", cashback: "", partner: "" },
+                specs: { brand: "peilijia", color: "", dimensions: "", finish: "", material: "", occasion: "", specialFeature: "good", theme: "" }
+              },
+              {
+                productId: "blue",
+                name: "blue",
+                price: 100,
+                originalPrice: 200,
+                discount: "50%",
+                imageUrl: "https://i.ibb.co/zTYyC9N/th.jpg",
+                sourceLocation: "Charminar",
+                brand: "tshirt",
+                description: "best for the children",
+                rating: 4,
+                ratingsCount: 0,
+                delivery: { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: "10 days" },
+                offers: { bank: "", cashback: "", partner: "" },
+                specs: { brand: "tshirt", color: "", dimensions: "", finish: "", material: "", occasion: "", specialFeature: "good", theme: "" }
+              },
+              {
+                productId: "shows",
+                name: "shows",
+                price: 500,
+                originalPrice: 700,
+                discount: "29%",
+                imageUrl: "https://images.unsplash.com/photo-1605518216938-7c31b7b14a91?q=80&w=1500",
+                sourceLocation: "KPHB",
+                brand: "Footwear",
+                description: "good and strong",
+                rating: 0,
+                ratingsCount: 0,
+                delivery: { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: "10 days" },
+                offers: { bank: "", cashback: "", partner: "" },
+                specs: { brand: "Footwear", color: "", dimensions: "", finish: "", material: "", occasion: "", specialFeature: "good", theme: "" }
+              }
+            ];
+            fallbackProducts.forEach((product) => {
+              const card = createProductCard(product);
+              productsGrid.appendChild(card);
+            });
+          } else {
+            snapshot.forEach((doc) => {
+              const product = { productId: doc.id, ...doc.data() };
+              const card = createProductCard(product);
+              productsGrid.appendChild(card);
+            });
+          }
+          observeCards();
+          toggleLoadingSpinner(false);
         }, (error) => {
           console.error("Error fetching products:", error.message);
+          alert("Failed to load products: " + error.message);
+          toggleLoadingSpinner(false);
         });
       } catch (error) {
         console.error("Error querying products:", error.message);
+        alert("Failed to load products: " + error.message);
+        toggleLoadingSpinner(false);
       }
     };
 
+    // Create Product Card
+    function createProductCard(product) {
+      const card = document.createElement("div");
+      card.className = "card lazy-load";
+      card.innerHTML = `
+        <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" alt="${sanitizeHTML(product.name)}" class="w-full h-56 object-cover rounded lazy-img">
+        <h3 class="text-lg font-semibold mt-2">${sanitizeHTML(product.name)}</h3>
+        <p class="text-sm text-gray-600">Brand: ${sanitizeHTML(product.specs?.brand || "Unknown")}</p>
+        <p class="text-sm text-gray-600">₹${product.price.toFixed(2)} <span class="line-through text-gray-400">₹${product.originalPrice.toFixed(2)}</span> (${product.discount})</p>
+        <p class="text-sm text-yellow-500">⭐ ${product.rating.toFixed(1)} (${product.ratingsCount} ratings)</p>
+        <p class="text-sm text-green-600">${product.delivery.freeDelivery ? "✅ Free Delivery" : product.delivery.payOnDelivery ? "Pay on Delivery" : ""}</p>
+        <p class="text-sm text-gray-600">${sanitizeHTML(product.description || "")}</p>
+        <p class="text-sm text-gray-500">📍 ${sanitizeHTML(product.sourceLocation || "Unknown")}</p>
+        <div class="flex space-x-2 mt-2">
+          <button class="btn" onclick="addToCart('${product.productId}', '${sanitizeHTML(product.name)}', ${product.price}, '${sanitizeHTML(product.sourceLocation)}', '${sanitizeHTML(product.specs?.brand || "Unknown")}', '${sanitizeHTML(product.description || "")}', '${product.discount}', '${product.imageUrl}', ${product.originalPrice}, ${product.rating}, ${product.ratingsCount}, ${JSON.stringify(product.delivery)}, ${JSON.stringify(product.offers)}, ${JSON.stringify(product.specs)})">Add to Cart</button>
+          <button class="btn-secondary" onclick="viewDetails('${product.productId}')">View Details</button>
+        </div>
+      `;
+      return card;
+    }
+
+    // Sanitize HTML to prevent XSS
+    function sanitizeHTML(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Lazy Load Images with IntersectionObserver
+    function observeCards() {
+      const cards = document.querySelectorAll(".lazy-load");
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const card = entry.target;
+            card.classList.add("visible");
+            const img = card.querySelector(".lazy-img");
+            if (img && img.dataset.src) {
+              img.src = img.dataset.src;
+              img.removeAttribute("data-src");
+            }
+            observer.unobserve(card);
+          }
+        });
+      }, { rootMargin: "100px" });
+      cards.forEach(card => observer.observe(card));
+    }
+
     // Filter Category
     window.filterCategory = (category) => {
-      window.location.href = `https://localworkers.xyz/products.html?category=${encodeURIComponent(category)}`;
+      window.location.href = `products.html?category=${encodeURIComponent(category)}`;
     };
 
     // Add to Cart
@@ -750,8 +853,10 @@
           timestamp: new Date()
         }).then(() => {
           console.log("Added to cart:", name);
+          alert("Added to cart: " + name);
         }).catch((error) => {
           console.error("Error adding to cart:", error.message);
+          alert("Error adding to cart: " + error.message);
         });
       } else {
         let cart = JSON.parse(localStorage.getItem("cart") || "{}");
@@ -775,13 +880,14 @@
         };
         localStorage.setItem("cart", JSON.stringify(cart));
         console.log("Added to localStorage cart:", name);
+        alert("Added to cart: " + name);
       }
       updateCartCount();
     };
 
     // View Details
     window.viewDetails = (productId) => {
-      window.location.href = `https://sunny1451.github.io/myechoshop/mainproduct.html?id=${productId}`;
+      window.location.href = `mainproduct.html?id=${productId}`;
     };
 
     // Update Cart Count
@@ -818,13 +924,14 @@
           div.className = "p-2 hover:bg-gray-100 cursor-pointer";
           div.textContent = product.name;
           div.onclick = () => {
-            window.location.href = `https://sunny1451.github.io/myechoshop/mainproduct.html?id=${doc.id}`;
+            window.location.href = `mainproduct.html?id=${doc.id}`;
           };
           suggestions.appendChild(div);
         });
         suggestions.classList.remove("hidden");
       } catch (error) {
         console.error("Error searching products:", error.message);
+        alert("Error searching products: " + error.message);
       }
     });
 
@@ -836,7 +943,7 @@
         onSnapshot(q, (snapshot) => {
           swiperWrapper.innerHTML = "";
           if (snapshot.empty) {
-            // Fallback banners if Firebase returns no data
+            console.warn("No banners found in Firestore, using fallback banners");
             const fallbackBanners = [
               { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+1', title: 'Up to 70% off | Fashion Deals', category: 'Fashion' },
               { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+2', title: 'Buy 2, Save ₹150', category: 'Electronics' }
@@ -856,7 +963,7 @@
           } else {
             snapshot.forEach((doc) => {
               const banner = doc.data();
-              console.log("Fetched banner:", banner); // Debugging
+              console.log("Fetched banner:", banner);
               const slide = document.createElement("div");
               slide.className = "swiper-slide banner";
               slide.style.backgroundImage = `url('${banner.imageUrl || 'https://via.placeholder.com/1200x300?text=Fallback+Banner'}')`;
@@ -872,7 +979,7 @@
           swiper.update();
         }, (error) => {
           console.error("Error fetching banners:", error.message);
-          // Fallback banners on error
+          alert("Failed to load banners: " + error.message);
           const fallbackBanners = [
             { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+1', title: 'Up to 70% off | Fashion Deals', category: 'Fashion' },
             { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+2', title: 'Buy 2, Save ₹150', category: 'Electronics' }
@@ -893,10 +1000,29 @@
         });
       } catch (error) {
         console.error("Error querying banners:", error.message);
+        alert("Failed to load banners: " + error.message);
+        const fallbackBanners = [
+          { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+1', title: 'Up to 70% off | Fashion Deals', category: 'Fashion' },
+          { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+2', title: 'Buy 2, Save ₹150', category: 'Electronics' }
+        ];
+        fallbackBanners.forEach((banner) => {
+          const slide = document.createElement("div");
+          slide.className = "swiper-slide banner";
+          slide.style.backgroundImage = `url('${banner.imageUrl}')`;
+          slide.innerHTML = `
+            <div class="banner-overlay absolute bottom-0 left-0 p-4">
+              <h2 class="text-xl font-semibold">${banner.title}</h2>
+              <button class="btn mt-2" onclick="filterCategory('${banner.category}')">Shop Now</button>
+            </div>
+          `;
+          swiperWrapper.appendChild(slide);
+        });
+        swiper.update();
       }
     };
 
     // Initialize
+    toggleLoadingSpinner(true);
     loadProducts();
     loadBanners();
     updateCartCount();
