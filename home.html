@@ -181,7 +181,7 @@
       transform: translateY(30px);
       width: 100%;
       max-width: 350px;
-      margin: 0 auto;
+      margin: 0;
       border: 1px solid #E5E7E7;
     }
 
@@ -261,8 +261,8 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(300px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 0;
       padding: 2rem;
       justify-items: center;
     }
@@ -403,7 +403,7 @@
         max-width: 350px;
       }
       .grid {
-        grid-template-columns: repeat(2, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       }
     }
   </style>
@@ -508,6 +508,20 @@
 
   <!-- Featured Products Grid -->
   <section class="grid" role="region" aria-label="Featured products">
+    <div class="card lazy-load">
+      <img src="https://images.unsplash.com/photo-1628755126578-4e0a683d7b0d?q=80&w=1500" alt="Girls bag" class="w-full h-56 object-cover rounded">
+      <h3 class="text-lg font-semibold mt-2">Girls bag</h3>
+      <p class="text-sm text-gray-600">Brand: peilijia</p>
+      <p class="text-sm text-gray-600">₹300 <span class="line-through text-gray-400">₹1000</span> (70% off)</p>
+      <p class="text-sm text-yellow-500">☆ 0 (0 ratings)</p>
+      <p class="text-sm text-green-600">✅ Free Delivery</p>
+      <p class="text-sm text-gray-600">this bag is made in china and it a very good product then we never see use and test</p>
+      <p class="text-sm text-gray-500">📍 KPHB</p>
+      <div class="flex space-x-2 mt-2">
+        <button class="btn" onclick="addToCart('girls_bag', 'Girls bag', 300, 'KPHB', 'peilijia', 'this bag is made in china and it a very good product then we never see use and test', '70%', 'https://images.unsplash.com/photo-1628755126578-4e0a683d7b0d?q=80&w=1500', 1000, 0, 0, { amazonDelivered: false, freeDelivery: true, payOnDelivery: false, returnable: '10 days' }, { bank: '', cashback: '', partner: '' }, { brand: 'peilijia', color: '', dimensions: '', finish: '', material: '', occasion: '', specialFeature: 'good', theme: '' })">Add to Cart</button>
+        <button class="btn-secondary" onclick="viewDetails('girls_bag')">View Details</button>
+      </div>
+    </div>
     <div class="card lazy-load">
       <img src="https://i.ibb.co/zTYyC9N/th.jpg" alt="blue" class="w-full h-56 object-cover rounded">
       <h3 class="text-lg font-semibold mt-2">blue</h3>
