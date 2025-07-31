@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1E40AF">
+  <meta name="description" content="Echo Shop - Manage your cart and proceed to secure checkout.">
+  <meta name="keywords" content="online shopping, cart, checkout, Echo Shop, India">
+  <meta name="robots" content="index, follow">
+  <title>Echo Shop - Your Cart</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <style>
+    :root {
+      --primary-dark: #1A252F;
+      --primary-accent: #1E40AF;
+      --accent-hover: #1E3A8A;
+      --secondary-accent: #3B82F6;
+      --light-bg: #FFFFFF;
+      --text-primary: #0F1111;
+      --text-secondary: #4B5563;
+      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --gradient-primary: linear-gradient(135deg, #1A252F, #2A3F5F);
+      --gradient-accent: linear-gradient(135deg, #1E40AF, #3B82F6);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-primary);
+      margin: 0;
+      overflow-x: hidden;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    .navbar {
+      background: var(--gradient-primary);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-base);
+      height: 80px;
+    }
+
+    .navbar-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #FFF;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-logo:hover {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      color: #FFF;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--secondary-accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover {
+      color: var(--secondary-accent);
+    }
+
+    .navbar-btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow-base);
+    }
+
+    .navbar-btn:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .search-bar {
+      display: flex;
+      width: 35%;
+      max-width: 400px;
+      background-color: #FFF;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-base);
+      height: 45px;
+      border: 2px solid var(--primary-accent);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .search-bar:focus-within {
+      box-shadow: 0 0 10px rgba(30, 64, 175, 0.3);
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 0.8rem 1rem 0.8rem 2.5rem;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>') no-repeat 0.8rem center;
+    }
+
+    .search-bar button {
+      background: var(--gradient-accent);
+      color: #FFF;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+    }
+
+    .cart-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 3rem;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      background: #FFF;
+      border-radius: 12px;
+      box-shadow: var(--shadow-base);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: transform 0.3s ease;
+    }
+
+    .cart-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .cart-item img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 1rem;
+    }
+
+    .cart-details {
+      flex: 1;
+    }
+
+    .cart-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .cart-controls button {
+      background: #E5E7EB;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+    }
+
+    .cart-controls button:hover {
+      background: #D1D5DB;
+    }
+
+    .cart-controls .remove {
+      color: #EF4444;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .cart-controls .remove:hover {
+      text-decoration: underline;
+    }
+
+    .coupon-section {
+      background: #FFF;
+      border-radius: 12px;
+      box-shadow: var(--shadow-base);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .coupon-section input {
+      border: 1px solid #E5E7EB;
+      padding: 0.8rem;
+      border-radius: 8px;
+      flex: 1;
+      font-size: 0.9rem;
+    }
+
+    .coupon-section button {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease;
+    }
+
+    .coupon-section button:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+    }
+
+    .cart-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      background: #FFF;
+      border-radius: 12px;
+      box-shadow: var(--shadow-base);
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .cart-summary h3, .delivery-info h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, background 0.3s ease;
+      width: 100%;
+      margin: 0.5rem 0;
+      animation: pulse 2s infinite;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+    }
+
+    .btn-continue {
+      background: #6B7280;
+      color: #FFF;
+    }
+
+    .btn-continue:hover {
+      background: #4B5563;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 2rem;
+      background: #FFF;
+      border-radius: 12px;
+      box-shadow: var(--shadow-base);
+    }
+
+    .trust-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .trust-badges img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10B981;
+      color: #FFF;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .error-message {
+      background: #FEE2E2;
+      color: #B91C1C;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      margin: 2rem auto;
+      max-width: 600px;
+    }
+
+    .footer {
+      background: var(--primary-dark);
+      color: #FFF;
+      padding: 2.5rem 3rem;
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--secondary-accent);
+      text-decoration: none;
+      margin: 0 1rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #FFF;
+    }
+
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        padding: 1rem;
+        height: auto;
+        gap: 1rem;
+      }
+      .nav-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .search-bar {
+        width: 100%;
+        height: 40px;
+      }
+      .cart-container {
+        padding: 1rem;
+      }
+      .cart-summary {
+        grid-template-columns: 1fr;
+      }
+      .coupon-section {
+        flex-direction: column;
+      }
+      .coupon-section input {
+        width: 100%;
+      }
+      .btn-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem;
+        background: #FFF;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .cart-summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-logo">Echo Shop</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="deals.html">Deals</a>
+      <a href="orders.html">Orders</a>
+      <a href="profile.html">Account</a>
+      <a href="#" id="logout">Logout</a>
+    </div>
+    <div class="search-bar flex items-center">
+      <input id="search-bar" type="text" placeholder="Search Echo Shop..." class="text-gray-700 focus:ring-0" aria-label="Search products" autocomplete="off">
+      <button aria-label="Search">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </button>
+      <div id="search-suggestions" class="absolute w-full bg-white shadow-lg rounded-b-md hidden" role="listbox"></div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button id="auth-status" class="navbar-btn" role="link" tabindex="0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        Hello, Sign In
+      </button>
+      <a href="cart.html" class="navbar-btn" aria-label="View cart">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        Cart <span id="cart-count" class="ml-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Error Message for Unsupported Protocol -->
+  <div id="error-message" class="error-message hidden">
+    This page must be served over http or https. Please run a local server (e.g., `npx serve` or `python -m http.server 8000`) and access via http://localhost.
+  </div>
+
+  <!-- Cart Section -->
+  <section class="cart-container" role="region" aria-label="Shopping cart">
+    <h1 class="text-2xl font-semibold mb-4">✅ You have <span id="cart-item-count">0</span> items in your cart.</h1>
+    <div id="cart-items" data-aos="fade-up"></div>
+    <div id="empty-cart" class="empty-cart hidden">
+      <p class="text-lg">Your cart is empty 🛒</p>
+      <a href="products.html" class="btn btn-continue mt-4">Continue Shopping</a>
+    </div>
+    <div class="coupon-section" data-aos="fade-up">
+      <input type="text" id="coupon-code" placeholder="Enter Coupon Code" class="focus:ring-0">
+      <button onclick="applyCoupon()">Apply Coupon</button>
+    </div>
+    <div class="cart-summary" data-aos="fade-up">
+      <div>
+        <h3>Cart Summary</h3>
+        <p>Subtotal (<span id="summary-item-count">0</span> items): <span id="subtotal">₹0.00</span></p>
+        <p>Shipping Charges: <span id="shipping">₹0.00</span></p>
+        <p>Discounts: <span id="discount">₹0.00</span></p>
+        <p>Estimated Tax (8%): <span id="tax">₹0.00</span></p>
+        <p class="font-bold">Grand Total: <span id="grand-total">₹0.00</span></p>
+      </div>
+      <div class="delivery-info">
+        <h3>Delivery Info</h3>
+        <p>Delivered to: <span id="delivery-address">Sunny, Hyderabad</span></p>
+        <button class="text-blue-600 text-sm hover:underline" onclick="changeAddress()">📍 Change Address</button>
+        <p class="text-sm text-green-600 mt-2" id="delivery-status">📦 Free Delivery ✅</p>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-4 mt-4 btn-fixed">
+      <button class="btn" onclick="placeOrder()">Proceed to Buy →</button>
+      <a href="products.html" class="btn btn-continue">Continue Shopping</a>
+    </div>
+    <div class="trust-badges">
+      <img src="https://whatismyipaddress.com/wp-content/uploads/ssl-image-1024x731.jpg?tr=w-40,h-40" alt="SSL Secure">
+      <img src="https://hostbillapp.com/appstore/payment_razorpay/images/logo.png?tr=w-40,h-40" alt="Razorpay">
+      <img src="https://logodix.com/logo/1645140.png?tr=w-40,h-40" alt="UPI">
+      <p class="text-sm">Payment through Razorpay/UPI/Pay on Delivery</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="text-center">
+      <p class="text-lg font-poppins">Echo Shop</p>
+      <p class="text-sm">Your one-stop online store for electronics, fashion, beauty, and more.</p>
+      <div class="mt-2">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="terms.html">Return Policy</a>
+        <a href="payment.html">Payment Methods</a>
+      </div>
+      <div class="mt-2">
+        <a href="#" class="inline-block mx-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3V2z"></path></svg></a>
+        <a href="#" class="inline-block mx-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path></svg></a>
+      </div>
+      <p class="mt-2">Support: +91-1234567890 | <a href="mailto:support@echoshop.in">support@echoshop.in</a></p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">Action Completed!</div>
+
+  <!-- Firebase and JavaScript -->
+  <script type="module">
+    // Check Environment Early
+    if (!['http:', 'https:'].includes(window.location.protocol)) {
+      document.getElementById('error-message').textContent = 'This page must be served over http or https. Please run a local server (e.g., `npx serve` or `python -m http.server 8000`) and access via http://localhost.';
+      document.getElementById('error-message').classList.remove('hidden');
+      throw new Error('Unsupported protocol. Use http or https.');
+    }
+
+    if (!window.localStorage) {
+      document.getElementById('error-message').textContent = 'Web storage is not enabled in this browser.';
+      document.getElementById('error-message').classList.remove('hidden');
+      throw new Error('Web storage is not enabled.');
+    }
+
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, onSnapshot, deleteDoc, setDoc, getDocs, query, limit, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS",
+      databaseURL: "https://myechostore.firebaseio.com"
+    };
+
+    // Initialize Firebase
+    let app, db, auth, analytics, provider;
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+      analytics = getAnalytics(app);
+      provider = new GoogleAuthProvider();
+    } catch (error) {
+      console.warn("Failed to initialize Firebase:", error.message);
+      showToast(`Firebase initialization failed: ${error.message}`, false);
+      return;
+    }
+
+    // Initialize AOS
+    AOS.init({ duration: 800, once: true });
+
+    // Load Cart Items
+    const loadCartItems = async () => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
+        return;
+      }
+      const user = auth.currentUser;
+      const cartItemsDiv = document.getElementById('cart-items');
+      const emptyCartDiv = document.getElementById('empty-cart');
+      if (!user) {
+        cartItemsDiv.innerHTML = '';
+        emptyCartDiv.classList.remove('hidden');
+        document.getElementById('cart-item-count').textContent = '0';
+        updateCartSummary([]);
+        return;
+      }
+      onSnapshot(collection(db, "carts", user.uid, "items"), async (snapshot) => {
+        cartItemsDiv.innerHTML = '';
+        const items = [];
+        if (snapshot.empty) {
+          emptyCartDiv.classList.remove('hidden');
+          document.getElementById('cart-item-count').textContent = '0';
+          updateCartSummary([]);
+          return;
+        }
+        for (const doc of snapshot.docs) {
+          const item = { id: doc.id, ...doc.data() };
+          // Fetch product details for verification
+          const productDoc = await getDoc(doc(db, "products", item.productId));
+          if (productDoc.exists()) {
+            item.imageUrl = productDoc.data().imageUrl || item.imageUrl;
+            item.name = productDoc.data().name || item.name;
+            item.brand = productDoc.data().brand || item.brand;
+            item.price = productDoc.data().price || item.price;
+            item.originalPrice = productDoc.data().originalPrice || item.originalPrice;
+            item.discount = productDoc.data().discount || item.discount;
+            item.delivery = productDoc.data().delivery || item.delivery;
+          }
+          items.push(item);
+          const cartItem = document.createElement('div');
+          cartItem.className = 'cart-item';
+          cartItem.setAttribute('data-aos', 'fade-up');
+          cartItem.innerHTML = `
+            <img src="${item.imageUrl}?tr=w-120,h-120,q-80" alt="${item.name}" />
+            <div class="cart-details">
+              <h3 class="text-lg font-semibold">${item.name}</h3>
+              <p class="text-sm">Brand: ${item.brand || 'N/A'}</p>
+              <p class="text-sm">User: ${item.userEmail}</p>
+              <p class="text-sm">Price: ₹${item.price.toFixed(2)}</p>
+              <p class="text-sm">Offer: ${item.discount || 'None'}</p>
+              <p class="text-sm">${item.delivery.freeDelivery ? 'Free Delivery ✅' : 'Shipping: ₹50'}</p>
+              <p class="text-sm">Location: ${item.sourceLocation || 'N/A'}</p>
+              <p class="text-sm">Description: ${item.description || 'N/A'}</p>
+              <div class="cart-controls">
+                <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                <span>${item.quantity}</span>
+                <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                <a href="#" class="remove" onclick="removeItem('${item.id}')">Remove ❌</a>
+              </div>
+            </div>
+            <div class="price">₹${(item.price * item.quantity).toFixed(2)}</div>
+          `;
+          cartItemsDiv.appendChild(cartItem);
+        }
+        emptyCartDiv.classList.add('hidden');
+        document.getElementById('cart-item-count').textContent = items.length;
+        updateCartSummary(items);
+        updateCartCount();
+        AOS.refresh();
+      }, (error) => {
+        console.warn("Error loading cart:", error.message);
+        showToast(`Error loading cart: ${error.message}`, false);
+        cartItemsDiv.innerHTML = '';
+        emptyCartDiv.classList.remove('hidden');
+        updateCartSummary([]);
+      });
+    };
+
+    // Update Quantity
+    window.updateQuantity = async (itemId, newQuantity) => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) {
+        showToast("Sign-in required to update cart.", false);
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+      if (newQuantity < 1) {
+        await removeItem(itemId);
+        return;
+      }
+      try {
+        const itemDoc = await getDoc(doc(db, "carts", user.uid, "items", itemId));
+        if (!itemDoc.exists()) {
+          showToast("Item not found in cart.", false);
+          return;
+        }
+        const productDoc = await getDoc(doc(db, "products", itemId));
+        if (productDoc.exists() && productDoc.data().stock < newQuantity) {
+          showToast("Requested quantity exceeds available stock.", false);
+          return;
+        }
+        await setDoc(doc(db, "carts", user.uid, "items", itemId), { quantity: newQuantity }, { merge: true });
+        showToast("Quantity updated!");
+      } catch (error) {
+        console.warn("Error updating quantity:", error.message);
+        showToast(`Error: ${error.message}`, false);
+      }
+    };
+
+    // Remove Item
+    window.removeItem = async (itemId) => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) {
+        showToast("Sign-in required to update cart.", false);
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+      try {
+        await deleteDoc(doc(db, "carts", user.uid, "items", itemId));
+        showToast("Item removed from cart!");
+      } catch (error) {
+        console.warn("Error removing item:", error.message);
+        showToast(`Error: ${error.message}`, false);
+      }
+    };
+
+    // Apply Coupon
+    let appliedCoupon = null;
+    window.applyCoupon = async () => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
+        return;
+      }
+      const couponCode = document.getElementById('coupon-code').value.trim().toUpperCase();
+      if (!couponCode) {
+        showToast("Please enter a coupon code.", false);
+        return;
+      }
+      try {
+        const couponDoc = await getDoc(doc(db, "coupons", couponCode));
+        if (!couponDoc.exists()) {
+          showToast("Invalid coupon code.", false);
+          return;
+        }
+        const coupon = couponDoc.data();
+        if (coupon.validUntil && coupon.validUntil.toDate() < new Date()) {
+          showToast("Coupon has expired.", false);
+          return;
+        }
+        const snapshot = await getDocs(collection(db, "carts", auth.currentUser.uid, "items"));
+        let subtotal = 0;
+        snapshot.forEach(doc => {
+          const item = doc.data();
+          subtotal += item.price * item.quantity;
+        });
+        if (subtotal < coupon.minCartValue) {
+          showToast(`Minimum cart value of ₹${coupon.minCartValue} required.`, false);
+          return;
+        }
+        appliedCoupon = coupon;
+        showToast("Coupon applied successfully!");
+        updateCartSummary(null);
+      } catch (error) {
+        console.warn("Error applying coupon:", error.message);
+        showToast(`Error: ${error.message}`, false);
+      }
+    };
+
+    // Update Cart Summary
+    const updateCartSummary = async (items = null) => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        return;
+      }
+      if (!items) {
+        const snapshot = await getDocs(collection(db, "carts", auth.currentUser?.uid || "anonymous", "items"));
+        items = [];
+        for (const doc of snapshot.docs) {
+          const item = { id: doc.id, ...doc.data() };
+          const productDoc = await getDoc(doc(db, "products", item.productId));
+          if (productDoc.exists()) {
+            item.imageUrl = productDoc.data().imageUrl || item.imageUrl;
+            item.name = productDoc.data().name || item.name;
+            item.brand = productDoc.data().brand || item.brand;
+            item.price = productDoc.data().price || item.price;
+            item.originalPrice = productDoc.data().originalPrice || item.originalPrice;
+            item.discount = productDoc.data().discount || item.discount;
+            item.delivery = productDoc.data().delivery || item.delivery;
+          }
+          items.push(item);
+        }
+      }
+      let subtotal = 0;
+      let discount = 0;
+      let shipping = 0;
+      items.forEach(item => {
+        subtotal += item.price * item.quantity;
+        if (item.discount) {
+          const discountPercent = parseFloat(item.discount.replace('%', '')) / 100;
+          discount += (item.originalPrice - item.price) * item.quantity;
+        }
+        if (!item.delivery.freeDelivery) {
+          shipping += 50;
+        }
+      });
+      if (appliedCoupon) {
+        if (appliedCoupon.discountType === 'percentage') {
+          discount += subtotal * (appliedCoupon.discount / 100);
+        } else {
+          discount += appliedCoupon.discount;
+        }
+      }
+      const tax = subtotal * 0.08;
+      const grandTotal = subtotal + tax + shipping - discount;
+      document.getElementById('summary-item-count').textContent = items.length;
+      document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+      document.getElementById('shipping').textContent = `₹${shipping.toFixed(2)}`;
+      document.getElementById('discount').textContent = `-₹${discount.toFixed(2)}`;
+      document.getElementById('tax').textContent = `₹${tax.toFixed(2)}`;
+      document.getElementById('grand-total').textContent = `₹${grandTotal.toFixed(2)}`;
+      document.getElementById('delivery-status').textContent = shipping === 0 ? '📦 Free Delivery ✅' : '📦 Shipping Applied';
+      gsap.from('.cart-summary', { opacity: 0, y: 20, duration: 0.5 });
+    };
+
+    // Place Order
+    window.placeOrder = async () => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) {
+        showToast("Sign-in required to proceed to checkout.", false);
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+      try {
+        const snapshot = await getDocs(collection(db, "carts", user.uid, "items"));
+        const items = [];
+        for (const doc of snapshot.docs) {
+          const item = { id: doc.id, ...doc.data() };
+          const productDoc = await getDoc(doc(db, "products", item.productId));
+          if (productDoc.exists()) {
+            item.imageUrl = productDoc.data().imageUrl || item.imageUrl;
+            item.name = productDoc.data().name || item.name;
+            item.brand = productDoc.data().brand || item.brand;
+            item.price = productDoc.data().price || item.price;
+            item.originalPrice = productDoc.data().originalPrice || item.originalPrice;
+            item.discount = productDoc.data().discount || item.discount;
+            item.delivery = productDoc.data().delivery || item.delivery;
+          }
+          items.push(item);
+        }
+        if (items.length === 0) {
+          showToast("Your cart is empty.", false);
+          return;
+        }
+        let subtotal = 0;
+        let discount = 0;
+        let shipping = 0;
+        items.forEach(item => {
+          subtotal += item.price * item.quantity;
+          if (item.discount) {
+            const discountPercent = parseFloat(item.discount.replace('%', '')) / 100;
+            discount += (item.originalPrice - item.price) * item.quantity;
+          }
+          if (!item.delivery.freeDelivery) {
+            shipping += 50;
+          }
+        });
+        if (appliedCoupon) {
+          if (appliedCoupon.discountType === 'percentage') {
+            discount += subtotal * (appliedCoupon.discount / 100);
+          } else {
+            discount += appliedCoupon.discount;
+          }
+        }
+        const tax = subtotal * 0.08;
+        const grandTotal = subtotal + tax + shipping - discount;
+        const orderData = {
+          userId: user.uid,
+          userEmail: user.email,
+          items,
+          subtotal,
+          discount,
+          tax,
+          shipping,
+          totalPrice: grandTotal,
+          orderStatus: 'pending',
+          shippingAddress: document.getElementById('delivery-address').textContent,
+          coupon: appliedCoupon ? appliedCoupon.code : null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        // Save to orders collection
+        await addDoc(collection(db, "orders"), orderData);
+        // Clear cart
+        for (const item of snapshot.docs) {
+          await deleteDoc(doc(db, "carts", user.uid, "items", item.id));
+        }
+        showToast("Order placed successfully!");
+        // Prepare checkout data for compatibility with existing checkout.html
+        const checkoutData = {
+          items,
+          subtotal,
+          discount,
+          tax,
+          shipping,
+          total: grandTotal,
+          shippingAddress: document.getElementById('delivery-address').textContent,
+          coupon: appliedCoupon ? appliedCoupon.code : null
+        };
+        localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+        setTimeout(() => {
+          window.location.href = 'checkout.html';
+        }, 1500);
+      } catch (error) {
+        console.warn("Error placing order:", error.message);
+        showToast(`Error: ${error.message}`, false);
+      }
+    };
+
+    // Change Address
+    window.changeAddress = async () => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) {
+        showToast("Sign-in required to update address.", false);
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+      const newAddress = prompt("Enter new delivery address:");
+      if (newAddress) {
+        try {
+          await setDoc(doc(db, "users", user.uid), { address: newAddress }, { merge: true });
+          document.getElementById('delivery-address').textContent = newAddress;
+          showToast("Address updated!");
+        } catch (error) {
+          console.warn("Error updating address:", error.message);
+          showToast(`Error: ${error.message}`, false);
+        }
+      }
+    };
+
+    // Show Toast
+    const showToast = (message, success = true) => {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = success ? '#10B981' : '#EF4444';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    };
+
+    // Update Cart Count
+    const updateCartCount = () => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        return;
+      }
+      const user = auth.currentUser;
+      if (user) {
+        onSnapshot(collection(db, "carts", user.uid, "items"), (snapshot) => {
+          document.getElementById("cart-count").textContent = snapshot.size;
+        }, (error) => {
+          console.warn("Error updating cart count:", error.message);
+        });
+      } else {
+        const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+        const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById("cart-count").textContent = count;
+      }
+    };
+
+    // Authentication
+    onAuthStateChanged(auth, async (user) => {
+      const authStatus = document.getElementById("auth-status");
+      const logoutLink = document.getElementById("logout");
+      if (user) {
+        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, ${user.email || "User"}!`;
+        authStatus.onclick = () => window.location.href = "profile.html";
+        logoutLink.classList.remove('hidden');
+        logoutLink.onclick = async () => {
+          try {
+            await signOut(auth);
+            showToast("Logged out successfully!");
+            window.location.reload();
+          } catch (error) {
+            console.warn("Error logging out:", error.message);
+            showToast(`Error: ${error.message}`, false);
+          }
+        };
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists() && userDoc.data().address) {
+            document.getElementById('delivery-address').textContent = userDoc.data().address;
+          }
+        } catch (error) {
+          console.warn("Error fetching user address:", error.message);
+        }
+      } else {
+        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, Sign In`;
+        authStatus.onclick = () => signInWithRedirect(auth, provider);
+        logoutLink.classList.add('hidden');
+        document.getElementById('cart-items').innerHTML = '';
+        document.getElementById('empty-cart').classList.remove('hidden');
+        document.getElementById('cart-item-count').textContent = '0';
+        updateCartSummary([]);
+      }
+      loadCartItems();
+      updateCartCount();
+    });
+
+    // Handle Redirect Result
+    getRedirectResult(auth).then((result) => {
+      if (result) {
+        showToast("Signed in successfully!");
+        loadCartItems();
+        updateCartCount();
+      }
+    }).catch((error) => {
+      console.warn("Error handling redirect result:", error.message);
+      showToast(`Sign-in error: ${error.message}`, false);
+    });
+
+    // Search Functionality
+    document.getElementById("search-bar").addEventListener("input", async (e) => {
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        return;
+      }
+      const searchTerm = e.target.value.toLowerCase();
+      const suggestions = document.getElementById("search-suggestions");
+      if (searchTerm.length < 3) {
+        suggestions.classList.add("hidden");
+        return;
+      }
+      try {
+        const q = query(collection(db, "products"), limit(5));
+        const snapshot = await getDocs(q);
+        suggestions.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const product = doc.data();
+          if (product.name.toLowerCase().includes(searchTerm)) {
+            const div = document.createElement("div");
+            div.className = "p-2 hover:bg-gray-100 cursor-pointer";
+            div.textContent = product.name;
+            div.onclick = () => {
+              window.location.href = `https://sunny1451.github.io/myechoshop/mainproduct.html?id=${doc.id}`;
+            };
+            suggestions.appendChild(div);
+          }
+        });
+        suggestions.classList.remove('hidden');
+      } catch (error) {
+        console.warn("Error searching products:", error.message);
+        showToast(`Search error: ${error.message}`, false);
+      }
+    });
+
+    // Button Hover Animations
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        gsap.to(btn, { scale: 1.05, duration: 0.3, boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)' });
+      });
+      btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, { scale: 1, duration: 0.3, boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' });
+      });
+    });
+
+    // Initialize
+    loadCartItems();
+    updateCartCount();
+  </script>
+</body>
+</html>
