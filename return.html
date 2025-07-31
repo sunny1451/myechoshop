@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2e7d32">
+  <meta name="description" content="EchoShop Return & Refund Policy - Learn how to return items, get refunds, and understand our exchange policies.">
+  <meta name="keywords" content="EchoShop, return policy, refund policy, e-commerce India, customer support">
+  <meta name="robots" content="index, follow">
+  <title>EchoShop Return & Refund Policy</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --primary-dark: #212121;
+      --primary-accent: #2e7d32;
+      --accent-highlight: #fdd835;
+      --light-bg: #ffffff;
+      --text-primary: #0f1111;
+      --text-secondary: #4b5563;
+      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    .navbar {
+      background: #0F1111; /* Black like Amazon */
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-base);
+      height: 80px;
+    }
+    .navbar-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-links a {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--accent-highlight);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .hero {
+      position: relative;
+      height: 400px;
+      background: var(--primary-dark);
+      color: #fff;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .section {
+      padding: 3rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .return-section {
+      margin-bottom: 2rem;
+    }
+    .return-section h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .return-section ul {
+      list-style-type: disc;
+      margin-left: 1.5rem;
+    }
+    .updated {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 1rem 0;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .table th, .table td {
+      border: 1px solid #e5e7eb;
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .table th {
+      background: #f9fafb;
+      font-weight: 600;
+    }
+    .icon {
+      transition: transform 0.2s ease;
+    }
+    .icon:hover {
+      transform: scale(1.1);
+    }
+    .footer {
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+    }
+    .footer a {
+      color: var(--accent-highlight);
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+    @media print {
+      .navbar, .footer {
+        display: none;
+      }
+      .hero {
+        height: auto;
+        padding: 1rem;
+      }
+      .section {
+        padding: 1rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        height: auto;
+        gap: 1rem;
+      }
+      .nav-links {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero {
+        height: 300px;
+      }
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+      .return-section {
+        margin-bottom: 1.5rem;
+      }
+      .table {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-logo">EchoShop</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Categories</a>
+      <a href="deals.html">Deals</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" data-aos="fade-in">
+    <h1 class="text-4xl font-poppins font-bold">Return & Refund Policy</h1>
+    <p class="text-lg mt-2">Shop worry-free at EchoShop! We’ve made returns and refunds simple and hassle-free.</p>
+  </section>
+
+  <!-- Last Updated -->
+  <p class="updated" data-aos="fade-up">Last updated: July 31, 2025</p>
+
+  <!-- Return Policy Sections -->
+  <section class="section">
+    <!-- Eligibility for Returns -->
+    <div class="return-section" data-aos="fade-up">
+      <h3><i data-lucide="check-circle" class="icon"></i> 1. Eligibility for Returns</h3>
+      <p>Products are eligible for return within 7 to 10 days from delivery. Items must be:</p>
+      <ul>
+        <li>Unused and in original condition</li>
+        <li>In original packaging with all tags intact</li>
+        <li>Accompanied by proof of purchase (order ID or invoice)</li>
+      </ul>
+    </div>
+
+    <!-- How to Return an Item -->
+    <div class="return-section" data-aos="fade-up">
+      <h3><i data-lucide="truck" class="icon"></i> 2. How to Return an Item</h3>
+      <ol class="list-decimal ml-6">
+        <li>Go to "My Orders" in your EchoShop account</li>
+        <li>Click on the item you want to return</li>
+        <li>Select a return reason and upload a photo (optional)</li>
+        <li>Confirm pickup address</li>
+        <li>Hand over the product to our delivery partner</li>
+      </ol>
+      <p class="mt-2">You'll receive SMS/email updates during each step.</p>
+    </div>
+
+    <!-- Non-returnable Items -->
+    <div class="return-section" data-aos="fade-up">
+      <h3><i data-lucide="x-circle" class="icon"></i> 3. Non-returnable Items</h3>
+      <p>The following items cannot be returned unless received damaged:</p>
+      <ul>
+        <li>Innerwear, personal care & hygiene products</li>
+        <li>Gift cards</li>
+        <li>Custom-made products</li>
+        <li>Digital goods</li>
+      </ul>
+    </div>
+
+    <!-- Refund Timeline -->
+    <div class="return-section" data-aos="fade-up">
+      <h3><i data-lucide="clock" class="icon"></i> 4. Refund Timeline</h3>
+      <p>All refunds are made to the original payment method used.</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Payment Mode</th>
+            <th>Refund Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>UPI</td>
+            <td>1–3 business days</td>
+          </tr>
+          <tr>
+            <td>Card/Netbanking</td>
+            <td>5–7 business days</td>
+          </tr>
+          <tr>
+            <td>Cash on Delivery</td>
+            <td>UPI refund link or bank transfer (5–7 days)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Exchange Policy -->
+    <div class="return-section" data-aos="fade-up">
+      <h3><i data-lucide="refresh-cw" class="icon"></i> 5. Exchange Policy</h3>
+      <ul>
+        <li>Exchanges are allowed only if the item is defective or wrongly delivered.</li>
+        <li>Exchange request can be raised in the My Orders section.</li>
+        <li>Exchange is subject to stock availability.</li>
+      </ul>
+    </div>
+
+    <!-- Need Help -->
+    <div class="return-section" data-aos="fade-up">
+      <h3><i data-lucide="help-circle" class="icon"></i> 6. Need Help?</h3>
+      <p>For returns or refund issues, reach out to our friendly support team:</p>
+      <ul>
+        <li><strong>Email:</strong> <a href="mailto:support@echoshop.in" class="text-blue-600">support@echoshop.in</a></li>
+        <li><strong>Phone:</strong> +91-98765-43210</li>
+        <li><strong>Address:</strong> Kukatpally, Hyderabad</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="text-lg font-poppins">EchoShop</p>
+    <p class="text-sm">Your one-stop online store for electronics, fashion, and more.</p>
+    <div class="mt-2">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="terms.html">Terms & Conditions</a>
+      <a href="return.html">Return Policy</a>
+      <a href="payment.html">Payment Methods</a>
+    </div>
+    <p class="text-sm mt-2">© 2025 EchoShop. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS",
+      databaseURL: "https://myechostore.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Initialize AOS
+    if (typeof AOS !== 'undefined') {
+      AOS.init({ duration: 800 });
+    } else {
+      console.warn('AOS library failed to load. Animations will not work.');
+    }
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Optional: Log Return Request (example for future integration)
+    const logReturnRequest = async (userId, orderId, reason, imageUrl = '') => {
+      try {
+        await addDoc(collection(db, 'returnRequests'), {
+          userId: userId || 'anonymous',
+          orderId,
+          reason,
+          imageUrl,
+          status: 'pending',
+          timestamp: new Date().toISOString()
+        });
+        console.log('Return request logged.');
+      } catch (error) {
+        console.error('Error logging return request:', error);
+      }
+    };
+
+    // Example: Call this during return submission (not implemented in this page)
+    // logReturnRequest('user123', 'order456', 'Defective item', 'https://ik.imagekit.io/echoshop/defect.jpg');
+  </script>
+</body>
+</html>

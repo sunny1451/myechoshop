@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2da44e">
+  <meta name="description" content="EchoShop Profile - Manage your personal details.">
+  <meta name="keywords" content="EchoShop, profile, user account">
+  <meta name="robots" content="index, follow">
+  <title>Profile - EchoShop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to bottom, #e0f7fa, #f6f8fa);
+      color: #24292f;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, #2da44e 0%, #218739 100%);
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      border-bottom: 2px solid #ffffff33;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      color: white;
+      font-size: 28px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 1.5px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-logo:hover {
+      transform: scale(1.03);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .nav-links a, .nav-links button {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover, .nav-links button:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 80px 20px 40px;
+    }
+
+    .profile-header {
+      background: linear-gradient(to right, #ffffff, #f9f9f9);
+      border: 1px solid #d8dee4;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .profile-picture-container {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .profile-picture {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #d8dee4;
+      transition: border-color 0.3s ease;
+    }
+
+    .profile-picture:hover {
+      border-color: #2da44e;
+    }
+
+    .profile-picture-placeholder {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #e1e4e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #d8dee4;
+      color: #586069;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .profile-picture-placeholder:hover {
+      background-color: #d0d7de;
+    }
+
+    .profile-action-mark {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: #2da44e;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .profile-action-mark:hover {
+      background-color: #218739;
+      transform: scale(1.1);
+    }
+
+    .profile-info h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a3c34;
+      margin-bottom: 10px;
+    }
+
+    .profile-info p {
+      font-size: 14px;
+      color: #586069;
+      margin-bottom: 5px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background-color: #2da44e;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #218739;
+      transform: scale(1.05);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background: linear-gradient(to bottom, #ffffff, #f9f9f9);
+      padding: 20px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+      border: 1px solid #e0e0e0;
+      position: relative;
+    }
+
+    .modal-content h3 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #2da44e;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #24292f;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #2da44e;
+      outline: none;
+      box-shadow: 0 0 5px rgba(45, 164, 78, 0.3);
+    }
+
+    .form-group input:invalid:not(:placeholder-shown) {
+      border-color: #dc3545;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .save-btn, .cancel-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .save-btn {
+      background-color: #2da44e;
+      color: white;
+    }
+
+    .save-btn:hover {
+      background-color: #218739;
+      transform: scale(1.05);
+    }
+
+    .cancel-btn {
+      background-color: #d0d7de;
+      color: #24292f;
+    }
+
+    .cancel-btn:hover {
+      background-color: #c0c7ce;
+      transform: scale(1.05);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #586069;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #dc3545;
+    }
+
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      font-size: 16px;
+      color: #586069;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 60px 15px 30px;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .modal-content {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">EchoShop</a>
+      <div class="nav-links">
+        <a href="search.html">Search</a>
+        <a href="cart.html">Cart</a>
+        <a href="orders.html">Orders</a>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="loading-spinner" id="loadingSpinner">Loading profile...</div>
+    <div class="profile-header" id="profileHeader" style="display: none;">
+      <div class="profile-picture-container" id="profilePictureContainer">
+        <img id="profilePicture" src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-picture" style="display: none;">
+        <div id="profilePicturePlaceholder" class="profile-picture-placeholder">Add Photo</div>
+        <span id="profileActionMark" class="profile-action-mark" style="display: none;">+</span>
+      </div>
+      <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
+      <div class="profile-info">
+        <h1 id="fullName">Loading...</h1>
+        <p id="email">Loading...</p>
+        <p id="phone">Loading...</p>
+        <button class="btn" id="editProfileBtn" style="display: none;" onclick="openEditModal()">Edit Profile</button>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeEditModal()">×</span>
+        <h3>Edit Profile</h3>
+        <div class="form-group">
+          <label for="editFullName">Full Name</label>
+          <input type="text" id="editFullName" required>
+        </div>
+        <div class="form-group">
+          <label for="editEmail">Email</label>
+          <input type="email" id="editEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="editPhone">Phone</label>
+          <input type="tel" id="editPhone" pattern="\+?[0-9]{10,12}" placeholder="+919876543210">
+        </div>
+        <div class="modal-buttons">
+          <button class="save-btn" onclick="confirmSave()">Save</button>
+          <button class="cancel-btn" onclick="closeEditModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS",
+      databaseURL: "https://myechostore.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const CLOUDINARY_CLOUD_NAME = '01400454f4aafb70d1c9beddec5cbbc5';
+    const CLOUDINARY_UPLOAD_PRESET = 'echoshop_profile'; // Replace with your actual unsigned upload preset
+
+    let currentUserData = null;
+    let currentUsername = null;
+    let isOwner = false;
+    let profileImageUrl = '';
+    let isAuthInitialized = false;
+
+    // Sanitize HTML to prevent XSS
+    function sanitizeHTML(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Show/Hide Loading Spinner
+    function toggleLoadingSpinner(show) {
+      const spinner = document.getElementById("loadingSpinner");
+      const profileHeader = document.getElementById("profileHeader");
+      spinner.style.display = show ? "block" : "none";
+      profileHeader.style.display = show ? "none" : "flex";
+    }
+
+    // Load Profile Data
+    async function loadProfile(user) {
+      toggleLoadingSpinner(true);
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          currentUserData = userDoc.data();
+          currentUsername = user.uid;
+          isOwner = true;
+          profileImageUrl = currentUserData.profilePicture || '';
+          updateProfileUI(currentUserData);
+          document.getElementById("editProfileBtn").style.display = "block";
+          document.getElementById("profileActionMark").style.display = "flex";
+          updateProfilePictureUI();
+        } else {
+          // Create default profile
+          const defaultData = {
+            fullName: user.displayName || "User",
+            email: user.email || "Not set",
+            phone: "",
+            profilePicture: ""
+          };
+          await setDoc(doc(db, "users", user.uid), defaultData);
+          currentUserData = defaultData;
+          currentUsername = user.uid;
+          isOwner = true;
+          profileImageUrl = '';
+          updateProfileUI(currentUserData);
+          document.getElementById("editProfileBtn").style.display = "block";
+          document.getElementById("profileActionMark").style.display = "flex";
+          updateProfilePictureUI();
+        }
+      } catch (error) {
+        console.error("Error loading profile:", error);
+        alert("Failed to load profile: " + error.message);
+      } finally {
+        toggleLoadingSpinner(false);
+      }
+    }
+
+    // Update Profile UI
+    function updateProfileUI(data) {
+      document.getElementById("fullName").textContent = sanitizeHTML(data.fullName || "Not specified");
+      document.getElementById("email").textContent = sanitizeHTML(data.email || "Not specified");
+      document.getElementById("phone").textContent = data.phone ? sanitizeHTML(data.phone) : "Not specified";
+    }
+
+    // Update Profile Picture UI
+    function updateProfilePictureUI() {
+      const profilePicture = document.getElementById("profilePicture");
+      const profilePicturePlaceholder = document.getElementById("profilePicturePlaceholder");
+      const profileActionMark = document.getElementById("profileActionMark");
+
+      if (profileImageUrl) {
+        profilePicture.src = profileImageUrl;
+        profilePicture.style.display = "block";
+        profilePicturePlaceholder.style.display = "none";
+        profileActionMark.textContent = "×";
+      } else {
+        profilePicture.src = "https://via.placeholder.com/100";
+        profilePicture.style.display = "none";
+        profilePicturePlaceholder.style.display = "flex";
+        profileActionMark.textContent = "+";
+      }
+    }
+
+    // Open Edit Modal
+    window.openEditModal = () => {
+      if (!isOwner) {
+        alert("You are not authorized to edit this profile.");
+        return;
+      }
+      if (!currentUserData) {
+        alert("User data is still loading. Please wait.");
+        return;
+      }
+
+      document.getElementById("editFullName").value = currentUserData.fullName || "";
+      document.getElementById("editEmail").value = currentUserData.email || "";
+      document.getElementById("editPhone").value = currentUserData.phone || "";
+      document.getElementById("editModal").style.display = "flex";
+    };
+
+    // Close Edit Modal
+    window.closeEditModal = () => {
+      document.getElementById("editModal").style.display = "none";
+    };
+
+    // Save Profile
+    window.confirmSave = async () => {
+      if (!isOwner) {
+        alert("You are not authorized to edit this profile.");
+        return;
+      }
+      const fullName = document.getElementById("editFullName").value.trim();
+      const email = document.getElementById("editEmail").value.trim();
+      const phone = document.getElementById("editPhone").value.trim();
+
+      if (!fullName || !email) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      const phoneRegex = /^\+?[0-9]{10,12}$/;
+      if (phone && !phoneRegex.test(phone)) {
+        alert("Please enter a valid phone number (10-12 digits, optional +).");
+        return;
+      }
+
+      try {
+        toggleLoadingSpinner(true);
+        const updatedData = {
+          fullName,
+          email,
+          phone,
+          profilePicture: profileImageUrl
+        };
+        await setDoc(doc(db, "users", currentUsername), updatedData, { merge: true });
+        currentUserData = { ...currentUserData, ...updatedData };
+        updateProfileUI(currentUserData);
+        closeEditModal();
+        alert("Profile updated successfully!");
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("Failed to update profile: " + error.message);
+      } finally {
+        toggleLoadingSpinner(false);
+      }
+    };
+
+    // Upload Profile Picture to Cloudinary
+    async function uploadToCloudinary(file, fileName) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('folder', `profiles/${currentUsername}`);
+        formData.append('tags', `profile,${currentUsername}`);
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Cloudinary upload failed: ${errorText}`);
+        }
+
+        const data = await response.json();
+        return data.secure_url;
+      } catch (error) {
+        console.error('Cloudinary upload error:', error);
+        throw error;
+      }
+    }
+
+    window.triggerProfilePictureUpload = () => {
+      if (!isOwner) {
+        alert("You are not authorized to edit this profile.");
+        return;
+      }
+      if (!currentUsername) {
+        alert("Please wait for profile to load.");
+        return;
+      }
+      if (profileImageUrl) {
+        if (confirm("Do you want to remove the current profile picture?")) {
+          removeProfilePicture();
+        }
+      } else {
+        document.getElementById("profilePictureInput").click();
+      }
+    };
+
+    async function updateProfileImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        if (!file.type.startsWith("image/")) {
+          throw new Error("Please select an image file (PNG/JPG).");
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          throw new Error("Image size must be less than 5MB.");
+        }
+
+        toggleLoadingSpinner(true);
+        const fileName = `profile_${currentUserData.fullName || currentUsername}_${Date.now()}_${file.name}`;
+        profileImageUrl = await uploadToCloudinary(file, fileName);
+
+        await setDoc(doc(db, "users", currentUsername), { profilePicture: profileImageUrl }, { merge: true });
+        updateProfilePictureUI();
+        alert("Profile picture uploaded successfully!");
+      } catch (error) {
+        console.error("Error uploading profile picture:", error);
+        alert(`Failed to upload profile picture: ${error.message}`);
+        document.getElementById("profilePictureInput").value = "";
+      } finally {
+        toggleLoadingSpinner(false);
+      }
+    }
+
+    async function removeProfilePicture() {
+      try {
+        toggleLoadingSpinner(true);
+        profileImageUrl = '';
+        await setDoc(doc(db, "users", currentUsername), { profilePicture: null }, { merge: true });
+        updateProfilePictureUI();
+        alert("Profile picture removed successfully!");
+      } catch (error) {
+        console.error("Error removing profile picture:", error);
+        alert(`Failed to remove profile picture: ${error.message}`);
+      } finally {
+        toggleLoadingSpinner(false);
+      }
+    }
+
+    document.getElementById("profilePictureInput").addEventListener("change", updateProfileImage);
+    document.getElementById("profilePictureContainer").addEventListener("click", triggerProfilePictureUpload);
+
+    // Logout Function
+    window.logout = async () => {
+      try {
+        await signOut(auth);
+        window.location.href = "index.html";
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert("Error logging out: " + error.message);
+      }
+    };
+
+    // Initialize Authentication
+    toggleLoadingSpinner(true);
+    onAuthStateChanged(auth, (user) => {
+      if (!isAuthInitialized) {
+        isAuthInitialized = true;
+        if (user) {
+          loadProfile(user);
+        } else {
+          toggleLoadingSpinner(false);
+          alert("Please sign in to access your profile.");
+          window.location.href = "index.html";
+        }
+      }
+    }, (error) => {
+      console.error("Auth state error:", error);
+      alert("Authentication error: " + error.message);
+      toggleLoadingSpinner(false);
+    });
+  </script>
+</body>
+</html>

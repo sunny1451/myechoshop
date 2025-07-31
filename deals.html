@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2e7d32">
+  <meta name="description" content="EchoShop Deals - Grab time-limited offers, lightning deals, and discounts on electronics, fashion, and more.">
+  <meta name="keywords" content="EchoShop, deals, discounts, lightning deals, e-commerce India">
+  <meta name="robots" content="index, follow">
+  <title>EchoShop Deals</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --primary-dark: #212121;
+      --primary-accent: #2e7d32;
+      --deal-highlight: #ff5722;
+      --accent-highlight: #fdd835;
+      --light-bg: #ffffff;
+      --text-primary: #0f1111;
+      --text-secondary: #4b5563;
+      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    .navbar {
+      background: #0F1111;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-base);
+      height: 80px;
+    }
+    .navbar-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-links a {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--accent-highlight);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .hero {
+      position: relative;
+      height: 400px;
+      background: var(--primary-dark);
+      color: #fff;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://ik.imagekit.io/echoshop/deals-banner.jpg?tr=w-1600,h-400');
+      background-size: cover;
+      background-position: center;
+    }
+    .section {
+      padding: 3rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .filter-bar select {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .deal-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+    .deal-card:hover {
+      transform: scale(1.05);
+    }
+    .deal-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .deal-card .badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--deal-highlight);
+      color: #fff;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .deal-card .content {
+      padding: 1rem;
+    }
+    .deal-card .price-old {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+    }
+    .deal-card .price-new {
+      color: var(--deal-highlight);
+      font-weight: 600;
+    }
+    .deal-card .timer {
+      color: var(--deal-highlight);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .deal-card .buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .deal-card .btn {
+      flex: 1;
+      padding: 0.5rem;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .deal-card .btn-cart {
+      background: var(--primary-accent);
+      color: #fff;
+    }
+    .deal-card .btn-cart:hover {
+      background: #1b5e20;
+    }
+    .deal-card .btn-buy {
+      background: var(--deal-highlight);
+      color: #fff;
+    }
+    .deal-card .btn-buy:hover {
+      background: #e64a19;
+    }
+    .footer {
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+    }
+    .footer a {
+      color: var(--accent-highlight);
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        height: auto;
+        gap: 1rem;
+      }
+      .nav-links {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero {
+        height: 300px;
+      }
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+      .filter-bar {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-logo">EchoShop</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Categories</a>
+      <a href="deals.html">Deals</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" data-aos="fade-in">
+    <h1 class="text-4xl font-poppins font-bold flex items-center gap-2">
+      <i data-lucide="flame"></i> Today’s Best Deals
+    </h1>
+    <p class="text-lg mt-2">Grab these time-limited offers before they’re gone!</p>
+  </section>
+
+  <!-- Filter Bar -->
+  <section class="section" data-aos="fade-up">
+    <div class="filter-bar">
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="T-Shirts">T-Shirts</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Shoes">Shoes</option>
+      </select>
+      <select id="discountFilter">
+        <option value="">All Discounts</option>
+        <option value="10">10%+</option>
+        <option value="20">20%+</option>
+        <option value="50">50%+</option>
+        <option value="80">80%+</option>
+      </select>
+      <select id="priceFilter">
+        <option value="">All Prices</option>
+        <option value="0-500">₹0 - ₹500</option>
+        <option value="500-1000">₹500 - ₹1000</option>
+        <option value="1000+">₹1000+</option>
+      </select>
+      <select id="sortFilter">
+        <option value="">Sort By</option>
+        <option value="priceLow">Price: Low to High</option>
+        <option value="priceHigh">Price: High to Low</option>
+        <option value="discount">Discount: High to Low</option>
+        <option value="endingSoon">Ending Soon</option>
+      </select>
+    </div>
+
+    <!-- Deal Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="dealsGrid"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="text-lg font-poppins">EchoShop</p>
+    <p class="text-sm">Your one-stop online store for electronics, fashion, and more.</p>
+    <div class="mt-2">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="terms.html">Terms & Conditions</a>
+      <a href="return.html">Return Policy</a>
+      <a href="payment.html">Payment Methods</a>
+      <a href="https://x.com/echoshop" target="_blank">X</a>
+      <a href="https://linkedin.com/company/echoshop" target="_blank">LinkedIn</a>
+    </div>
+    <p class="text-sm mt-2">© 2025 EchoShop. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS",
+      databaseURL: "https://myechostore.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Initialize AOS
+    if (typeof AOS !== 'undefined') {
+      AOS.init({ duration: 800 });
+    } else {
+      console.warn('AOS library failed to load. Animations will not work.');
+    }
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Countdown Timer
+    const startCountdown = (element, endTime) => {
+      const updateTimer = () => {
+        const now = new Date();
+        const end = new Date(endTime);
+        const diff = end - now;
+
+        if (diff <= 0) {
+          element.textContent = 'Deal Ended';
+          element.style.color = '#ef4444';
+          return;
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        element.textContent = `Ends in: ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+      };
+
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    };
+
+    // Render Deal Cards
+    const renderDeals = (deals) => {
+      const grid = document.getElementById('dealsGrid');
+      grid.innerHTML = '';
+      deals.forEach(deal => {
+        const card = document.createElement('div');
+        card.className = 'deal-card';
+        card.setAttribute('data-aos', 'fade-up');
+        card.innerHTML = `
+          <div class="badge">${deal.discount} OFF</div>
+          <img src="${deal.imageUrl}?tr=w-300,h-300" alt="${deal.name}">
+          <div class="content">
+            <h3 class="font-poppins font-semibold">${deal.name}</h3>
+            <p class="text-sm text-gray-600">${deal.brand}</p>
+            <p class="flex items-center gap-1 text-sm">
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400"></i>
+              ${deal.rating} (${deal.ratingsCount} ratings)
+            </p>
+            <p class="price-old">₹${deal.originalPrice}</p>
+            <p class="price-new">₹${deal.dealPrice}</p>
+            <p class="timer"></p>
+            <p class="text-sm">
+              ${deal.delivery.freeDelivery ? '<span class="text-green-600">Free Delivery</span>' : ''}
+              ${deal.returnable ? ' | ' + deal.returnable : ''}
+            </p>
+            <div class="buttons">
+              <button class="btn btn-cart">Add to Cart</button>
+              <button class="btn btn-buy">Buy Now</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+        const timer = card.querySelector('.timer');
+        startCountdown(timer, deal.dealEndsAt);
+      });
+    };
+
+    // Fetch and Filter Deals
+    const fetchDeals = async () => {
+      const now = new Date().toISOString();
+      const q = query(collection(db, 'deals'), where('dealEndsAt', '>', now));
+      const snapshot = await getDocs(q);
+      let deals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // Apply Filters
+      const categoryFilter = document.getElementById('categoryFilter');
+      const discountFilter = document.getElementById('discountFilter');
+      const priceFilter = document.getElementById('priceFilter');
+      const sortFilter = document.getElementById('sortFilter');
+
+      const applyFilters = () => {
+        let filteredDeals = [...deals];
+
+        // Category Filter
+        const category = categoryFilter.value;
+        if (category) {
+          filteredDeals = filteredDeals.filter(deal => deal.category === category);
+        }
+
+        // Discount Filter
+        const discount = discountFilter.value;
+        if (discount) {
+          filteredDeals = filteredDeals.filter(deal => parseInt(deal.discount) >= parseInt(discount));
+        }
+
+        // Price Filter
+        const priceRange = priceFilter.value;
+        if (priceRange) {
+          const [min, max] = priceRange.split('-').map(Number);
+          filteredDeals = filteredDeals.filter(deal => deal.dealPrice >= min && (max ? deal.dealPrice <= max : true));
+        }
+
+        // Sort Filter
+        const sort = sortFilter.value;
+        if (sort === 'priceLow') {
+          filteredDeals.sort((a, b) => a.dealPrice - b.dealPrice);
+        } else if (sort === 'priceHigh') {
+          filteredDeals.sort((a, b) => b.dealPrice - a.dealPrice);
+        } else if (sort === 'discount') {
+          filteredDeals.sort((a, b) => parseInt(b.discount) - parseInt(a.discount));
+        } else if (sort === 'endingSoon') {
+          filteredDeals.sort((a, b) => new Date(a.dealEndsAt) - new Date(b.dealEndsAt));
+        }
+
+        renderDeals(filteredDeals);
+      };
+
+      categoryFilter.addEventListener('change', applyFilters);
+      discountFilter.addEventListener('change', applyFilters);
+      priceFilter.addEventListener('change', applyFilters);
+      sortFilter.addEventListener('change', applyFilters);
+
+      applyFilters();
+    };
+
+    // Initial Fetch
+    fetchDeals();
+  </script>
+</body>
+</html>

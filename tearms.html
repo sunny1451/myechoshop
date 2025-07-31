@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2e7d32">
+  <meta name="description" content="EchoShop Terms & Conditions - Understand the guidelines for using our platform, including user responsibilities, returns, and legal policies.">
+  <meta name="keywords" content="EchoShop, terms and conditions, user policy, returns, e-commerce India">
+  <meta name="robots" content="index, follow">
+  <title>EchoShop Terms & Conditions</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-dark: #212121;
+      --primary-accent: #2e7d32;
+      --accent-highlight: #fdd835;
+      --light-bg: #ffffff;
+      --text-primary: #0f1111;
+      --text-secondary: #4b5563;
+      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    .navbar {
+      background: #0F1111; /* Black like Amazon */
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-base);
+      height: 80px;
+    }
+    .navbar-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-links a {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--accent-highlight);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .hero {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+      background: var(--primary-dark);
+      color: #fff;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .section {
+      padding: 3rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .terms-section {
+      margin-bottom: 2rem;
+    }
+    .terms-section h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-accent);
+      margin-bottom: 1rem;
+    }
+    .terms-section ul {
+      list-style-type: disc;
+      margin-left: 1.5rem;
+    }
+    .updated {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 1rem 0;
+    }
+    .download-btn {
+      background: var(--primary-accent);
+      color: #fff;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+    .download-btn:hover {
+      background: #1b5e20;
+    }
+    .footer {
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+    }
+    .footer a {
+      color: var(--accent-highlight);
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+    @media print {
+      .navbar, .footer, .download-btn {
+        display: none;
+      }
+      .hero {
+        height: auto;
+        padding: 1rem;
+      }
+      .section {
+        padding: 1rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        height: auto;
+        gap: 1rem;
+      }
+      .nav-links {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero {
+        height: 300px;
+      }
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+      .terms-section {
+        margin-bottom: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-logo">EchoShop</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Categories</a>
+      <a href="deals.html">Deals</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" data-aos="fade-in">
+    <div>
+      <h1 class="text-4xl font-poppins font-bold">Terms & Conditions</h1>
+      <p class="text-lg mt-2">Welcome to EchoShop! Please read these terms carefully before using our platform.</p>
+    </div>
+  </section>
+
+  <!-- Last Updated -->
+  <p class="updated" data-aos="fade-up">Last updated: July 31, 2025</p>
+
+  <!-- Terms Sections -->
+  <section class="section">
+    <!-- Acceptance of Terms -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>1. Acceptance of Terms</h3>
+      <p>By accessing and using the EchoShop platform, you agree to abide by the following Terms and Conditions. If you do not agree, please do not use our services.</p>
+    </div>
+
+    <!-- User Responsibilities -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>2. User Responsibilities</h3>
+      <ul>
+        <li>Provide accurate information during sign-up or checkout.</li>
+        <li>Use products/services for lawful purposes.</li>
+        <li>Do not misuse, hack, or manipulate any part of the platform.</li>
+      </ul>
+    </div>
+
+    <!-- Orders & Payments -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>3. Orders & Payments</h3>
+      <ul>
+        <li>All orders are subject to availability and confirmation.</li>
+        <li>Prices are listed in INR and may change without notice.</li>
+        <li>Payments can be made via UPI, cards, wallets, or pay-on-delivery where available.</li>
+      </ul>
+    </div>
+
+    <!-- Returns & Refunds -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>4. Returns & Refunds</h3>
+      <ul>
+        <li>Products are returnable within the return window mentioned (e.g., 7 or 10 days).</li>
+        <li>Refunds are initiated only after successful pickup and product validation.</li>
+        <li>Certain items like personal hygiene products are not returnable.</li>
+      </ul>
+    </div>
+
+    <!-- Delivery Terms -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>5. Delivery Terms</h3>
+      <ul>
+        <li>Estimated delivery times are shown on the product page.</li>
+        <li>Delays may occur due to unavoidable circumstances.</li>
+        <li>Free delivery may be available on select items or offers.</li>
+      </ul>
+    </div>
+
+    <!-- Intellectual Property -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>6. Intellectual Property</h3>
+      <p>All content, logos, images (hosted via ImageKit), and code are property of EchoShop. You may not use, reproduce, or distribute any material without permission.</p>
+    </div>
+
+    <!-- Termination -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>7. Termination</h3>
+      <p>EchoShop reserves the right to suspend or terminate your access to the platform for any violation of these terms.</p>
+    </div>
+
+    <!-- Disclaimer & Limitation of Liability -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>8. Disclaimer & Limitation of Liability</h3>
+      <p>We make no guarantees about the availability, completeness, or accuracy of products or services. EchoShop is not liable for any indirect, incidental, or consequential damages.</p>
+    </div>
+
+    <!-- Governing Law -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>9. Governing Law</h3>
+      <p>These terms are governed by Indian law. Any legal disputes will be resolved in Hyderabad jurisdiction.</p>
+    </div>
+
+    <!-- Contact Us -->
+    <div class="terms-section" data-aos="fade-up">
+      <h3>10. Contact Us</h3>
+      <p>For any questions regarding these Terms, please contact:</p>
+      <ul>
+        <li><strong>Email:</strong> <a href="mailto:support@echoshop.in" class="text-blue-600">support@echoshop.in</a></li>
+        <li><strong>Phone:</strong> +91-98765-43210</li>
+        <li><strong>Address:</strong> Kukatpally, Hyderabad</li>
+      </ul>
+    </div>
+
+    <!-- Download PDF Button -->
+    <div class="text-center" data-aos="fade-up">
+      <a href="https://ik.imagekit.io/echoshop/terms-conditions.pdf" class="download-btn">Download Terms as PDF</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="text-lg font-poppins">EchoShop</p>
+    <p class="text-sm">Your one-stop online store for electronics, fashion, and more.</p>
+    <div class="mt-2">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="terms.html">Return Policy</a>
+      <a href="payment.html">Payment Methods</a>
+    </div>
+    <p class="text-sm mt-2">© 2025 EchoShop. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS",
+      databaseURL: "https://myechostore.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Initialize AOS
+    if (typeof AOS !== 'undefined') {
+      AOS.init({ duration: 800 });
+    } else {
+      console.warn('AOS library failed to load. Animations will not work.');
+    }
+
+    // Optional: Log Terms Acceptance (e.g., during user registration)
+    const logTermsAcceptance = async (userId) => {
+      try {
+        await addDoc(collection(db, 'termsAcceptances'), {
+          userId: userId || 'anonymous',
+          timestamp: new Date().toISOString(),
+          termsVersion: '2025-07-31'
+        });
+        console.log('Terms acceptance logged.');
+      } catch (error) {
+        console.error('Error logging terms acceptance:', error);
+      }
+    };
+
+    // Example: Call this during user registration (not implemented in this page)
+    // logTermsAcceptance('user123');
+  </script>
+</body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2e7d32">
+  <meta name="description" content="About EchoShop - Learn about our mission, vision, team, and journey to empower local sellers and deliver a trusted shopping experience.">
+  <meta name="keywords" content="EchoShop, about us, online shopping, local sellers, India e-commerce">
+  <meta name="robots" content="index, follow">
+  <title>About EchoShop</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/swiper@8.4.7/swiper-bundle.min.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/swiper@8.4.7/swiper-bundle.min.js"></script>
+  <style>
+    :root {
+      --primary-dark: #212121;
+      --primary-accent: #2e7d32;
+      --accent-highlight: #fdd835;
+      --light-bg: #ffffff;
+      --text-primary: #0f1111;
+      --text-secondary: #4b5563;
+      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --gradient-primary: linear-gradient(135deg, #212121, #2e7d32);
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    .navbar {
+      background: #0F1111; /* Black color like Amazon */
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-base);
+      height: 80px;
+    }
+    .navbar-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav-links a {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--accent-highlight);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .hero {
+      position: relative;
+      height: 500px;
+      overflow: hidden;
+    }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    .section {
+      padding: 3rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      background: var(--primary-accent);
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .timeline-item {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      margin: 2rem 0;
+    }
+    .timeline-content {
+      width: 45%;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+      position: relative;
+    }
+    .timeline-content.left {
+      margin-right: auto;
+      text-align: right;
+    }
+    .timeline-content.right {
+      margin-left: auto;
+    }
+    .team-member {
+      text-align: center;
+      padding: 1rem;
+    }
+    .team-member img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+    .partner-logo {
+      filter: grayscale(100%);
+      transition: filter 0.3s ease;
+      max-width: 150px;
+    }
+    .partner-logo:hover {
+      filter: grayscale(0%);
+    }
+    .testimonials .swiper-slide {
+      padding: 1rem;
+      background: #f9fafb;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+    }
+    .cta-button {
+      background: var(--primary-accent);
+      color: #fff;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .cta-button:hover {
+      background: #1b5e20;
+    }
+    .footer {
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+    }
+    .footer a {
+      color: var(--accent-highlight);
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        height: auto;
+        gap: 1rem;
+      }
+      .nav-links {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero {
+        height: 300px;
+      }
+      .hero-text h1 {
+        font-size: 1.5rem;
+      }
+      .timeline::before {
+        left: 20px;
+      }
+      .timeline-content {
+        width: 80%;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .timeline-content.left, .timeline-content.right {
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-logo">EchoShop</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Categories</a>
+      <a href="deals.html">Deals</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" data-aos="fade-in">
+    <img src="https://ik.imagekit.io/echoshop/about-banner.jpg?tr=w-1600,h-600" alt="EchoShop Team">
+    <div class="hero-text">
+      <h1 class="text-4xl font-poppins font-bold">About EchoShop</h1>
+      <p class="text-lg">Building the future of shopping — simple, fast, trusted.</p>
+    </div>
+  </section>
+
+  <!-- Who We Are -->
+  <section class="section" data-aos="fade-up">
+    <h2 class="text-2xl font-poppins font-bold text-center">Who We Are</h2>
+    <p class="text-center mt-4 max-w-2xl mx-auto">
+      EchoShop is a smart marketplace designed to bring products from local markets to your fingertips. From Charminar to Kukatpally, we connect real sellers to real buyers with real benefits.
+    </p>
+  </section>
+
+  <!-- Mission & Vision -->
+  <section class="section bg-gray-100" data-aos="fade-up">
+    <h2 class="text-2xl font-poppins font-bold text-center">Our Mission & Vision</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div class="text-center p-4">
+        <span class="text-3xl">🎯</span>
+        <h3 class="text-lg font-semibold mt-2">Mission</h3>
+        <p>Empower small sellers to go digital and reach customers everywhere.</p>
+      </div>
+      <div class="text-center p-4">
+        <span class="text-3xl">👁️</span>
+        <h3 class="text-lg font-semibold mt-2">Vision</h3>
+        <p>To be India's most customer-centric and seller-friendly e-commerce platform.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose EchoShop -->
+  <section class="section" data-aos="fade-up">
+    <h2 class="text-2xl font-poppins font-bold text-center">Why Choose EchoShop</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div class="flex items-start gap-3">
+        <span class="text-2xl">✅</span>
+        <div>
+          <h3 class="font-semibold">Trusted Local Sellers</h3>
+          <p>Shop from verified sellers in your community.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl">📦</span>
+        <div>
+          <h3 class="font-semibold">Fast Delivery</h3>
+          <p>Get products from nearby locations quickly.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl">💸</span>
+        <div>
+          <h3 class="font-semibold">Flexible Payments</h3>
+          <p>UPI, COD, PayLater, and EMI supported.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl">🔄</span>
+        <div>
+          <h3 class="font-semibold">Easy Returns</h3>
+          <p>Hassle-free returns with real-time support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Journey Timeline -->
+  <section class="section bg-gray-100" data-aos="fade-up">
+    <h2 class="text-2xl font-poppins font-bold text-center">Our Journey</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-content left" data-aos="fade-right">
+          <h3 class="font-semibold">2023</h3>
+          <p>Idea Born 💡</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-content right" data-aos="fade-left">
+          <h3 class="font-semibold">2024</h3>
+          <p>1,000+ Sellers Joined 🔧</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-content left" data-aos="fade-right">
+          <h3 class="font-semibold">2025</h3>
+          <p>EchoShop App Launched 🚀</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-content right" data-aos="fade-left">
+          <h3 class="font-semibold">2026</h3>
+          <p>50K+ Happy Orders 🎉</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Meet the Team -->
+  <section class="section" data-aos="fade-up">
+    <h2 class="text-2xl font-poppins font-bold text-center">Meet the Team</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+      <div class="team-member">
+        <img src="https://ik.imagekit.io/echoshop/sunny.jpg?tr=w-150,h-150" alt="Sunny - Founder">
+        <h4 class="font-semibold">Sunny</h4>
+        <p>Founder & Tech Lead</p>
+        <a href="https://linkedin.com/in/sunny" class="text-blue-600 text-sm">LinkedIn</a>
+      </div>
+      <div class="team-member">
+        <img src="https://ik.imagekit.io/echoshop/priya.jpg?tr=w-150,h-150" alt="Priya - Marketing">
+        <h4 class="font-semibold">Priya</h4>
+        <p>Head of Marketing</p>
+        <a href="https://linkedin.com/in/priya" class="text-blue-600 text-sm">LinkedIn</a>
+      </div>
+      <div class="team-member">
+        <img src="https://ik.imagekit.io/echoshop/rahul.jpg?tr=w-150,h-150" alt="Rahul - Operations">
+        <h4 class="font-semibold">Rahul</h4>
+        <p>Operations Lead</p>
+        <a href="https://linkedin.com/in/rahul" class="text-blue-600 text-sm">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Partners -->
+  <section class="section bg-gray-100" data-aos="fade-up">
+    <h2 class="text-2xl font-poppins font-bold text-center">Our Trusted Partners</h2>
+    <div class="flex flex-wrap justify-center gap-6 mt-6">
+      <img src="https://ik.imagekit.io/echoshop/amazon-logo.png?tr=w-150" alt="Amazon" class="partner-logo">
+      <img src="https://ik.imagekit.io/echoshop/flipkart-logo.png?tr=w-150" alt="Flipkart" class="partner-logo">
+      <img src="https://ik.imagekit.io/echoshop/paytm-logo.png?tr=w-150" alt="Paytm" class="partner-logo">
+      <img src="https://ik.imagekit.io/echoshop/google-cloud-logo.png?tr=w-150" alt="Google Cloud" class="partner-logo">
+      <img src="https://ik.imagekit.io/echoshop/firebase-logo.png?tr=w-150" alt="Firebase" class="partner-logo">
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section" data-aos="fade-up">
+    <h2 class="text-2xl font-poppins font-bold text-center">What Our Customers Say</h2>
+    <div class="swiper testimonials mt-6">
+      <div class="swiper-wrapper" id="testimonials"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </section>
+
+  <!-- Contact Prompt -->
+  <section class="section bg-gray-100 text-center" data-aos="fade-up">
+    <h2 class="text-2xl font-poppins font-bold">Want to Partner With Us or Have Feedback?</h2>
+    <a href="contact.html" class="cta-button inline-block mt-4">Get in Touch →</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="text-lg font-poppins">EchoShop</p>
+    <p class="text-sm">Your one-stop online store for electronics, fashion, and more.</p>
+    <div class="mt-2">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="terms.html">Return Policy</a>
+      <a href="payment.html">Payment Methods</a>
+    </div>
+    <p class="text-sm mt-2">© 2025 EchoShop. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, limit } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS",
+      databaseURL: "https://myechostore.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Initialize AOS
+    AOS.init({ duration: 800 });
+
+    // Initialize Swiper for Testimonials
+    const testimonialSwiper = new Swiper('.testimonials', {
+      loop: true,
+      pagination: { el: '.swiper-pagination', clickable: true },
+      spaceBetween: 20,
+      slidesPerView: 1,
+      breakpoints: {
+        640: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 }
+      }
+    });
+
+    // Load Testimonials
+    const loadTestimonials = async () => {
+      try {
+        const q = query(collection(db, 'testimonials'), limit(5));
+        const querySnapshot = await getDocs(q);
+        const testimonials = querySnapshot.docs.map(doc => doc.data());
+        const testimonialWrapper = document.getElementById('testimonials');
+        testimonialWrapper.innerHTML = testimonials.length ? testimonials.map(t => `
+          <div class="swiper-slide">
+            <p class="text-sm italic">"${t.review}"</p>
+            <p class="font-semibold mt-2">${t.name}</p>
+            <p class="text-xs text-gray-500">${t.location}</p>
+          </div>
+        `).join('') : '<div class="swiper-slide"><p class="text-sm">No testimonials yet.</p></div>';
+        testimonialSwiper.update();
+      } catch (error) {
+        console.error('Error loading testimonials:', error);
+        document.getElementById('testimonials').innerHTML = '<div class="swiper-slide"><p class="text-sm">Failed to load testimonials.</p></div>';
+      }
+    };
+
+    // Initialize
+    loadTestimonials();
+  </script>
+</body>
+</html>
