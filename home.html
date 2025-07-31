@@ -142,15 +142,31 @@
       height: 500px;
       position: relative;
       overflow: hidden;
-      margin: 2rem 0;
+      margin: 0;
       border-radius: 10px;
       box-shadow: var(--shadow-base);
       background-size: cover;
       background-position: center;
+      width: 100%;
     }
 
     .swiper-slide {
       min-height: 500px;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .banner-swiper, .swiper-wrapper {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .banner-carousel-container {
+      margin-top: 0.5rem;
     }
 
     .banner-overlay {
@@ -367,6 +383,7 @@
       }
       .swiper-slide {
         min-height: 300px;
+        height: 100%;
       }
       .grid {
         grid-template-columns: 1fr;
@@ -391,6 +408,7 @@
       }
       .swiper-slide {
         min-height: 400px;
+        height: 100%;
       }
       .card {
         max-width: 320px;
@@ -450,13 +468,13 @@
           Account & Lists <span class="ml-1">▼</span>
         </button>
         <div id="account-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2" role="menu">
-          <a href="profile.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Profile</a>
+          <a href="https://localworkers.xyz/profile.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Profile</a>
           <a href="wishlist.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Wishlist</a>
-          <a href="orders.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Orders</a>
+          <a href="https://localworkers.xyz/orders.html" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Orders</a>
           <a href="#" id="sign-out" class="block p-2 text-gray-700 hover:bg-gray-100 rounded" role="menuitem">Sign Out</a>
         </div>
       </div>
-      <a href="orders.html" class="navbar-btn" role="link">
+      <a href="https://localworkers.xyz/orders.html" class="navbar-btn" role="link">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
         Orders
       </a>
@@ -471,16 +489,16 @@
   <div class="loading-spinner" id="loadingSpinner">Loading...</div>
 
   <!-- Main Banner Carousel -->
-  <div class="mt-20" role="region" aria-label="Banner carousel">
+  <div class="banner-carousel-container" role="region" aria-label="Banner carousel">
     <div class="swiper banner-swiper">
       <div class="swiper-wrapper">
-        <div class="swiper-slide banner" style="background-image: url('https://via.placeholder.com/1200x300?text=Banner+1');">
+        <div class="swiper-slide banner" style="background-image: url('https://i.etsystatic.com/19936320/r/il/21ab76/2652179468/il_600x600.2652179468_h8du.jpg');">
           <div class="banner-overlay absolute bottom-0 left-0 p-4">
             <h2 class="text-xl font-semibold">Up to 70% off | Fashion Deals</h2>
             <button class="btn mt-2" onclick="filterCategory('Fashion')">Shop Now</button>
           </div>
         </div>
-        <div class="swiper-slide banner" style="background-image: url('https://via.placeholder.com/1200x300?text=Banner+2');">
+        <div class="swiper-slide banner" style="background-image: url('https://d1xv5jidmf7h0f.cloudfront.net/circleone/images/product/Fabric_Banner.jpg');">
           <div class="banner-overlay absolute bottom-0 left-0 p-4">
             <h2 class="text-xl font-semibold">Buy 2, Save ₹150</h2>
             <button class="btn mt-2" onclick="filterCategory('Electronics')">Shop Now</button>
@@ -537,7 +555,7 @@
   <!-- Firebase and JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, getDocs, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, query, getDocs, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithPhoneNumber, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
@@ -935,96 +953,9 @@
       }
     });
 
-    // Load Banners from Firebase
-    const loadBanners = async () => {
-      const swiperWrapper = document.querySelector(".swiper-wrapper");
-      try {
-        const q = query(collection(db, "banners"), orderBy("createdAt", "desc"), limit(4));
-        onSnapshot(q, (snapshot) => {
-          swiperWrapper.innerHTML = "";
-          if (snapshot.empty) {
-            console.warn("No banners found in Firestore, using fallback banners");
-            const fallbackBanners = [
-              { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+1', title: 'Up to 70% off | Fashion Deals', category: 'Fashion' },
-              { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+2', title: 'Buy 2, Save ₹150', category: 'Electronics' }
-            ];
-            fallbackBanners.forEach((banner) => {
-              const slide = document.createElement("div");
-              slide.className = "swiper-slide banner";
-              slide.style.backgroundImage = `url('${banner.imageUrl}')`;
-              slide.innerHTML = `
-                <div class="banner-overlay absolute bottom-0 left-0 p-4">
-                  <h2 class="text-xl font-semibold">${banner.title}</h2>
-                  <button class="btn mt-2" onclick="filterCategory('${banner.category}')">Shop Now</button>
-                </div>
-              `;
-              swiperWrapper.appendChild(slide);
-            });
-          } else {
-            snapshot.forEach((doc) => {
-              const banner = doc.data();
-              console.log("Fetched banner:", banner);
-              const slide = document.createElement("div");
-              slide.className = "swiper-slide banner";
-              slide.style.backgroundImage = `url('${banner.imageUrl || 'https://via.placeholder.com/1200x300?text=Fallback+Banner'}')`;
-              slide.innerHTML = `
-                <div class="banner-overlay absolute bottom-0 left-0 p-4">
-                  <h2 class="text-xl font-semibold">${banner.title || 'Shop Now'}</h2>
-                  <button class="btn mt-2" onclick="filterCategory('${banner.category || 'All'}')">Shop Now</button>
-                </div>
-              `;
-              swiperWrapper.appendChild(slide);
-            });
-          }
-          swiper.update();
-        }, (error) => {
-          console.error("Error fetching banners:", error.message);
-          alert("Failed to load banners: " + error.message);
-          const fallbackBanners = [
-            { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+1', title: 'Up to 70% off | Fashion Deals', category: 'Fashion' },
-            { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+2', title: 'Buy 2, Save ₹150', category: 'Electronics' }
-          ];
-          fallbackBanners.forEach((banner) => {
-            const slide = document.createElement("div");
-            slide.className = "swiper-slide banner";
-            slide.style.backgroundImage = `url('${banner.imageUrl}')`;
-            slide.innerHTML = `
-              <div class="banner-overlay absolute bottom-0 left-0 p-4">
-                <h2 class="text-xl font-semibold">${banner.title}</h2>
-                <button class="btn mt-2" onclick="filterCategory('${banner.category}')">Shop Now</button>
-              </div>
-            `;
-            swiperWrapper.appendChild(slide);
-          });
-          swiper.update();
-        });
-      } catch (error) {
-        console.error("Error querying banners:", error.message);
-        alert("Failed to load banners: " + error.message);
-        const fallbackBanners = [
-          { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+1', title: 'Up to 70% off | Fashion Deals', category: 'Fashion' },
-          { imageUrl: 'https://via.placeholder.com/1200x300?text=Banner+2', title: 'Buy 2, Save ₹150', category: 'Electronics' }
-        ];
-        fallbackBanners.forEach((banner) => {
-          const slide = document.createElement("div");
-          slide.className = "swiper-slide banner";
-          slide.style.backgroundImage = `url('${banner.imageUrl}')`;
-          slide.innerHTML = `
-            <div class="banner-overlay absolute bottom-0 left-0 p-4">
-              <h2 class="text-xl font-semibold">${banner.title}</h2>
-              <button class="btn mt-2" onclick="filterCategory('${banner.category}')">Shop Now</button>
-            </div>
-          `;
-          swiperWrapper.appendChild(slide);
-        });
-        swiper.update();
-      }
-    };
-
     // Initialize
     toggleLoadingSpinner(true);
     loadProducts();
-    loadBanners();
     updateCartCount();
   </script>
 </body>
