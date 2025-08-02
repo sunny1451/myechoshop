@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#1E40AF">
-  <meta name="description" content="Echo Store - Browse premium Rakhi products for Raksha Bandhan 2025 with fast delivery and exclusive deals.">
-  <meta name="keywords" content="online shopping, Rakhi, Raksha Bandhan, Echo Store, India">
+  <meta name="description" content="Echo Store - Browse premium Rakhi products with fast delivery and exclusive deals.">
+  <meta name="keywords" content="Rakhi, Raksha Bandhan, online shopping, Echo Store, India">
   <meta name="robots" content="index, follow">
   <title>Echo Store - Rakhi Products</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -121,13 +121,6 @@
       transform: scale(1.05);
       box-shadow: 0 15px 30px rgba(30, 64, 175, 0.2);
     }
-    .image-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 0.5rem;
-      max-height: 200px;
-      overflow-y: auto;
-    }
     .filter-panel {
       transition: transform 0.3s ease;
       background: linear-gradient(135deg, #f3f4f6, #ffffff);
@@ -184,7 +177,7 @@
   <nav class="navbar">
     <a href="index.html" class="navbar-logo">Echo Store</a>
     <div class="search-bar flex items-center">
-      <input id="search-bar" type="text" placeholder="Search by product name..." class="text-gray-700 focus:ring-0" aria-label="Search products" autocomplete="off">
+      <input id="search-bar" type="text" placeholder="Search Rakhi products..." class="text-gray-700 focus:ring-0" aria-label="Search Rakhi products" autocomplete="off">
       <button aria-label="Search">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </button>
@@ -210,15 +203,6 @@
   <div class="fixed top-0 left-0 h-full bg-white w-64 p-4 shadow-lg filter-panel lg:static lg:block lg:transform-none z-20">
     <h3 class="text-lg font-poppins font-semibold mb-4 text-blue-900">Filters</h3>
     <div class="space-y-4">
-      <div class="filter-section open" id="category-section">
-        <button class="w-full text-left p-2 bg-blue-100 rounded-md flex items-center" onclick="toggleSection('category')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          Category
-        </button>
-        <div id="category-filters" class="mt-2 space-y-2">
-          <label><input type="checkbox" name="category" value="Rakhi" checked disabled> Rakhi</label>
-        </div>
-      </div>
       <div class="filter-section closed" id="price-section">
         <button class="w-full text-left p-2 bg-blue-100 rounded-md flex items-center" onclick="toggleSection('price')">
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -256,20 +240,6 @@
         <input type="range" id="rating-filter" min="0" max="5" step="0.5" value="0" class="w-full mt-2">
         <span id="rating-value" class="text-sm">0★</span>
       </div>
-      <div class="filter-section closed" id="color-section">
-        <button class="w-full text-left p-2 bg-blue-100 rounded-md flex items-center" onclick="toggleSection('color')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
-          Color
-        </button>
-        <div id="color-filters" class="mt-2 space-y-2"></div>
-      </div>
-      <div class="filter-section closed" id="material-section">
-        <button class="w-full text-left p-2 bg-blue-100 rounded-md flex items-center" onclick="toggleSection('material')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2-5v6m14-6v6"></path></svg>
-          Material
-        </button>
-        <div id="material-filters" class="mt-2 space-y-2"></div>
-      </div>
       <button id="apply-filters" class="apply-button w-full bg-blue-600 text-white p-2 rounded-md mt-4 hover:bg-blue-700">Apply Filters</button>
     </div>
   </div>
@@ -277,7 +247,6 @@
   <!-- Product Grid Display -->
   <div class="container mx-auto pt-24 pb-8 px-4 lg:pl-64">
     <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    <button id="load-more-btn" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition mx-auto block hidden">Load More</button>
     <div id="empty-state" class="empty-state hidden text-center text-gray-500 mt-10">
       😢 No Rakhi products found.<br>Try adjusting filters or check back later.
     </div>
@@ -288,7 +257,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, where, limit, startAfter, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -316,6 +285,30 @@
     }
 
     const provider = new GoogleAuthProvider();
+
+    // Fallback Rakhi Product Data
+    const fallbackProducts = [
+      {
+        id: "1630457891234",
+        name: "Designer Rakhi",
+        brand: "",
+        rating: 0,
+        ratingsCount: 0,
+        price: 100,
+        originalPrice: 150,
+        discount: "33%",
+        emi: "",
+        offers: { cashback: "", bank: "", partner: "" },
+        delivery: { payOnDelivery: false, returnable: "", freeDelivery: true, amazonDelivered: false },
+        specs: { theme: "", brand: "", color: "Gold", size: "", material: "Beads", occasion: "Raksha Bandhan", specialFeature: "Handmade", finish: "Glossy" },
+        description: "A beautiful Rakhi for Raksha Bandhan",
+        imageUrls: [
+          { name: "image1.jpg", url: "https://i.ibb.co/.../image1.jpg" }
+        ],
+        sourceLocation: "KPHB",
+        createdAt: "2025-08-02T15:40:00.000Z"
+      }
+    ];
 
     // Show Toast
     const showToast = (message, success = true) => {
@@ -380,219 +373,149 @@
     if (!['http:', 'https:'].includes(window.location.protocol)) {
       document.getElementById("product-grid").innerHTML = '<div class="text-center text-red-500 mt-10">This app requires a server for Firebase Firestore. Please host it using a local server (e.g., `npx serve` or `python -m http.server 8000`) or Firebase Hosting.</div>';
       document.querySelectorAll(".filter-panel input, .filter-panel select, #apply-filters").forEach(el => el.disabled = true);
-      showToast('This page requires a server.', false);
-      return;
-    }
+    } else {
+      // Real-time data fetch for Rakhi products
+      const rakhiDocRef = doc(db, "products", "Rakhi");
+      const productGrid = document.getElementById("product-grid");
+      const emptyState = document.getElementById("empty-state");
+      let products = [];
 
-    // Real-time data fetch
-    const productGrid = document.getElementById("product-grid");
-    const emptyState = document.getElementById("empty-state");
-    const loadMoreBtn = document.getElementById("load-more-btn");
-    let products = [];
-    let lastDoc = null;
-    let unsubscribe = null;
-
-    function fetchRakhiProducts() {
-      try {
-        // Query Rakhi products
-        let q = query(
-          collection(db, "products"),
-          where("specs.brand", "==", "raksha bandhan 2025"),
-          orderBy("createdAt", "desc"),
-          limit(20)
-        );
-
-        unsubscribe = onSnapshot(q, (snapshot) => {
-          products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          if (products.length === 0) {
-            emptyState.classList.remove("hidden");
-            productGrid.innerHTML = "";
-          } else {
-            emptyState.classList.add("hidden");
-          }
-          renderProducts();
-          updateFilters();
-          lastDoc = snapshot.docs[snapshot.docs.length - 1];
-          loadMoreBtn.classList.toggle("hidden", snapshot.size < 20);
-        }, (error) => {
-          console.error("Error fetching Rakhi products:", error);
-          showToast('Failed to load Rakhi products.', false);
-          emptyState.classList.remove("hidden");
-          productGrid.innerHTML = "";
-          logAnalyticsError('product_fetch_error', error);
-        });
-      } catch (error) {
-        console.error("Error setting up listener:", error);
-        showToast('Failed to initialize product listener.', false);
-        emptyState.classList.remove("hidden");
-      }
-    }
-
-    // Load more products
-    async function loadMoreProducts() {
-      try {
-        let q = query(
-          collection(db, "products"),
-          where("specs.brand", "==", "raksha bandhan 2025"),
-          orderBy("createdAt", "desc"),
-          limit(20),
-          startAfter(lastDoc)
-        );
-
-        const snapshot = await getDocs(q);
-        const newProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        products.push(...newProducts);
+      onSnapshot(rakhiDocRef, (doc) => {
+        if (doc.exists()) {
+          products = doc.data().items || [];
+        } else {
+          products = [];
+        }
+        if (products.length === 0) {
+          products = fallbackProducts; // Use fallback if no data
+        }
         renderProducts();
-        lastDoc = snapshot.docs[snapshot.docs.length - 1];
-        loadMoreBtn.classList.toggle("hidden", snapshot.size < 20);
-      } catch (error) {
-        console.error("Error loading more products:", error);
-        showToast('Failed to load more products.', false);
-        logAnalyticsError('load_more_error', error);
-      }
-    }
-
-    // DOM Elements
-    const searchBar = document.getElementById("search-bar");
-    const categoryFilters = document.getElementById("category-filters");
-    const locationFilters = document.getElementById("location-filters");
-    const priceFilter = document.getElementById("price-filter");
-    const freeDeliveryFilter = document.getElementById("free-delivery-filter");
-    const payDeliveryFilter = document.getElementById("pay-delivery-filter");
-    const ratingFilter = document.getElementById("rating-filter");
-    const ratingValue = document.getElementById("rating-value");
-    const colorFilters = document.getElementById("color-filters");
-    const materialFilters = document.getElementById("material-filters");
-    const applyFiltersBtn = document.getElementById("apply-filters");
-
-    // Toggle filter sections
-    function toggleSection(section) {
-      const element = document.getElementById(`${section}-section`);
-      element.classList.toggle("closed");
-      element.classList.toggle("open");
-    }
-
-    // Update rating display
-    ratingFilter.addEventListener("input", () => {
-      ratingValue.textContent = `${ratingFilter.value}★`;
-    });
-
-    // Update filters dynamically
-    function updateFilters() {
-      const locations = [...new Set(products.map(p => p.sourceLocation || "Unknown"))];
-      locationFilters.innerHTML = locations.map(loc => `<label><input type="checkbox" name="location" value="${loc}"> ${loc}</label>`).join("");
-      const colors = [...new Set(products.map(p => p.specs?.color || "N/A"))];
-      colorFilters.innerHTML = colors.map(color => `<label><input type="checkbox" name="color" value="${color}"> ${color}</label>`).join("");
-      const materials = [...new Set(products.map(p => p.specs?.material || "N/A"))];
-      materialFilters.innerHTML = materials.map(material => `<label><input type="checkbox" name="material" value="${material}"> ${material}</label>`).join("");
-    }
-
-    // Render products with filters and search
-    function renderProducts() {
-      const searchQuery = searchBar.value.toLowerCase();
-      const selectedLocations = Array.from(document.querySelectorAll("input[name='location']:checked")).map(cb => cb.value);
-      const selectedColors = Array.from(document.querySelectorAll("input[name='color']:checked")).map(cb => cb.value);
-      const selectedMaterials = Array.from(document.querySelectorAll("input[name='material']:checked")).map(cb => cb.value);
-      const priceRange = priceFilter.value.split("-");
-      const minPrice = priceRange[0] === "" ? 0 : parseInt(priceRange[0]);
-      const maxPrice = priceRange[1] === "+" ? Infinity : parseInt(priceRange[1]) || Infinity;
-      const freeDelivery = freeDeliveryFilter.checked;
-      const payDelivery = payDeliveryFilter.checked;
-      const minRating = parseFloat(ratingFilter.value);
-
-      const filteredProducts = products.filter(p => {
-        const matchesSearch = !searchQuery || (p.name && p.name.toLowerCase().includes(searchQuery));
-        const matchesLocation = selectedLocations.length === 0 || selectedLocations.includes(p.sourceLocation || "Unknown");
-        const matchesColor = selectedColors.length === 0 || selectedColors.includes(p.specs?.color || "N/A");
-        const matchesMaterial = selectedMaterials.length === 0 || selectedMaterials.includes(p.specs?.material || "N/A");
-        const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
-        const matchesDelivery = (!freeDelivery || p.delivery?.freeDelivery) && (!payDelivery || p.delivery?.payOnDelivery);
-        const matchesRating = p.rating >= minRating;
-        return matchesSearch && matchesLocation && matchesColor && matchesMaterial && matchesPrice && matchesDelivery && matchesRating;
+        updateFilters();
+      }, (error) => {
+        console.error("Error fetching Rakhi products:", error);
+        showToast('Failed to load Rakhi products.', false);
+        products = fallbackProducts;
+        renderProducts();
+        updateFilters();
+        logAnalyticsError('rakhi_fetch_error', error);
       });
 
-      productGrid.innerHTML = "";
-      if (filteredProducts.length === 0) {
-        emptyState.classList.remove("hidden");
-      } else {
-        emptyState.classList.add("hidden");
-        filteredProducts.forEach((product, index) => {
-          const deliveryOptions = [];
-          if (product.delivery?.payOnDelivery) deliveryOptions.push("Pay on Delivery");
-          if (product.delivery?.freeDelivery) deliveryOptions.push("Free Delivery");
-          if (product.delivery?.returnable) deliveryOptions.push(`${product.delivery.returnable} Returnable`);
-          const features = product.specs?.specialFeature ? product.specs.specialFeature.split(",").map(f => f.trim()).filter(f => f) : [];
+      // DOM Elements
+      const searchBar = document.getElementById("search-bar");
+      const locationFilters = document.getElementById("location-filters");
+      const priceFilter = document.getElementById("price-filter");
+      const freeDeliveryFilter = document.getElementById("free-delivery-filter");
+      const payDeliveryFilter = document.getElementById("pay-delivery-filter");
+      const ratingFilter = document.getElementById("rating-filter");
+      const ratingValue = document.getElementById("rating-value");
+      const applyFiltersBtn = document.getElementById("apply-filters");
 
-          const card = document.createElement("div");
-          card.className = "card bg-white p-4 rounded-lg shadow-md";
-          card.style.animationDelay = `${index * 0.1}s`;
-          card.innerHTML = `
-            <div class="image-grid mb-4">
-              ${product.imageUrls?.map(url => `
-                <img src="${url}" alt="${product.name} image" class="h-24 w-full object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100?text=Image+Failed'; this.alt='Failed to load image';">
-              `).join("") || `<img src="https://via.placeholder.com/100?text=No+Image" alt="No image" class="h-24 w-full object-cover rounded-lg">`}
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900">${product.name || "Unnamed"}</h3>
-            <p class="text-sm text-gray-600">Brand: ${product.specs?.brand || product.brand || "N/A"}</p>
-            <div class="flex items-center mt-1">
-              <span class="text-yellow-500">${"★".repeat(Math.floor(product.rating || 0)) + "☆".repeat(5 - Math.floor(product.rating || 0))}</span>
-              <span class="text-sm text-gray-500 ml-2">(${product.ratingsCount || 0} ratings)</span>
-            </div>
-            <div class="flex items-center mt-1">
-              <span class="text-lg font-bold text-gray-900">₹${(product.price || 0).toFixed(2)}</span>
-              <span class="text-sm text-gray-500 line-through ml-2">₹${(product.originalPrice || 0).toFixed(2)}</span>
-              <span class="text-sm text-green-600 ml-2">${product.discount || ""}</span>
-            </div>
-            <p class="text-sm text-green-600 mt-1">${deliveryOptions.length ? deliveryOptions.join(", ") : "No delivery options"}</p>
-            <p class="text-sm text-gray-600 mt-1">📍 ${product.sourceLocation || "Unknown"}</p>
-            <p class="text-sm text-gray-600 mt-1">Category: ${product.category || "Rakhi"}</p>
-            <p class="text-sm text-gray-600 mt-1">Color: ${product.specs?.color || "N/A"}</p>
-            <p class="text-sm text-gray-600 mt-1">Material: ${product.specs?.material || "N/A"}</p>
-            <p class="text-sm text-gray-600 mt-1">Occasion: ${product.specs?.occasion || "Raksha Bandhan"}</p>
-            <p class="text-sm text-gray-600 mt-1">Finish: ${product.specs?.finish || "N/A"}</p>
-            <div class="flex flex-wrap gap-2 mt-1">
-              ${features.map(f => `<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">${f}</span>`).join("")}
-            </div>
-            <p class="text-sm text-gray-600 mt-2">${product.description || "No description available"}</p>
-            <div class="mt-2 space-x-2">
-              <a href="mainproduct.html?id=${product.id}" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">View Details</a>
-              <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700" onclick="addToCart('${product.id}')">Add to Cart</button>
-            </div>
-          `;
-          productGrid.appendChild(card);
-          gsap.from(card, { opacity: 0, y: 20, duration: 0.5, delay: index * 0.1 });
+      // Toggle filter sections
+      function toggleSection(section) {
+        const element = document.getElementById(`${section}-section`);
+        element.classList.toggle("closed");
+        element.classList.toggle("open");
+      }
+
+      // Update rating display
+      ratingFilter.addEventListener("input", () => {
+        ratingValue.textContent = `${ratingFilter.value}★`;
+      });
+
+      // Update filters dynamically
+      function updateFilters() {
+        const locations = [...new Set(products.map(p => p.sourceLocation || "Unknown"))];
+        locationFilters.innerHTML = locations.map(loc => `<label><input type="checkbox" name="location" value="${loc}"> ${loc}</label>`).join("");
+      }
+
+      // Render Rakhi products with filters and search
+      function renderProducts() {
+        const searchQuery = searchBar.value.toLowerCase();
+        const selectedLocations = Array.from(document.querySelectorAll("input[name='location']:checked")).map(cb => cb.value);
+        const priceRange = priceFilter.value.split("-");
+        const minPrice = priceRange[0] === "" ? 0 : parseInt(priceRange[0]);
+        const maxPrice = priceRange[1] === "+" ? Infinity : parseInt(priceRange[1]) || Infinity;
+        const freeDelivery = freeDeliveryFilter.checked;
+        const payDelivery = payDeliveryFilter.checked;
+        const minRating = parseFloat(ratingFilter.value);
+
+        const filteredProducts = products.filter(p => {
+          const matchesSearch = !searchQuery || (p.name && p.name.toLowerCase().includes(searchQuery));
+          const matchesLocation = selectedLocations.length === 0 || selectedLocations.includes(p.sourceLocation || "Unknown");
+          const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
+          const matchesDelivery = (!freeDelivery || p.delivery?.freeDelivery) && (!payDelivery || p.delivery?.payOnDelivery);
+          const matchesRating = p.rating >= minRating;
+          return matchesSearch && matchesLocation && matchesPrice && matchesDelivery && matchesRating;
         });
-      }
-    }
 
-    // Add to Cart
-    window.addToCart = (productId) => {
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      const product = products.find(p => p.id === productId);
-      if (product) {
-        const existingItem = cart.find(item => item.id === productId);
-        if (existingItem) {
-          existingItem.quantity += 1;
+        productGrid.innerHTML = "";
+        if (filteredProducts.length === 0) {
+          emptyState.classList.remove("hidden");
         } else {
-          cart.push({ id: productId, quantity: 1, color: product.specs?.color || 'N/A', size: product.specs?.size || 'N/A' });
+          emptyState.classList.add("hidden");
+          filteredProducts.forEach((product, index) => {
+            const card = document.createElement("div");
+            card.className = "card bg-white p-4 rounded-lg shadow-md";
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.innerHTML = `
+              <img src="${product.imageUrls?.[0]?.url || 'https://via.placeholder.com/300'}" alt="${product.name}" class="w-full h-48 object-cover rounded-md mb-2 lazy">
+              <h3 class="text-lg font-semibold text-gray-900">${product.name || "Unnamed Rakhi"}</h3>
+              <p class="text-sm text-gray-600">Brand: ${product.brand || "N/A"}</p>
+              <div class="flex items-center mt-1">
+                <span class="text-yellow-500">⭐ ${product.rating || 0}.0</span>
+                <span class="text-sm text-gray-500 ml-2">(${product.ratingsCount || 0} ratings)</span>
+              </div>
+              <div class="flex items-center mt-1">
+                <span class="text-lg font-bold text-gray-900">₹${product.price || 0}</span>
+                <span class="text-sm text-gray-500 line-through ml-2">₹${product.originalPrice || 0}</span>
+                <span class="text-sm text-green-600 ml-2">${product.discount || ""}</span>
+              </div>
+              <p class="text-sm text-green-600 mt-1">${product.delivery?.freeDelivery ? "✅ Free Delivery" : ""}</p>
+              <p class="text-sm text-gray-600 mt-1">${product.delivery?.returnable ? `🔁 ${product.delivery.returnable}` : ""}</p>
+              <p class="text-sm text-gray-600 mt-1">📍 ${product.sourceLocation || "Unknown"}</p>
+              <p class="text-sm text-gray-600 mt-1">Material: ${product.specs?.material || "N/A"}</p>
+              <p class="text-sm text-gray-600 mt-1">Color: ${product.specs?.color || "N/A"}</p>
+              <p class="text-sm text-gray-600 mt-1">Occasion: ${product.specs?.occasion || "Raksha Bandhan"}</p>
+              <p class="text-sm text-gray-600 mt-1">Features: ${product.specs?.specialFeature || "N/A"}</p>
+              <p class="text-sm text-gray-600 mt-1">Finish: ${product.specs?.finish || "N/A"}</p>
+              <div class="mt-2 space-x-2">
+                <a href="mainproduct.html?id=${product.id}&category=Rakhi" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">View Details</a>
+                <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700" onclick="addToCart('${product.id}')">Add to Cart</button>
+              </div>
+            `;
+            productGrid.appendChild(card);
+            gsap.from(card, { opacity: 0, y: 20, duration: 0.5, delay: index * 0.1 });
+          });
         }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        showToast('Added to cart!');
-        logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
       }
-    };
 
-    // Event listeners
-    searchBar.addEventListener("input", renderProducts);
-    [priceFilter, freeDeliveryFilter, payDeliveryFilter, ratingFilter].forEach(el => el.addEventListener("change", () => applyFiltersBtn.click()));
-    applyFiltersBtn.addEventListener("click", renderProducts);
-    loadMoreBtn.addEventListener("click", loadMoreProducts);
+      // Add to Cart
+      window.addToCart = (productId) => {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const product = products.find(p => p.id === productId);
+        if (product) {
+          const existingItem = cart.find(item => item.id === productId);
+          if (existingItem) {
+            existingItem.quantity += 1;
+          } else {
+            cart.push({ id: productId, quantity: 1, color: product.specs?.color || 'Gold', size: product.specs?.size || '' });
+          }
+          localStorage.setItem('cart', JSON.stringify(cart));
+          updateCartCount();
+          showToast('Added to cart!');
+          logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
+        }
+      };
 
-    // Initialize
-    updateCartCount();
-    fetchRakhiProducts();
-    logEvent(analytics, 'page_view', { page_title: document.title, page_location: window.location.href });
+      // Event listeners
+      searchBar.addEventListener("input", renderProducts);
+      [priceFilter, freeDeliveryFilter, payDeliveryFilter, ratingFilter].forEach(el => el.addEventListener("change", () => applyFiltersBtn.click()));
+      applyFiltersBtn.addEventListener("click", renderProducts);
+
+      // Initialize
+      updateCartCount();
+      logEvent(analytics, 'page_view', { page_title: document.title, page_location: window.location.href });
+    }
   </script>
 </body>
 </html>
