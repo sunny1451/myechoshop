@@ -20,8 +20,8 @@
       --light-bg: #FFFFFF;
       --text-primary: #0F1111;
       --text-secondary: #4B5563;
-      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --shadow-base: 0 2px 6px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
       --gradient-primary: linear-gradient(135deg, #1A252F, #2A3F5F);
       --gradient-accent: linear-gradient(135deg, #1E40AF, #3B82F6);
     }
@@ -30,11 +30,12 @@
       background-color: var(--light-bg);
       color: var(--text-primary);
       margin: 0;
-      line-height: 1.6;
+      line-height: 1.4;
+      font-size: 0.85rem;
     }
     .navbar {
       background: var(--gradient-primary);
-      padding: 1rem 2rem;
+      padding: 0.4rem 0.8rem;
       position: fixed;
       top: 0;
       left: 0;
@@ -44,10 +45,11 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: var(--shadow-base);
+      height: 48px;
     }
     .navbar-logo {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: #FFF;
       text-decoration: none;
@@ -61,14 +63,14 @@
     .navbar-btn {
       background: var(--gradient-accent);
       color: #FFF;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
       font-weight: 600;
       transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.3rem;
       box-shadow: var(--shadow-base);
     }
     .navbar-btn:hover {
@@ -78,52 +80,85 @@
     }
     .search-bar {
       display: flex;
-      width: 35%;
-      max-width: 400px;
+      width: 100%;
+      max-width: 180px;
       background-color: #FFF;
-      border-radius: 10px;
+      border-radius: 6px;
       overflow: hidden;
       box-shadow: var(--shadow-base);
-      border: 2px solid var(--primary-accent);
-      transition: box-shadow 0.3s ease;
+      border: 1px solid var(--primary-accent);
+      height: 28px;
+      position: relative;
     }
     .search-bar:focus-within {
-      box-shadow: 0 0 10px rgba(30, 64, 175, 0.3);
+      box-shadow: 0 0 6px rgba(30, 64, 175, 0.3);
     }
     .search-bar input {
       border: none;
       outline: none;
       flex: 1;
-      padding: 0.8rem 1rem 0.8rem 2.5rem;
-      font-size: 0.9rem;
+      padding: 0.4rem 0.6rem 0.4rem 2rem;
+      font-size: 0.75rem;
       color: var(--text-primary);
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>') no-repeat 0.8rem center;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="gray" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>') no-repeat 0.5rem center;
     }
     .search-bar button {
       background: var(--gradient-accent);
       color: #FFF;
       border: none;
-      padding: 0.8rem 1.2rem;
+      padding: 0.4rem 0.6rem;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.75rem;
       transition: transform 0.3s ease, background 0.3s ease;
     }
     .search-bar button:hover {
       background: linear-gradient(135deg, #1E3A8A, #3B82F6);
       transform: scale(1.05);
     }
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #FFF;
+      border: 1px solid #E5E7EB;
+      border-radius: 6px;
+      box-shadow: var(--shadow-base);
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+    .search-suggestions.show {
+      display: block;
+    }
+    .search-suggestions div {
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .search-suggestions div:hover {
+      background: #F3F4F6;
+    }
     .card {
       transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
       opacity: 0;
       animation: fadeIn 0.5s forwards;
+      border-radius: 8px;
+      overflow: hidden;
     }
     .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 30px rgba(30, 64, 175, 0.2);
+      transform: scale(1.03);
+      box-shadow: var(--shadow-hover);
     }
     .filter-panel {
       transition: transform 0.3s ease;
       background: linear-gradient(135deg, #f3f4f6, #ffffff);
+      width: 80vw;
+      max-width: 240px;
+      padding: 0.5rem;
+      z-index: 20;
     }
     .filter-panel.hidden {
       transform: translateX(-100%);
@@ -133,7 +168,7 @@
       overflow: hidden;
     }
     .filter-section.open {
-      max-height: 500px;
+      max-height: 300px;
     }
     .filter-section.closed {
       max-height: 0;
@@ -144,19 +179,41 @@
     .apply-button:hover {
       background-color: #1e40af;
     }
+    .close-filter-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: #EF4444;
+      color: #FFF;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+      z-index: 30;
+    }
+    .close-filter-btn:hover {
+      background: #DC2626;
+    }
     .toast {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 10px;
+      right: 10px;
       background: #10B981;
       color: #FFF;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
       box-shadow: var(--shadow-base);
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.4s ease, transform 0.4s ease;
       z-index: 1000;
+      font-size: 0.75rem;
     }
     .toast.show {
       opacity: 1;
@@ -165,10 +222,52 @@
     @keyframes fadeIn {
       to { opacity: 1; }
     }
-    @media (max-width: 1024px) {
-      .grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .filter-panel { transform: translateX(-100%); }
-      .filter-toggle:checked ~ .filter-panel { transform: translateX(0); }
+    @media (max-width: 640px) {
+      .navbar {
+        padding: 0.4rem 0.8rem;
+        height: 48px;
+      }
+      .navbar-logo {
+        font-size: 1.1rem;
+      }
+      .search-bar {
+        max-width: 180px;
+        height: 28px;
+      }
+      .navbar-btn {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+      }
+      .navbar-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .grid-cols-1 {
+        grid-template-columns: 1fr;
+      }
+      .filter-panel {
+        width: 80vw;
+        max-width: 240px;
+        padding: 0.5rem;
+      }
+      .filter-toggle:checked ~ .filter-panel {
+        transform: translateX(0);
+      }
+      .card img {
+        height: 120px;
+      }
+      .container {
+        padding: 0.5rem;
+        padding-top: 60px;
+      }
+      .close-filter-btn {
+        display: flex;
+      }
+    }
+    @media (min-width: 641px) {
+      .close-filter-btn {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -179,75 +278,77 @@
     <div class="search-bar flex items-center">
       <input id="search-bar" type="text" placeholder="Search Rakhi products..." class="text-gray-700 focus:ring-0" aria-label="Search Rakhi products" autocomplete="off">
       <button aria-label="Search">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
       </button>
+      <div id="search-suggestions" class="search-suggestions"></div>
     </div>
-    <div class="flex items-center space-x-3">
+    <div class="flex items-center space-x-2">
       <button id="auth-status" class="navbar-btn" role="link" tabindex="0">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
         Hello, Sign In
       </button>
       <a href="cart.html" class="navbar-btn" aria-label="View cart">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-        Cart <span id="cart-count" class="ml-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        Cart <span id="cart-count" class="ml-1 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">0</span>
       </a>
     </div>
   </nav>
 
   <!-- Filter Sidebar and Toggle -->
   <input type="checkbox" id="filter-toggle" class="hidden">
-  <label for="filter-toggle" class="fixed top-20 left-4 bg-blue-600 text-white p-2 rounded-full z-10 lg:hidden flex items-center">
-    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+  <label for="filter-toggle" class="fixed top-12 left-2 bg-blue-600 text-white p-1.5 rounded-full z-10 lg:hidden flex items-center">
+    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
     Filters
   </label>
-  <div class="fixed top-0 left-0 h-full bg-white w-64 p-4 shadow-lg filter-panel lg:static lg:block lg:transform-none z-20">
-    <h3 class="text-lg font-poppins font-semibold mb-4 text-blue-900">Filters</h3>
-    <div class="space-y-4">
+  <div class="fixed top-0 left-0 h-full bg-white w-80vw max-w-240px p-2 shadow-lg filter-panel lg:static lg:block lg:transform-none z-20">
+    <button id="close-filter" class="close-filter-btn lg:hidden">X</button>
+    <h3 class="text-base font-poppins font-semibold mb-2 text-blue-900">Filters</h3>
+    <div class="space-y-2">
       <div class="filter-section closed" id="price-section">
-        <button class="w-full text-left p-2 bg-blue-100 rounded-md flex items-center" onclick="toggleSection('price')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <button class="w-full text-left p-1.5 bg-blue-100 rounded-md flex items-center text-xs" onclick="toggleSection('price')">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           Price
         </button>
-        <select id="price-filter" class="w-full p-2 border rounded-md mt-2">
+        <select id="price-filter" class="w-full p-1.5 border rounded-md mt-1 text-xs">
           <option value="">All</option>
-          <option value="0-100">₹0 - ₹100</option>
+          <option value="10-50">₹10 - ₹50</option>
+          <option value="50-100">₹50 - ₹100</option>
           <option value="100-500">₹100 - ₹500</option>
-          <option value="500+">₹500+</option>
         </select>
       </div>
       <div class="filter-section closed" id="location-section">
-        <button class="w-full text-left p-2 bg-blue-100 rounded-md flex items-center" onclick="toggleSection('location')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1 1 0 01-1.414 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        <button class="w-full text-left p-1.5 bg-blue-100 rounded-md flex items-center text-xs" onclick="toggleSection('location')">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1 1 0 01-1.414 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
           Location
         </button>
-        <div id="location-filters" class="mt-2 space-y-2"></div>
+        <div id="location-filters" class="mt-1 space-y-1 text-xs"></div>
       </div>
       <div class="filter-section closed" id="delivery-section">
-        <button class="w-full text-left p-2 bg-blue-100 rounded-md flex items-center" onclick="toggleSection('delivery')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1"></path></svg>
+        <button class="w-full text-left p-1.5 bg-blue-100 rounded-md flex items-center text-xs" onclick="toggleSection('delivery')">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1"></path></svg>
           Delivery
         </button>
-        <div class="mt-2 space-y-2">
+        <div class="mt-1 space-y-1 text-xs">
           <label><input type="checkbox" id="free-delivery-filter" value="free"> Free Delivery</label>
           <label><input type="checkbox" id="pay-delivery-filter" value="pay"> Pay on Delivery</label>
         </div>
       </div>
       <div class="filter-section closed" id="rating-section">
-        <button class="w-full text-left p-2 bg-blue-100 rounded-md flex items-center" onclick="toggleSection('rating')">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+        <button class="w-full text-left p-1.5 bg-blue-100 rounded-md flex items-center text-xs" onclick="toggleSection('rating')">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
           Rating
         </button>
-        <input type="range" id="rating-filter" min="0" max="5" step="0.5" value="0" class="w-full mt-2">
-        <span id="rating-value" class="text-sm">0★</span>
+        <input type="range" id="rating-filter" min="0" max="5" step="0.5" value="0" class="w-full mt-1">
+        <span id="rating-value" class="text-xs">0★</span>
       </div>
-      <button id="apply-filters" class="apply-button w-full bg-blue-600 text-white p-2 rounded-md mt-4 hover:bg-blue-700">Apply Filters</button>
+      <button id="apply-filters" class="apply-button w-full bg-blue-600 text-white p-1.5 rounded-md mt-2 text-xs hover:bg-blue-700">Apply Filters</button>
     </div>
   </div>
 
   <!-- Product Grid Display -->
-  <div class="container mx-auto pt-24 pb-8 px-4 lg:pl-64">
-    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    <div id="empty-state" class="empty-state hidden text-center text-gray-500 mt-10">
+  <div class="container mx-auto pt-14 pb-4 px-2">
+    <div id="product-grid" class="grid grid-cols-1 gap-4"></div>
+    <div id="empty-state" class="empty-state hidden text-center text-gray-500 mt-6 text-xs">
       😢 No Rakhi products found.<br>Try adjusting filters or check back later.
     </div>
   </div>
@@ -291,7 +392,7 @@
       {
         id: "1630457891234",
         name: "Designer Rakhi",
-        brand: "",
+        brand: "EchoCraft",
         rating: 0,
         ratingsCount: 0,
         price: 100,
@@ -300,10 +401,10 @@
         emi: "",
         offers: { cashback: "", bank: "", partner: "" },
         delivery: { payOnDelivery: false, returnable: "", freeDelivery: true, amazonDelivered: false },
-        specs: { theme: "", brand: "", color: "Gold", size: "", material: "Beads", occasion: "Raksha Bandhan", specialFeature: "Handmade", finish: "Glossy" },
+        specs: { theme: "", brand: "EchoCraft", color: "Gold", size: "", material: "Beads", occasion: "Raksha Bandhan", specialFeature: "Handmade", finish: "Glossy" },
         description: "A beautiful Rakhi for Raksha Bandhan",
         imageUrls: [
-          { name: "image1.jpg", url: "https://i.ibb.co/.../image1.jpg" }
+          { name: "image1.jpg", url: "https://via.placeholder.com/150" }
         ],
         sourceLocation: "KPHB",
         createdAt: "2025-08-02T15:40:00.000Z"
@@ -325,12 +426,12 @@
       const authButton = document.getElementById('auth-status');
       if (user) {
         authButton.innerHTML = `
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
           ${user.displayName || 'User'}
         `;
       } else {
         authButton.innerHTML = `
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
           Hello, Sign In
         `;
       }
@@ -369,15 +470,22 @@
       document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
     };
 
+    // Close Filter Panel
+    document.getElementById('close-filter').addEventListener('click', () => {
+      document.getElementById('filter-toggle').checked = false;
+    });
+
     // Check Environment
     if (!['http:', 'https:'].includes(window.location.protocol)) {
-      document.getElementById("product-grid").innerHTML = '<div class="text-center text-red-500 mt-10">This app requires a server for Firebase Firestore. Please host it using a local server (e.g., `npx serve` or `python -m http.server 8000`) or Firebase Hosting.</div>';
+      document.getElementById("product-grid").innerHTML = '<div class="text-center text-red-500 mt-6 text-xs">This app requires a server for Firebase Firestore. Please host it using a local server (e.g., `npx serve` or `python -m http.server 8000`) or Firebase Hosting.</div>';
       document.querySelectorAll(".filter-panel input, .filter-panel select, #apply-filters").forEach(el => el.disabled = true);
     } else {
       // Real-time data fetch for Rakhi products
       const rakhiDocRef = doc(db, "products", "Rakhi");
       const productGrid = document.getElementById("product-grid");
       const emptyState = document.getElementById("empty-state");
+      const searchBar = document.getElementById("search-bar");
+      const searchSuggestions = document.getElementById("search-suggestions");
       let products = [];
 
       onSnapshot(rakhiDocRef, (doc) => {
@@ -401,7 +509,6 @@
       });
 
       // DOM Elements
-      const searchBar = document.getElementById("search-bar");
       const locationFilters = document.getElementById("location-filters");
       const priceFilter = document.getElementById("price-filter");
       const freeDeliveryFilter = document.getElementById("free-delivery-filter");
@@ -428,19 +535,46 @@
         locationFilters.innerHTML = locations.map(loc => `<label><input type="checkbox" name="location" value="${loc}"> ${loc}</label>`).join("");
       }
 
+      // Show search suggestions
+      function showSuggestions(query) {
+        if (!query) {
+          searchSuggestions.classList.remove("show");
+          searchSuggestions.innerHTML = "";
+          return;
+        }
+        const suggestions = products
+          .filter(p => 
+            (p.name && p.name.toLowerCase().includes(query.toLowerCase())) || 
+            (p.brand && p.brand.toLowerCase().includes(query.toLowerCase()))
+          )
+          .slice(0, 5)
+          .map(p => `<div onclick="selectSuggestion('${p.name}')">${p.name} (${p.brand || 'No Brand'})</div>`);
+        searchSuggestions.innerHTML = suggestions.length ? suggestions.join("") : "<div>No matches found</div>";
+        searchSuggestions.classList.add("show");
+      }
+
+      // Select suggestion
+      window.selectSuggestion = (value) => {
+        searchBar.value = value;
+        searchSuggestions.classList.remove("show");
+        renderProducts();
+      };
+
       // Render Rakhi products with filters and search
       function renderProducts() {
         const searchQuery = searchBar.value.toLowerCase();
         const selectedLocations = Array.from(document.querySelectorAll("input[name='location']:checked")).map(cb => cb.value);
         const priceRange = priceFilter.value.split("-");
         const minPrice = priceRange[0] === "" ? 0 : parseInt(priceRange[0]);
-        const maxPrice = priceRange[1] === "+" ? Infinity : parseInt(priceRange[1]) || Infinity;
+        const maxPrice = priceRange[1] === undefined ? Infinity : parseInt(priceRange[1]);
         const freeDelivery = freeDeliveryFilter.checked;
         const payDelivery = payDeliveryFilter.checked;
         const minRating = parseFloat(ratingFilter.value);
 
         const filteredProducts = products.filter(p => {
-          const matchesSearch = !searchQuery || (p.name && p.name.toLowerCase().includes(searchQuery));
+          const matchesSearch = !searchQuery || 
+            (p.name && p.name.toLowerCase().includes(searchQuery)) || 
+            (p.brand && p.brand.toLowerCase().includes(searchQuery));
           const matchesLocation = selectedLocations.length === 0 || selectedLocations.includes(p.sourceLocation || "Unknown");
           const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
           const matchesDelivery = (!freeDelivery || p.delivery?.freeDelivery) && (!payDelivery || p.delivery?.payOnDelivery);
@@ -455,32 +589,32 @@
           emptyState.classList.add("hidden");
           filteredProducts.forEach((product, index) => {
             const card = document.createElement("div");
-            card.className = "card bg-white p-4 rounded-lg shadow-md";
+            card.className = "card bg-white p-2 rounded-lg shadow-md";
             card.style.animationDelay = `${index * 0.1}s`;
             card.innerHTML = `
-              <img src="${product.imageUrls?.[0]?.url || 'https://via.placeholder.com/300'}" alt="${product.name}" class="w-full h-48 object-cover rounded-md mb-2 lazy">
-              <h3 class="text-lg font-semibold text-gray-900">${product.name || "Unnamed Rakhi"}</h3>
-              <p class="text-sm text-gray-600">Brand: ${product.brand || "N/A"}</p>
-              <div class="flex items-center mt-1">
-                <span class="text-yellow-500">⭐ ${product.rating || 0}.0</span>
-                <span class="text-sm text-gray-500 ml-2">(${product.ratingsCount || 0} ratings)</span>
+              <img src="${product.imageUrls?.[0]?.url || 'https://via.placeholder.com/150'}" alt="${product.name}" class="w-full h-32 object-cover rounded-md mb-1 lazy">
+              <h3 class="text-base font-semibold text-gray-900">${product.name || "Unnamed Rakhi"}</h3>
+              <p class="text-xs text-gray-600">Brand: ${product.brand || "N/A"}</p>
+              <div class="flex items-center mt-0.5">
+                <span class="text-yellow-500 text-xs">⭐ ${product.rating || 0}.0</span>
+                <span class="text-xs text-gray-500 ml-1">(${product.ratingsCount || 0} ratings)</span>
               </div>
-              <div class="flex items-center mt-1">
-                <span class="text-lg font-bold text-gray-900">₹${product.price || 0}</span>
-                <span class="text-sm text-gray-500 line-through ml-2">₹${product.originalPrice || 0}</span>
-                <span class="text-sm text-green-600 ml-2">${product.discount || ""}</span>
+              <div class="flex items-center mt-0.5">
+                <span class="text-base font-bold text-gray-900">₹${product.price || 0}</span>
+                <span class="text-xs text-gray-500 line-through ml-1">₹${product.originalPrice || 0}</span>
+                <span class="text-xs text-green-600 ml-1">${product.discount || ""}</span>
               </div>
-              <p class="text-sm text-green-600 mt-1">${product.delivery?.freeDelivery ? "✅ Free Delivery" : ""}</p>
-              <p class="text-sm text-gray-600 mt-1">${product.delivery?.returnable ? `🔁 ${product.delivery.returnable}` : ""}</p>
-              <p class="text-sm text-gray-600 mt-1">📍 ${product.sourceLocation || "Unknown"}</p>
-              <p class="text-sm text-gray-600 mt-1">Material: ${product.specs?.material || "N/A"}</p>
-              <p class="text-sm text-gray-600 mt-1">Color: ${product.specs?.color || "N/A"}</p>
-              <p class="text-sm text-gray-600 mt-1">Occasion: ${product.specs?.occasion || "Raksha Bandhan"}</p>
-              <p class="text-sm text-gray-600 mt-1">Features: ${product.specs?.specialFeature || "N/A"}</p>
-              <p class="text-sm text-gray-600 mt-1">Finish: ${product.specs?.finish || "N/A"}</p>
-              <div class="mt-2 space-x-2">
-                <a href="mainproduct.html?id=${product.id}&category=Rakhi" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">View Details</a>
-                <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700" onclick="addToCart('${product.id}')">Add to Cart</button>
+              <p class="text-xs text-green-600 mt-0.5">${product.delivery?.freeDelivery ? "✅ Free Delivery" : ""}</p>
+              <p class="text-xs text-gray-600 mt-0.5">${product.delivery?.returnable ? `🔁 ${product.delivery.returnable}` : ""}</p>
+              <p class="text-xs text-gray-600 mt-0.5">📍 ${product.sourceLocation || "Unknown"}</p>
+              <p class="text-xs text-gray-600 mt-0.5">Material: ${product.specs?.material || "N/A"}</p>
+              <p class="text-xs text-gray-600 mt-0.5">Color: ${product.specs?.color || "N/A"}</p>
+              <p class="text-xs text-gray-600 mt-0.5">Occasion: ${product.specs?.occasion || "Raksha Bandhan"}</p>
+              <p class="text-xs text-gray-600 mt-0.5">Features: ${product.specs?.specialFeature || "N/A"}</p>
+              <p class="text-xs text-gray-600 mt-0.5">Finish: ${product.specs?.finish || "N/A"}</p>
+              <div class="mt-1 space-x-1 flex">
+                <a href="mainproduct.html?id=${product.id}&category=Rakhi" class="bg-blue-600 text-white px-2 py-0.5 rounded text-xs hover:bg-blue-700">View Details</a>
+                <button class="bg-green-600 text-white px-2 py-0.5 rounded text-xs hover:bg-green-700" onclick="addToCart('${product.id}')">Add to Cart</button>
               </div>
             `;
             productGrid.appendChild(card);
@@ -508,7 +642,16 @@
       };
 
       // Event listeners
-      searchBar.addEventListener("input", renderProducts);
+      searchBar.addEventListener("input", () => {
+        showSuggestions(searchBar.value);
+        renderProducts();
+      });
+      searchBar.addEventListener("focus", () => {
+        showSuggestions(searchBar.value);
+      });
+      searchBar.addEventListener("blur", () => {
+        setTimeout(() => searchSuggestions.classList.remove("show"), 200);
+      });
       [priceFilter, freeDeliveryFilter, payDeliveryFilter, ratingFilter].forEach(el => el.addEventListener("change", () => applyFiltersBtn.click()));
       applyFiltersBtn.addEventListener("click", renderProducts);
 
