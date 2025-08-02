@@ -243,7 +243,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -263,13 +263,6 @@
 
     // ImgBB API Key
     const IMGBB_API_KEY = "01400454f4aafb70d1c9beddec5cbbc5";
-
-    // Predefined Rakhi Image URLs
-    const rakhiImageUrls = [
-      { name: "Combo Rakhi", url: "https://i.ibb.co/TMSbvhm6/Whats-App-Image-2025-08-01-at-18-30-38-2a850cfc.jpg" },
-      { name: "Pusala Rakhi", url: "https://i.ibb.co/VWFkWxYF/Whats-App-Image-2025-08-01-at-18-30-38-8b4f000d.jpg" },
-      { name: "Combo Rakhi", url: "https://i.ibb.co/0VzBFzHs/sunny-pic.jpg" }
-    ];
 
     // DOM Elements
     const imageUpload = document.getElementById("image-upload");
@@ -573,7 +566,7 @@
     // Form Validation
     function validateForm() {
       let isValid = true;
-      if (!imageUpload.files.length && category.value !== "Rakhi") {
+      if (!imageUpload.files.length) {
         errors.image.textContent = "Please upload at least one valid image (JPG/PNG, <4MB)";
         errors.image.classList.remove("hidden");
         isValid = false;
@@ -612,7 +605,10 @@
     // Upload to ImgBB and Firestore
     uploadBtn.addEventListener("click", async () => {
       if (window.location.protocol === "file:") return;
-      if (!validateForm()) return;
+      if (!validateForm()) {
+        console.log("Form validation failed");
+        return;
+      }
 
       uploadBtn.classList.add("uploading");
       uploadBtn.disabled = true;
@@ -620,42 +616,40 @@
       uploadProgress.textContent = "Uploading images...";
 
       try {
-        let allImageUrls = [];
-        if (category.value !== "Rakhi") {
-          // Upload images to ImgBB for non-Rakhi categories
-          const files = Array.from(imageUpload.files).filter(file => file.type.match(/^image\/(jpeg|png)$/i) && file.size <= 4 * 1024 * 1024);
-          if (!files.length) {
-            throw new Error("No valid images selected (JPG/PNG, <4MB)");
-          }
+        // Upload images to ImgBB for all categories
+        const files = Array.from(imageUpload.files).filter(file => file.type.match(/^image\/(jpeg|png)$/i) && file.size <= 4 * 1024 * 1024);
+        if (!files.length) {
+          throw new Error("No valid images selected (JPG/PNG, <4MB)");
+        }
 
-          const uploadPromises = files.map(async (file, index) => {
-            const formData = new FormData();
-            const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").substring(0, 50);
-            formData.append("image", file, sanitizedName);
-            formData.append("key", IMGBB_API_KEY);
+        console.log(`Uploading ${files.length} images to ImgBB`);
+        const uploadPromises = files.map(async (file, index) => {
+          const formData = new FormData();
+          const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").substring(0, 50);
+          formData.append("image", file, sanitizedName);
+          formData.append("key", IMGBB_API_KEY);
 
-            uploadProgress.textContent = `Uploading image ${index + 1} of ${files.length}...`;
-            const response = await fetch(`https://api.imgbb.com/1/upload?cache=${Date.now()}`, {
-              method: "POST",
-              body: formData
-            });
-
-            const result = await response.json();
-            if (!result.success) {
-              throw new Error(`Image ${sanitizedName} upload failed: ${result.status || "Unknown error"}`);
-            }
-            return { name: sanitizedName, url: result.data.url };
+          uploadProgress.textContent = `Uploading image ${index + 1} of ${files.length}...`;
+          console.log(`Uploading image: ${sanitizedName}`);
+          const response = await fetch(`https://api.imgbb.com/1/upload?cache=${Date.now()}`, {
+            method: "POST",
+            body: formData
           });
 
-          allImageUrls = await Promise.all(uploadPromises);
-        } else {
-          // Use predefined Rakhi image URLs for Rakhi category
-          allImageUrls = rakhiImageUrls;
-        }
+          const result = await response.json();
+          console.log(`ImgBB response for ${sanitizedName}:`, result);
+          if (!result.success) {
+            throw new Error(`Image ${sanitizedName} upload failed: ${result.status || "Unknown error"}`);
+          }
+          return { name: sanitizedName, url: result.data.url };
+        });
+
+        const allImageUrls = await Promise.all(uploadPromises);
+        console.log("All images uploaded:", allImageUrls);
 
         // Prepare product data
         const product = {
-          id: Date.now().toString(), // Unique ID for the product within the array
+          id: Date.now().toString(),
           name: productName.value,
           brand: brand.value || "",
           rating: parseFloat(rating.value) || 0,
@@ -688,24 +682,29 @@
           description: description.value,
           imageUrls: allImageUrls,
           sourceLocation: sourceLocation.value,
-          createdAt: serverTimestamp()
+          createdAt: new Date().toISOString() // Use client-side timestamp
         };
 
-        // Save to Firestore with category as document ID
+        console.log("Prepared product data:", product);
+
+        // Save to Firestore
         uploadProgress.textContent = "Saving product to database...";
         const categoryDocRef = doc(db, "products", category.value);
+        console.log(`Checking Firestore document: products/${category.value}`);
         const categoryDoc = await getDoc(categoryDocRef);
 
         if (categoryDoc.exists()) {
-          // Update existing document by appending to the items array
+          console.log(`Document exists, appending to items array`);
           await updateDoc(categoryDocRef, {
             items: arrayUnion(product)
           });
+          console.log(`Product appended to products/${category.value}/items`);
         } else {
-          // Create new document with the first product in the items array
+          console.log(`Document does not exist, creating new document`);
           await setDoc(categoryDocRef, {
             items: [product]
           });
+          console.log(`New document created at products/${category.value}`);
         }
 
         // Show success modal
@@ -726,16 +725,24 @@
           }
         });
       } catch (error) {
-        console.error("Error uploading product:", error);
+        console.error("Detailed upload error:", {
+          message: error.message,
+          code: error.code,
+          stack: error.stack
+        });
         let errorMessage = "Failed to upload product. Please try again.";
-        if (error.message.includes("ImgBB")) {
-          errorMessage = `Image upload to ImgBB failed: ${error.message}. Check file type (JPG/PNG), size (<4MB), or network.`;
+        if (error.message.includes("ImgBB") || error.message.includes("Image")) {
+          errorMessage = `Image upload to ImgBB failed: ${error.message}. Check file type (JPG/PNG), size (<4MB), or API key.`;
+        } else if (error.message.includes("serverTimestamp")) {
+          errorMessage = "Firestore does not support server timestamps in arrays. Please try again.";
         } else if (error.code === "permission-denied") {
-          errorMessage = "Permission denied. Please check Firestore security rules.";
+          errorMessage = "Permission denied. Please check Firestore security rules or ensure you are logged in.";
         } else if (error.code === "unavailable") {
           errorMessage = "Firestore unavailable. Please check your network or ensure the app is running on a server.";
         } else if (error.message.includes("No valid images")) {
           errorMessage = "No valid images selected. Please upload JPG/PNG files under 4MB.";
+        } else {
+          errorMessage = `Upload failed: ${error.message || "Unknown error"}. Check console for details.`;
         }
         Swal.fire({
           icon: "error",
