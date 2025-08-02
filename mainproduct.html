@@ -265,13 +265,6 @@
     .variant-selector label:hover {
       background: #F3F4F6;
     }
-    .feature-highlights li {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 0.5rem 0;
-      font-size: 0.8rem;
-    }
     .collapsible-content {
       max-height: 0;
       overflow: hidden;
@@ -506,12 +499,6 @@
     </div>
   </section>
 
-  <!-- Feature Highlights -->
-  <section class="max-w-1400px mx-auto p-1" role="region" aria-label="Feature highlights">
-    <h2 class="text-base font-semibold">Key Features</h2>
-    <ul class="feature-highlights" id="feature-highlights"></ul>
-  </section>
-
   <!-- Product Description -->
   <section class="max-w-1400px mx-auto p-1" role="region" aria-label="Product description">
     <h2 class="text-base font-semibold">Product Description</h2>
@@ -523,19 +510,8 @@
     <button class="text-blue-600 text-sm hover:underline" onclick="toggleDescription()">Show More</button>
   </section>
 
-  <!-- Warranty & Support -->
-  <section class="max-w-1400px mx-auto p-1" role="region" aria-label="Warranty and support">
-    <h2 class="text-base font-semibold">Warranty & Support</h2>
-    <p class="text-sm" id="warranty-info">Loading warranty information...</p>
-  </section>
-
   <!-- Customer Reviews -->
   <section class="max-w-1400px mx-auto p-1" role="region" aria-label="Customer reviews">
-    <h2 class="text-base font-semibold">Customer Reviews</h2>
-    <div class="flex items-center gap-1">
-      <p class="text-sm text-yellow-500" id="product-rating-display">⭐ 0 (0 ratings)</p>
-      <input type="text" id="review-filter" placeholder="Filter reviews..." class="border p-0.5 rounded text-sm w-32">
-    </div>
     <div class="review-form">
       <h3 class="text-sm font-semibold">Write a Review</h3>
       <div class="star-rating flex gap-0.5 my-1">
@@ -580,7 +556,7 @@
   <!-- JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, collection, query, limit, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -659,13 +635,7 @@
       sourceLocation: "KPHB",
       createdAt: "2025-08-02T15:40:00.000Z",
       stock: 10,
-      popularity: "50+ bought this month",
-      warranty: "No warranty",
-      features: [
-        { text: "Handmade with Beads", icon: "M5 13l4 4L19 7" },
-        { text: "Glossy Finish", icon: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-10H7a4 4 0 01-4 4z" },
-        { text: "Designed for Raksha Bandhan", icon: "M13 10V3L4 14h7v7l9-11h-7z" }
-      ]
+      popularity: "50+ bought this month"
     };
 
     // Log Errors to Firebase Analytics
@@ -782,7 +752,6 @@
     const renderProduct = (product) => {
       document.getElementById('product-title').textContent = product.name || 'Unnamed Rakhi';
       document.getElementById('product-rating').textContent = `⭐ ${product.rating || 0} (${product.ratingsCount || 0} ratings)`;
-      document.getElementById('product-rating-display').textContent = `⭐ ${product.rating || 0} (${product.ratingsCount || 0} ratings)`;
       document.getElementById('product-popularity').textContent = product.popularity || '0 bought this month';
       document.getElementById('product-price').innerHTML = `₹${product.price || 0} <span class="text-sm text-gray-500 line-through">₹${product.originalPrice || product.price || 0}</span> <span class="text-sm text-green-600">${product.discount || ''}</span>`;
       document.getElementById('product-stock').textContent = product.stock > 0 ? `In Stock: ${product.stock} units` : 'Out of Stock';
@@ -796,14 +765,7 @@
       `;
       document.getElementById('product-description').textContent = product.description || 'No description available.';
       document.getElementById('technical-specs').innerHTML = Object.entries(product.specs || {}).map(([key, value]) => `<p><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value || 'N/A'}</p>`).join('');
-      document.getElementById('warranty-info').textContent = product.warranty || 'No warranty information available.';
       document.getElementById('offers').innerHTML = Object.entries(product.offers || {}).filter(([_, value]) => value).map(([key, value]) => `<p class="text-sm text-green-600">🎁 ${value}</p>`).join('') || '<p class="text-sm">No offers available.</p>';
-      document.getElementById('feature-highlights').innerHTML = product.features?.map(feature => `
-        <li>
-          <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${feature.icon}"></path></svg>
-          ${feature.text}
-        </li>
-      `).join('') || '<li>No features available.</li>';
 
       // Render Images
       const imageWrapper = document.getElementById('product-images');
