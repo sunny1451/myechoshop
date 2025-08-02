@@ -217,14 +217,6 @@
     .btn-wishlist.active:hover {
       background: #059669;
     }
-    .btn-details {
-      background: #4B5563;
-      color: #FFF;
-    }
-    .btn-details:hover {
-      background: #374151;
-      transform: scale(1.05);
-    }
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.03); }
@@ -518,7 +510,6 @@
       </div>
       <button class="btn" onclick="addToCart()">Add to Cart</button>
       <button class="btn btn-buy" onclick="buyNow()">Buy Now</button>
-      <button class="btn btn-details" onclick="viewDetails()">View Details</button>
       <button class="btn btn-wishlist" id="wishlist-btn" onclick="toggleWishlist()">
         <svg id="wishlist-icon" class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
         <span id="wishlist-text">Add to Wishlist</span>
@@ -570,7 +561,6 @@
         <input type="radio" name="rating" id="star1" value="1" checked><label for="star1">★</label>
       </div>
       <textarea id="review-text" class="w-full p-1 border rounded text-sm" placeholder="Your review..." rows="3"></textarea>
-      <input type="file" id="review-image" accept="image/*" class="my-1 text-sm">
       <div id="review-status" class="text-sm mt-1"></div>
       <button class="btn" onclick="submitReview()">Submit Review</button>
     </div>
@@ -605,7 +595,7 @@
   <!-- JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, getDocs, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -802,13 +792,15 @@
         </li>
       `).join('') || '<li>No features available.</li>';
 
-      // Render Images
+      // Render Images with ImageKit
       const imageWrapper = document.getElementById('product-images');
       imageWrapper.innerHTML = (product.imageUrls || [product.imageUrl]).map(url => `
         <div class="swiper-slide">
-          <img src="${url}" alt="${product.name}" onerror="this.classList.add('error')">
+          <img src="${getImageKitURL(url)}" alt="${product.name}" onerror="this.classList.add('error')">
         </div>
       `).join('');
+      productSwiper.update();
+      productSwiper.params.loop = (product.imageUrls || [product.imageUrl]).length >= 2; // Ensure loop only if 2+ images
       productSwiper.update();
 
       // Render Variants
@@ -831,6 +823,14 @@
           `).join('')}
         ` : ''}
       `;
+    };
+
+    // ImageKit URL Transformation
+    const getImageKitURL = (firebaseURL) => {
+      return firebaseURL.replace(
+        'https://firebasestorage.googleapis.com/',
+        'https://ik.imagekit.io/your_imagekit_id/tr:w-400,h-400,fo-auto/'
+      );
     };
 
     // Quantity Selector
@@ -902,46 +902,41 @@
       button.textContent = content.classList.contains('open') ? 'Show Less' : 'Show More';
     };
 
-    // View Details (Alias for toggleDescription)
-    window.viewDetails = () => {
-      toggleDescription();
-    };
-
-    // Review Form
-    document.getElementById('review-image').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      document.getElementById('review-status').textContent = file ? `Your review... ${file.name} Submit Review` : 'Your review... No file chosen Submit Review';
-    });
-
+    // Review Submission
     window.submitReview = async () => {
       if (!auth.currentUser) {
         showToast('Please sign in to submit a review.', false);
         return;
       }
-      const rating = document.querySelector('input[name="rating"]:checked')?.value || 1;
-      const text = document.getElementById('review-text').value;
-      const image = document.getElementById('review-image').files[0];
-      if (!text && !image) {
-        showToast('Please provide a review or image.', false);
+      const rating = parseInt(document.querySelector('input[name="rating"]:checked')?.value || 1);
+      const text = document.getElementById('review-text').value.trim();
+      if (!text) {
+        showToast('Please provide a review comment.', false);
         return;
       }
       try {
         const reviewRef = doc(collection(db, 'products', productId, 'reviews'));
         await setDoc(reviewRef, {
           userId: auth.currentUser.uid,
-          userName: auth.currentUser.displayName || 'Anonymous',
-          rating: parseInt(rating),
-          text: text || '',
-          image: image ? image.name : '',
-          timestamp: new Date()
+          userName: auth.currentUser.displayName || auth.currentUser.email || 'Anonymous',
+          rating: rating,
+          text: text,
+          timestamp: serverTimestamp()
         });
-        showToast('Review submitted!');
+        showToast('Review submitted successfully!');
         document.getElementById('review-text').value = '';
-        document.getElementById('review-image').value = '';
+        document.getElementById('star1').checked = true; // Reset to 1 star
         document.getElementById('review-status').textContent = '';
         logEvent(analytics, 'submit_review', { item_id: productId, rating });
       } catch (error) {
-        showToast('Failed to submit review.', false);
+        console.error('Error submitting review:', error);
+        let errorMessage = 'Failed to submit review.';
+        if (error.code === 'permission-denied') {
+          errorMessage = 'You do not have permission to submit a review.';
+        } else if (error.code === 'unavailable') {
+          errorMessage = 'Firestore is currently unavailable. Try again later.';
+        }
+        showToast(errorMessage, false);
         logAnalyticsError('review_submit_error', error);
       }
     };
@@ -951,16 +946,24 @@
       const reviewTiles = document.getElementById('review-tiles');
       const q = query(collection(db, 'products', productId, 'reviews'), limit(10));
       onSnapshot(q, (snapshot) => {
-        reviewTiles.innerHTML = snapshot.empty ? '<p class="text-sm">No reviews yet.</p>' : snapshot.docs.map((doc, index) => `
-          <div class="review-tile" style="animation-delay: ${index * 0.1}s">
-            <p class="text-sm font-semibold">${doc.data().userName}</p>
-            <p class="text-sm text-yellow-500">⭐ ${doc.data().rating}</p>
-            <p class="text-sm">${doc.data().text}</p>
-            ${doc.data().image ? `<img src="${doc.data().image}" alt="Review image" class="w-16 h-16 object-cover rounded mt-1">` : ''}
-            <p class="text-xs text-gray-500">${new Date(doc.data().timestamp.toDate()).toLocaleDateString()}</p>
-          </div>
-        `).join('');
-        gsap.from('.review-tile', { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 });
+        if (snapshot.empty) {
+          reviewTiles.innerHTML = '<p class="text-sm">No reviews yet.</p>';
+        } else {
+          reviewTiles.innerHTML = snapshot.docs.map((doc, index) => `
+            <div class="review-tile" style="animation-delay: ${index * 0.1}s">
+              <p class="text-sm font-semibold">${doc.data().userName}</p>
+              <p class="text-sm text-yellow-500">⭐ ${doc.data().rating}</p>
+              <p class="text-sm">${doc.data().text}</p>
+              <p class="text-xs text-gray-500">${doc.data().timestamp ? new Date(doc.data().timestamp.toDate()).toLocaleDateString() : 'Just now'}</p>
+            </div>
+          `).join('');
+          gsap.from('.review-tile', { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 });
+        }
+      }, (error) => {
+        console.error('Error fetching reviews:', error);
+        showToast('Failed to load reviews.', false);
+        reviewTiles.innerHTML = '<p class="text-sm text-red-600">Failed to load reviews.</p>';
+        logAnalyticsError('review_load_error', error);
       });
     };
 
@@ -997,6 +1000,7 @@
         } catch (error) {
           console.error('Search error:', error);
           suggestions.classList.add('hidden');
+          logAnalyticsError('search_error', error);
         }
       });
     };
@@ -1008,3 +1012,5 @@
     updateCartCount();
     logEvent(analytics, 'page_view', { page_title: document.title, page_location: window.location.href });
   </script>
+</body>
+</html>
