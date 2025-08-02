@@ -147,58 +147,14 @@
       animation: fadeIn 0.5s forwards;
       border-radius: 8px;
       overflow: hidden;
+      padding: 0.5rem;
     }
     .card:hover {
       transform: scale(1.03);
       box-shadow: var(--shadow-hover);
     }
-    .filter-panel {
-      transition: transform 0.3s ease;
-      background: linear-gradient(135deg, #f3f4f6, #ffffff);
-      width: 80vw;
-      max-width: 240px;
-      padding: 0.5rem;
-      z-index: 20;
-    }
-    .filter-panel.hidden {
-      transform: translateX(-100%);
-    }
-    .filter-section {
-      transition: max-height 0.3s ease;
-      overflow: hidden;
-    }
-    .filter-section.open {
-      max-height: 300px;
-    }
-    .filter-section.closed {
-      max-height: 0;
-    }
-    .apply-button {
-      transition: background-color 0.3s ease;
-    }
-    .apply-button:hover {
-      background-color: #1e40af;
-    }
-    .close-filter-btn {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background: #EF4444;
-      color: #FFF;
-      border: none;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s ease;
-      z-index: 30;
-    }
-    .close-filter-btn:hover {
-      background: #DC2626;
+    .card img {
+      height: 24;
     }
     .toast {
       position: fixed;
@@ -242,31 +198,12 @@
         width: 14px;
         height: 14px;
       }
-      .grid-cols-1 {
-        grid-template-columns: 1fr;
-      }
-      .filter-panel {
-        width: 80vw;
-        max-width: 240px;
-        padding: 0.5rem;
-      }
-      .filter-toggle:checked ~ .filter-panel {
-        transform: translateX(0);
-      }
       .card img {
-        height: 120px;
+        height: 20;
       }
       .container {
         padding: 0.5rem;
         padding-top: 60px;
-      }
-      .close-filter-btn {
-        display: flex;
-      }
-    }
-    @media (min-width: 641px) {
-      .close-filter-btn {
-        display: none;
       }
     }
   </style>
@@ -294,62 +231,11 @@
     </div>
   </nav>
 
-  <!-- Filter Sidebar and Toggle -->
-  <input type="checkbox" id="filter-toggle" class="hidden">
-  <label for="filter-toggle" class="fixed top-12 left-2 bg-blue-600 text-white p-1.5 rounded-full z-10 lg:hidden flex items-center">
-    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-    Filters
-  </label>
-  <div class="fixed top-0 left-0 h-full bg-white w-80vw max-w-240px p-2 shadow-lg filter-panel lg:static lg:block lg:transform-none z-20">
-    <button id="close-filter" class="close-filter-btn lg:hidden">X</button>
-    <h3 class="text-base font-poppins font-semibold mb-2 text-blue-900">Filters</h3>
-    <div class="space-y-2">
-      <div class="filter-section closed" id="price-section">
-        <button class="w-full text-left p-1.5 bg-blue-100 rounded-md flex items-center text-xs" onclick="toggleSection('price')">
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          Price
-        </button>
-        <select id="price-filter" class="w-full p-1.5 border rounded-md mt-1 text-xs">
-          <option value="">All</option>
-          <option value="10-50">₹10 - ₹50</option>
-          <option value="50-100">₹50 - ₹100</option>
-          <option value="100-500">₹100 - ₹500</option>
-        </select>
-      </div>
-      <div class="filter-section closed" id="location-section">
-        <button class="w-full text-left p-1.5 bg-blue-100 rounded-md flex items-center text-xs" onclick="toggleSection('location')">
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1 1 0 01-1.414 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-          Location
-        </button>
-        <div id="location-filters" class="mt-1 space-y-1 text-xs"></div>
-      </div>
-      <div class="filter-section closed" id="delivery-section">
-        <button class="w-full text-left p-1.5 bg-blue-100 rounded-md flex items-center text-xs" onclick="toggleSection('delivery')">
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1"></path></svg>
-          Delivery
-        </button>
-        <div class="mt-1 space-y-1 text-xs">
-          <label><input type="checkbox" id="free-delivery-filter" value="free"> Free Delivery</label>
-          <label><input type="checkbox" id="pay-delivery-filter" value="pay"> Pay on Delivery</label>
-        </div>
-      </div>
-      <div class="filter-section closed" id="rating-section">
-        <button class="w-full text-left p-1.5 bg-blue-100 rounded-md flex items-center text-xs" onclick="toggleSection('rating')">
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-          Rating
-        </button>
-        <input type="range" id="rating-filter" min="0" max="5" step="0.5" value="0" class="w-full mt-1">
-        <span id="rating-value" class="text-xs">0★</span>
-      </div>
-      <button id="apply-filters" class="apply-button w-full bg-blue-600 text-white p-1.5 rounded-md mt-2 text-xs hover:bg-blue-700">Apply Filters</button>
-    </div>
-  </div>
-
   <!-- Product Grid Display -->
-  <div class="container mx-auto pt-14 pb-4 px-2">
-    <div id="product-grid" class="grid grid-cols-1 gap-4"></div>
+  <div class="container mx-auto pt-12 pb-4 px-2">
+    <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
     <div id="empty-state" class="empty-state hidden text-center text-gray-500 mt-6 text-xs">
-      😢 No Rakhi products found.<br>Try adjusting filters or check back later.
+      😢 No Rakhi products found.<br>Try adjusting your search or check back later.
     </div>
   </div>
 
@@ -390,22 +276,50 @@
     // Fallback Rakhi Product Data
     const fallbackProducts = [
       {
-        id: "1630457891234",
-        name: "Designer Rakhi",
-        brand: "EchoCraft",
-        rating: 0,
+        id: "550e8400-e29b-41d4-a716-446655440001",
+        name: "rakhi",
+        brand: "Rakhi 2025",
+        rating: 5.0,
         ratingsCount: 0,
-        price: 100,
-        originalPrice: 150,
-        discount: "33%",
-        emi: "",
-        offers: { cashback: "", bank: "", partner: "" },
-        delivery: { payOnDelivery: false, returnable: "", freeDelivery: true, amazonDelivered: false },
-        specs: { theme: "", brand: "EchoCraft", color: "Gold", size: "", material: "Beads", occasion: "Raksha Bandhan", specialFeature: "Handmade", finish: "Glossy" },
-        description: "A beautiful Rakhi for Raksha Bandhan",
-        imageUrls: [
-          { name: "image1.jpg", url: "https://via.placeholder.com/150" }
-        ],
+        price: 12,
+        originalPrice: 22,
+        discount: "45%",
+        delivery: { freeDelivery: true, payOnDelivery: false, returnable: "", amazonDelivered: false },
+        specs: { material: "stones", color: "red", occasion: "Raksha Bandhan", specialFeature: "Minimalist, traditional Indian design", finish: "N/A" },
+        description: "A minimalist Rakhi with traditional Indian design for Raksha Bandhan",
+        imageUrls: [{ name: "rakhi.jpg", url: "https://via.placeholder.com/150" }],
+        sourceLocation: "KPHB",
+        createdAt: "2025-08-02T15:40:00.000Z"
+      },
+      {
+        id: "550e8400-e29b-41d4-a716-446655440002",
+        name: "red rakhi",
+        brand: "Modern",
+        rating: 5.0,
+        ratingsCount: 0,
+        price: 60,
+        originalPrice: 120,
+        discount: "50%",
+        delivery: { freeDelivery: true, payOnDelivery: false, returnable: "", amazonDelivered: false },
+        specs: { material: "stones", color: "red", occasion: "Raksha Bandhan", specialFeature: "6 Rakhis", finish: "N/A" },
+        description: "A set of 6 red Rakhis for Raksha Bandhan",
+        imageUrls: [{ name: "red_rakhi.jpg", url: "https://via.placeholder.com/150" }],
+        sourceLocation: "KPHB",
+        createdAt: "2025-08-02T15:40:00.000Z"
+      },
+      {
+        id: "550e8400-e29b-41d4-a716-446655440003",
+        name: "hook rakhi",
+        brand: "Rakhi 2025",
+        rating: 4.0,
+        ratingsCount: 0,
+        price: 20,
+        originalPrice: 40,
+        discount: "50%",
+        delivery: { freeDelivery: true, payOnDelivery: false, returnable: "", amazonDelivered: false },
+        specs: { material: "stones", color: "N/A", occasion: "Raksha Bandhan", specialFeature: "stone made", finish: "metal finish" },
+        description: "A stone-made Rakhi with metal finish for Raksha Bandhan",
+        imageUrls: [{ name: "hook_rakhi.jpg", url: "https://via.placeholder.com/150" }],
         sourceLocation: "KPHB",
         createdAt: "2025-08-02T15:40:00.000Z"
       }
@@ -470,15 +384,9 @@
       document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
     };
 
-    // Close Filter Panel
-    document.getElementById('close-filter').addEventListener('click', () => {
-      document.getElementById('filter-toggle').checked = false;
-    });
-
     // Check Environment
     if (!['http:', 'https:'].includes(window.location.protocol)) {
       document.getElementById("product-grid").innerHTML = '<div class="text-center text-red-500 mt-6 text-xs">This app requires a server for Firebase Firestore. Please host it using a local server (e.g., `npx serve` or `python -m http.server 8000`) or Firebase Hosting.</div>';
-      document.querySelectorAll(".filter-panel input, .filter-panel select, #apply-filters").forEach(el => el.disabled = true);
     } else {
       // Real-time data fetch for Rakhi products
       const rakhiDocRef = doc(db, "products", "Rakhi");
@@ -491,49 +399,22 @@
       onSnapshot(rakhiDocRef, (doc) => {
         if (doc.exists()) {
           products = doc.data().items || [];
+          console.log("Firestore data:", products);
         } else {
           products = [];
+          console.log("No Firestore data, using fallback");
         }
         if (products.length === 0) {
-          products = fallbackProducts; // Use fallback if no data
+          products = fallbackProducts;
         }
         renderProducts();
-        updateFilters();
       }, (error) => {
         console.error("Error fetching Rakhi products:", error);
         showToast('Failed to load Rakhi products.', false);
         products = fallbackProducts;
         renderProducts();
-        updateFilters();
         logAnalyticsError('rakhi_fetch_error', error);
       });
-
-      // DOM Elements
-      const locationFilters = document.getElementById("location-filters");
-      const priceFilter = document.getElementById("price-filter");
-      const freeDeliveryFilter = document.getElementById("free-delivery-filter");
-      const payDeliveryFilter = document.getElementById("pay-delivery-filter");
-      const ratingFilter = document.getElementById("rating-filter");
-      const ratingValue = document.getElementById("rating-value");
-      const applyFiltersBtn = document.getElementById("apply-filters");
-
-      // Toggle filter sections
-      function toggleSection(section) {
-        const element = document.getElementById(`${section}-section`);
-        element.classList.toggle("closed");
-        element.classList.toggle("open");
-      }
-
-      // Update rating display
-      ratingFilter.addEventListener("input", () => {
-        ratingValue.textContent = `${ratingFilter.value}★`;
-      });
-
-      // Update filters dynamically
-      function updateFilters() {
-        const locations = [...new Set(products.map(p => p.sourceLocation || "Unknown"))];
-        locationFilters.innerHTML = locations.map(loc => `<label><input type="checkbox" name="location" value="${loc}"> ${loc}</label>`).join("");
-      }
 
       // Show search suggestions
       function showSuggestions(query) {
@@ -560,27 +441,16 @@
         renderProducts();
       };
 
-      // Render Rakhi products with filters and search
+      // Render Rakhi products with search
       function renderProducts() {
         const searchQuery = searchBar.value.toLowerCase();
-        const selectedLocations = Array.from(document.querySelectorAll("input[name='location']:checked")).map(cb => cb.value);
-        const priceRange = priceFilter.value.split("-");
-        const minPrice = priceRange[0] === "" ? 0 : parseInt(priceRange[0]);
-        const maxPrice = priceRange[1] === undefined ? Infinity : parseInt(priceRange[1]);
-        const freeDelivery = freeDeliveryFilter.checked;
-        const payDelivery = payDeliveryFilter.checked;
-        const minRating = parseFloat(ratingFilter.value);
-
         const filteredProducts = products.filter(p => {
-          const matchesSearch = !searchQuery || 
+          return !searchQuery || 
             (p.name && p.name.toLowerCase().includes(searchQuery)) || 
             (p.brand && p.brand.toLowerCase().includes(searchQuery));
-          const matchesLocation = selectedLocations.length === 0 || selectedLocations.includes(p.sourceLocation || "Unknown");
-          const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
-          const matchesDelivery = (!freeDelivery || p.delivery?.freeDelivery) && (!payDelivery || p.delivery?.payOnDelivery);
-          const matchesRating = p.rating >= minRating;
-          return matchesSearch && matchesLocation && matchesPrice && matchesDelivery && matchesRating;
         });
+
+        console.log("Filtered products:", filteredProducts);
 
         productGrid.innerHTML = "";
         if (filteredProducts.length === 0) {
@@ -589,18 +459,18 @@
           emptyState.classList.add("hidden");
           filteredProducts.forEach((product, index) => {
             const card = document.createElement("div");
-            card.className = "card bg-white p-2 rounded-lg shadow-md";
+            card.className = "card bg-white p-1.5 rounded-lg shadow-md";
             card.style.animationDelay = `${index * 0.1}s`;
             card.innerHTML = `
-              <img src="${product.imageUrls?.[0]?.url || 'https://via.placeholder.com/150'}" alt="${product.name}" class="w-full h-32 object-cover rounded-md mb-1 lazy">
-              <h3 class="text-base font-semibold text-gray-900">${product.name || "Unnamed Rakhi"}</h3>
+              <img src="${product.imageUrls?.[0]?.url || 'https://via.placeholder.com/150'}" alt="${product.name}" class="w-full h-24 object-cover rounded-md mb-1 lazy">
+              <h3 class="text-sm font-semibold text-gray-900">${product.name || "Unnamed Rakhi"}</h3>
               <p class="text-xs text-gray-600">Brand: ${product.brand || "N/A"}</p>
               <div class="flex items-center mt-0.5">
                 <span class="text-yellow-500 text-xs">⭐ ${product.rating || 0}.0</span>
                 <span class="text-xs text-gray-500 ml-1">(${product.ratingsCount || 0} ratings)</span>
               </div>
               <div class="flex items-center mt-0.5">
-                <span class="text-base font-bold text-gray-900">₹${product.price || 0}</span>
+                <span class="text-sm font-bold text-gray-900">₹${product.price || 0}</span>
                 <span class="text-xs text-gray-500 line-through ml-1">₹${product.originalPrice || 0}</span>
                 <span class="text-xs text-green-600 ml-1">${product.discount || ""}</span>
               </div>
@@ -652,8 +522,6 @@
       searchBar.addEventListener("blur", () => {
         setTimeout(() => searchSuggestions.classList.remove("show"), 200);
       });
-      [priceFilter, freeDeliveryFilter, payDeliveryFilter, ratingFilter].forEach(el => el.addEventListener("change", () => applyFiltersBtn.click()));
-      applyFiltersBtn.addEventListener("click", renderProducts);
 
       // Initialize
       updateCartCount();
