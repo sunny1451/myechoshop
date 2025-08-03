@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1E40AF">
+  <meta name="description" content="Echo Store - Securely checkout with Rakhi Special gifts and fast delivery.">
+  <meta name="keywords" content="Rakhi Special, checkout, online shopping India, Echo Store">
+  <meta name="robots" content="index, follow">
+  <title>Echo Store - Checkout</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    :root {
+      --primary-dark: #1A252F;
+      --primary-accent: #1E40AF;
+      --accent-hover: #1E3A8A;
+      --secondary-accent: #3B82F6;
+      --light-bg: #FFFFFF;
+      --text-primary: #0F1111;
+      --text-secondary: #4B5563;
+      --shadow-base: 0 2px 6px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.2);
+      --gradient-primary: linear-gradient(135deg, #1A252F, #2A3F5F);
+      --gradient-accent: linear-gradient(135deg, #1E40AF, #3B82F6);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-primary);
+      margin: 0;
+      overflow-x: hidden;
+      line-height: 1.4;
+      font-size: 0.9rem;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://example.com/rakhi-pattern.png') repeat;
+      opacity: 0.03;
+      z-index: -1;
+    }
+    .navbar {
+      background: var(--gradient-primary);
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-base);
+      height: 60px;
+    }
+    .navbar-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #FFF;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .navbar-logo:hover {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .navbar-btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      box-shadow: var(--shadow-base);
+      min-height: 44px;
+      min-width: 44px;
+    }
+    .navbar-btn:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }
+    .progress-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      margin: 0.5rem auto;
+      padding: 0.5rem;
+      background: #FFF;
+      border-radius: 6px;
+      box-shadow: var(--shadow-base);
+    }
+    .progress-step {
+      flex: 1;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      position: relative;
+    }
+    .progress-step.active {
+      color: var(--primary-accent);
+      font-weight: 600;
+    }
+    .progress-step::after {
+      content: '✓';
+      display: none;
+      position: absolute;
+      top: -0.2rem;
+      right: -0.5rem;
+      color: #10B981;
+      font-size: 0.8rem;
+    }
+    .progress-step.completed::after {
+      display: block;
+    }
+    .card {
+      background-color: #FFF;
+      border-radius: 6px;
+      padding: 0.5rem;
+      box-shadow: var(--shadow-base);
+      margin: 0.5rem;
+      max-width: 600px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+    .address-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .address-card p {
+      font-size: 0.8rem;
+      margin: 0.1rem 0;
+    }
+    .order-item {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    .order-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      loading: lazy;
+    }
+    .order-item-details {
+      flex: 1;
+      font-size: 0.8rem;
+    }
+    .order-item-details p {
+      margin: 0.1rem 0;
+    }
+    .price-details p {
+      font-size: 0.8rem;
+      margin: 0.3rem 0;
+    }
+    .price-details .total {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .savings {
+      color: #10B981;
+    }
+    .delivery-charge {
+      color: #EF4444;
+    }
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid #E5E7EB;
+      border-radius: 6px;
+      margin: 0.3rem 0;
+      cursor: pointer;
+    }
+    .payment-option input {
+      margin-right: 0.5rem;
+    }
+    .payment-option label {
+      font-size: 0.8rem;
+      flex: 1;
+    }
+    .upi-input {
+      display: none;
+      margin-top: 0.3rem;
+    }
+    .upi-input.active {
+      display: block;
+    }
+    .btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, background 0.3s ease;
+      width: 100%;
+      min-height: 44px;
+      animation: pulse 2s infinite;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+    }
+    .btn-primary {
+      background: #FF2D55;
+      color: #FFF;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      min-height: 44px;
+      max-width: 200px;
+    }
+    .btn-primary:hover {
+      background: #E02447;
+      transform: scale(1.05);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    .sticky-price {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #FFF;
+      padding: 0.5rem;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 1000;
+    }
+    @media (max-width: 640px) {
+      .sticky-price {
+        display: block;
+      }
+      .navbar {
+        flex-direction: column;
+        height: auto;
+        gap: 0.5rem;
+        padding: 0.5rem;
+      }
+    }
+    .trust-badges {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+    .trust-badges img {
+      width: 60px;
+      height: auto;
+      loading: lazy;
+    }
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      background: #E5E7EB;
+      animation: skeleton-loading 1s linear infinite alternate;
+    }
+    @keyframes skeleton-loading {
+      0% { background-color: #E5E7EB; }
+      100% { background-color: #D1D5DB; }
+    }
+    .error-message {
+      background: #FEE2E2;
+      color: #EF4444;
+      padding: 0.75rem;
+      border-radius: 6px;
+      text-align: center;
+      margin: 0.5rem auto;
+      max-width: 90%;
+      font-size: 0.8rem;
+      display: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Error Message -->
+  <div id="error-message" class="error-message">An error occurred. Please try again.</div>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-logo">Echo Store</a>
+    <div class="flex items-center space-x-2">
+      <a href="cart.html" class="navbar-btn" aria-label="View cart">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        Cart <span id="cart-count" class="ml-1 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar">
+    <div class="progress-step completed">Cart</div>
+    <div class="progress-step active">Address</div>
+    <div class="progress-step">Payment</div>
+    <div class="progress-step">Order Placed</div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" id="loadingSpinner">Loading...</div>
+
+  <!-- Delivery Address -->
+  <section class="card mx-auto" role="region" aria-label="Delivery Address">
+    <h2 class="text-base font-semibold mb-2">Delivery Address</h2>
+    <div id="addressCard" class="address-card">
+      <p id="addressName">Loading...</p>
+      <p id="addressMobile"></p>
+      <p id="addressText"></p>
+      <button class="btn" onclick="editAddress()">Edit Address</button>
+      <button class="btn" onclick="addNewAddress()">Add New Address</button>
+    </div>
+  </section>
+
+  <!-- Order Summary -->
+  <section class="card mx-auto" role="region" aria-label="Order Summary">
+    <h2 class="text-base font-semibold mb-2">Order Summary</h2>
+    <div id="orderItems"></div>
+    <p class="text-sm mt-2" id="deliveryEstimate">Estimated Delivery: Loading...</p>
+  </section>
+
+  <!-- Price Details -->
+  <section class="card mx-auto" role="region" aria-label="Price Details">
+    <h2 class="text-base font-semibold mb-2">Price Details</h2>
+    <div class="price-details">
+      <p>MRP Total: ₹<span id="mrpTotal">0.00</span></p>
+      <p class="savings">Discount: -₹<span id="discountTotal">0.00</span></p>
+      <p class="delivery-charge">Delivery Charges: ₹<span id="deliveryCharge">0.00</span></p>
+      <p class="total">Total Amount: ₹<span id="totalAmount">0.00</span></p>
+    </div>
+  </section>
+
+  <!-- Sticky Price for Mobile -->
+  <div class="sticky-price">
+    <p class="total">Total: ₹<span id="mobileTotalAmount">0.00</span></p>
+    <button class="btn-primary" onclick="document.getElementById('placeOrder').click()">Place Order Securely</button>
+  </div>
+
+  <!-- Payment Method -->
+  <section class="card mx-auto" role="region" aria-label="Payment Method">
+    <h2 class="text-base font-semibold mb-2">Payment Method</h2>
+    <div class="payment-option">
+      <input type="radio" name="payment" id="upi" value="upi" checked>
+      <label for="upi">UPI (Google Pay, PhonePe, Paytm, etc.)</label>
+    </div>
+    <div class="upi-input active">
+      <input type="text" id="upiId" placeholder="Enter UPI ID (e.g., name@upi)" class="w-full p-2 border rounded text-sm">
+      <button class="btn mt-2" onclick="verifyUpi()">Verify</button>
+    </div>
+    <div class="payment-option">
+      <input type="radio" name="payment" id="razorpay" value="razorpay">
+      <label for="razorpay">Debit/Credit Card, Net Banking (Razorpay)</label>
+    </div>
+    <div class="payment-option">
+      <input type="radio" name="payment" id="cod" value="cod">
+      <label for="cod">Cash on Delivery</label>
+    </div>
+  </section>
+
+  <!-- Final Confirmation -->
+  <section class="card mx-auto" role="region" aria-label="Final Confirmation">
+    <div class="flex items-center gap-2 mb-2">
+      <input type="checkbox" id="terms" required>
+      <label for="terms" class="text-sm">I agree to the <a href="terms.html" class="text-blue-600 hover:underline">terms & conditions</a> and <a href="return.html" class="text-blue-600 hover:underline">return policy</a></label>
+    </div>
+    <button id="placeOrder" class="btn-primary">Place Order Securely</button>
+    <div class="trust-badges mt-2">
+      <img src="https://via.placeholder.com/60x20?text=Secure+Payment" alt="100% Secure Payment" loading="lazy">
+      <img src="https://via.placeholder.com/60x20?text=7-Day+Return" alt="7-Day Return Policy" loading="lazy">
+    </div>
+  </section>
+
+  <!-- JavaScript -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
+      authDomain: "myechostore.firebaseapp.com",
+      projectId: "myechostore",
+      storageBucket: "myechostore.firebasestorage.app",
+      messagingSenderId: "962362590691",
+      appId: "1:962362590691:web:e2c86494039142d0e04cd6",
+      measurementId: "G-MC8Q68G4YS"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let user = null;
+    let buyNowProductId = null;
+
+    // Sanitize HTML to prevent XSS
+    function sanitizeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Show error message
+    function showError(message) {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      gsap.from(errorDiv, { opacity: 0, y: 20, duration: 0.5 });
+      setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+    }
+
+    // Toggle loading spinner
+    function toggleLoadingSpinner(show) {
+      const spinner = document.getElementById("loadingSpinner");
+      spinner.style.display = show ? "block" : "none";
+    }
+
+    // Load confetti animation on page load
+    window.addEventListener('load', () => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.2 },
+        colors: ['#1A252F', '#1E40AF', '#3B82F6']
+      });
+      gsap.from(".card", { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 });
+    });
+
+    // Handle authentication state
+    onAuthStateChanged(auth, (currentUser) => {
+      user = currentUser;
+      if (user) {
+        const urlParams = new URLSearchParams(window.location.search);
+        buyNowProductId = urlParams.get('id');
+        loadAddress();
+        loadCartItems();
+        document.getElementById("cart-count").textContent = "0";
+      } else {
+        showError("Please sign in to proceed.");
+        setTimeout(() => { window.location.href = "index.html"; }, 2000);
+      }
+    });
+
+    // Load user address
+    async function loadAddress() {
+      toggleLoadingSpinner(true);
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const addressCard = document.getElementById("addressCard");
+        if (userDoc.exists() && userDoc.data().address) {
+          const { name, mobile, address } = userDoc.data().address;
+          addressCard.innerHTML = `
+            <p id="addressName">${sanitizeHTML(name)}</p>
+            <p id="addressMobile">${sanitizeHTML(mobile)}</p>
+            <p id="addressText">${sanitizeHTML(address)}</p>
+            <button class="btn" onclick="editAddress()">Edit Address</button>
+            <button class="btn" onclick="addNewAddress()">Add New Address</button>
+          `;
+        } else {
+          addressCard.innerHTML = `
+            <p>No address saved.</p>
+            <button class="btn" onclick="addNewAddress()">Add New Address</button>
+          `;
+        }
+      } catch (error) {
+        console.error("Error loading address:", error.message);
+        showError("Failed to load address: " + error.message);
+      }
+      toggleLoadingSpinner(false);
+    }
+
+    // Edit address
+    window.editAddress = () => {
+      const name = prompt("Enter name:", document.getElementById("addressName").textContent);
+      const mobile = prompt("Enter mobile:", document.getElementById("addressMobile").textContent);
+      const address = prompt("Enter address:", document.getElementById("addressText").textContent);
+      if (name && mobile && address) {
+        setDoc(doc(db, "users", user.uid), { address: { name, mobile, address } }, { merge: true })
+          .then(() => loadAddress())
+          .catch((error) => showError("Error updating address: " + error.message));
+      }
+    };
+
+    // Add new address
+    window.addNewAddress = () => {
+      const name = prompt("Enter name:");
+      const mobile = prompt("Enter mobile:");
+      const address = prompt("Enter address:");
+      if (name && mobile && address) {
+        setDoc(doc(db, "users", user.uid), { address: { name, mobile, address } }, { merge: true })
+          .then(() => loadAddress())
+          .catch((error) => showError("Error adding address: " + error.message));
+      }
+    };
+
+    // Update cart item quantity
+    window.updateQuantity = async (docId, quantity) => {
+      try {
+        quantity = parseInt(quantity);
+        if (quantity < 1) quantity = 1;
+        const rakhiDocRef = doc(db, 'products', 'Rakhi');
+        const rakhiDoc = await getDoc(rakhiDocRef);
+        const itemDoc = await getDoc(doc(db, "carts", user.uid, "items", docId));
+        const item = itemDoc.data();
+        const product = rakhiDoc.exists() ? (rakhiDoc.data().items || []).find(p => p.id === item.id) : null;
+        if (product && quantity <= product.stock) {
+          await setDoc(doc(db, "carts", user.uid, "items", docId), { quantity }, { merge: true });
+          loadCartItems();
+        } else {
+          showError(`Only ${product.stock} units available.`);
+        }
+      } catch (error) {
+        showError("Error updating quantity: " + error.message);
+      }
+    };
+
+    // Remove item from cart
+    window.removeItem = async (docId) => {
+      try {
+        await deleteDoc(doc(db, "carts", user.uid, "items", docId));
+        loadCartItems();
+      } catch (error) {
+        showError("Error removing item: " + error.message);
+      }
+    };
+
+    // Load cart items (only Buy Now item)
+    async function loadCartItems() {
+      toggleLoadingSpinner(true);
+      const orderItems = document.getElementById("orderItems");
+      let mrpTotal = 0, discountTotal = 0, deliveryCharge = 0, totalAmount = 0;
+      try {
+        const snapshot = await getDocs(collection(db, "carts", user.uid, "items"));
+        orderItems.innerHTML = "";
+        let itemCount = 0;
+        if (buyNowProductId) {
+          const buyNowItem = snapshot.docs.find(doc => doc.data().buyNow && doc.data().id === buyNowProductId);
+          if (buyNowItem) {
+            const item = buyNowItem.data();
+            const rakhiDocRef = doc(db, 'products', 'Rakhi');
+            const rakhiDoc = await getDoc(rakhiDocRef);
+            const product = rakhiDoc.exists() ? (rakhiDoc.data().items || []).find(p => p.id === item.id) : null;
+            if (product) {
+              itemCount++;
+              const itemTotal = item.price * item.quantity;
+              const itemOriginalTotal = item.originalPrice * item.quantity;
+              mrpTotal += itemOriginalTotal;
+              discountTotal += (item.originalPrice - item.price) * item.quantity;
+              const itemCard = document.createElement("div");
+              itemCard.className = "order-item";
+              itemCard.innerHTML = `
+                <img src="${item.imageUrl}" alt="${sanitizeHTML(item.name)}" loading="lazy" onerror="this.src='https://via.placeholder.com/60x60?text=Image+Not+Found'">
+                <div class="order-item-details">
+                  <p class="font-semibold">${sanitizeHTML(item.name)}</p>
+                  <p>Quantity: <input type="number" value="${item.quantity}" min="1" max="${product.stock}" onchange="updateQuantity('${buyNowItem.id}', this.value)" class="w-12 p-1 border rounded text-sm"></p>
+                  <p>Price: ₹${itemTotal.toFixed(2)}</p>
+                  <p class="savings">Discount: ${item.discount}</p>
+                  ${item.color ? `<p>Color: ${sanitizeHTML(item.color)}</p>` : ''}
+                  ${item.size ? `<p>Size: ${sanitizeHTML(item.size)}</p>` : ''}
+                  ${item.giftOption ? '<p class="text-green-600">🎁 Gift Option Added</p>' : ''}
+                  <button class="btn mt-2" onclick="removeItem('${buyNowItem.id}')">Remove</button>
+                </div>
+              `;
+              orderItems.appendChild(itemCard);
+            }
+          } else {
+            orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">No Buy Now item found.</p>';
+            showError("No Buy Now item found.");
+          }
+        } else {
+          orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">No items in cart.</p>';
+        }
+        document.getElementById("cart-count").textContent = itemCount;
+        deliveryCharge = mrpTotal >= 500 ? 0 : 40;
+        totalAmount = mrpTotal - discountTotal + deliveryCharge;
+        updatePriceDetails(mrpTotal, discountTotal, deliveryCharge, totalAmount);
+        document.getElementById("deliveryEstimate").textContent = `Estimated Delivery: By August 6, 2025`;
+      } catch (error) {
+        console.error("Error loading cart items:", error.message);
+        showError("Failed to load cart items: " + error.message);
+        orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">Failed to load items.</p>';
+      }
+      toggleLoadingSpinner(false);
+    }
+
+    // Update price details
+    function updatePriceDetails(mrpTotal, discountTotal, deliveryCharge, totalAmount) {
+      document.getElementById("mrpTotal").textContent = mrpTotal.toFixed(2);
+      document.getElementById("discountTotal").textContent = discountTotal.toFixed(2);
+      document.getElementById("deliveryCharge").textContent = deliveryCharge.toFixed(2);
+      document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
+      document.getElementById("mobileTotalAmount").textContent = totalAmount.toFixed(2);
+    }
+
+    // Toggle payment method UI
+    document.querySelectorAll('input[name="payment"]').forEach((input) => {
+      input.addEventListener('change', () => {
+        document.querySelectorAll('.upi-input').forEach((el) => el.classList.remove('active'));
+        if (input.value === 'upi') {
+          document.querySelector('.upi-input').classList.add('active');
+        }
+      });
+    });
+
+    // Verify UPI ID (mock)
+    window.verifyUpi = () => {
+      const upiId = document.getElementById("upiId").value;
+      if (!upiId.includes('@')) {
+        showError("Please enter a valid UPI ID.");
+        return false;
+      }
+      showError("UPI ID verified successfully!");
+      return true;
+    };
+
+    // Place order
+    document.getElementById("placeOrder").addEventListener("click", async () => {
+      if (!document.getElementById("terms").checked) {
+        showError("Please agree to the terms and conditions.");
+        return;
+      }
+      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists() || !userDoc.data().address) {
+        showError("Please add a delivery address.");
+        return;
+      }
+      const totalAmount = parseFloat(document.getElementById("totalAmount").textContent);
+      const orderItems = [];
+      const snapshot = await getDocs(collection(db, "carts", user.uid, "items"));
+      
+      if (buyNowProductId) {
+        const buyNowItem = snapshot.docs.find(doc => doc.data().buyNow && doc.data().id === buyNowProductId);
+        if (buyNowItem) {
+          orderItems.push(buyNowItem.data());
+        } else {
+          showError("No Buy Now item found.");
+          return;
+        }
+      }
+
+      if (orderItems.length === 0) {
+        showError("No items to order.");
+        return;
+      }
+
+      try {
+        if (paymentMethod === "razorpay") {
+          const options = {
+            key: "rzp_test_YOUR_RAZORPAY_KEY", // Replace with your Razorpay key
+            amount: totalAmount * 100,
+            currency: "INR",
+            name: "Echo Store",
+            description: "Rakhi Order Payment",
+            handler: async (response) => {
+              await saveOrder(orderItems, paymentMethod, response.razorpay_payment_id);
+              showError("Payment successful! Order placed.");
+              window.location.href = "order-confirmation.html";
+            },
+            prefill: {
+              name: userDoc.data().address.name,
+              email: user.email,
+              contact: userDoc.data().address.mobile
+            },
+            theme: {
+              color: "#FF2D55"
+            }
+          };
+          const rzp = new Razorpay(options);
+          rzp.open();
+        } else {
+          await saveOrder(orderItems, paymentMethod, null);
+          showError("Order placed successfully!");
+          window.location.href = "order-confirmation.html";
+        }
+      } catch (error) {
+        showError("Error placing order: " + error.message);
+      }
+    });
+
+    // Save order to Firestore
+    async function saveOrder(orderItems, paymentMethod, paymentId) {
+      try {
+        const totalAmount = parseFloat(document.getElementById("totalAmount").textContent);
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const orderRef = doc(collection(db, "orders"));
+        await setDoc(orderRef, {
+          userId: user.uid,
+          items: orderItems,
+          address: userDoc.data().address,
+          paymentMethod,
+          paymentId,
+          totalAmount,
+          status: "Pending",
+          createdAt: new Date().toISOString()
+        });
+        // Clear Buy Now item from cart
+        const snapshot = await getDocs(collection(db, "carts", user.uid, "items"));
+        for (const doc of snapshot.docs) {
+          if (doc.data().buyNow && doc.data().id === buyNowProductId) {
+            await deleteDoc(doc.ref);
+          }
+        }
+      } catch (error) {
+        throw new Error("Failed to save order: " + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
