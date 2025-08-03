@@ -162,7 +162,6 @@
       height: 60px;
       object-fit: cover;
       border-radius: 6px;
-      loading: lazy;
     }
     .order-item-details {
       flex: 1;
@@ -275,7 +274,6 @@
     .trust-badges img {
       width: 60px;
       height: auto;
-      loading: lazy;
     }
     .loading-spinner {
       display: none;
@@ -332,10 +330,7 @@
   <section class="card mx-auto" role="region" aria-label="Delivery Address">
     <h2 class="text-base font-semibold mb-2">Delivery Address</h2>
     <div id="addressCard" class="address-card">
-      <p id="addressName">Loading...</p>
-      <p id="addressMobile"></p>
-      <p id="addressText"></p>
-      <button class="btn" onclick="editAddress()">Edit Address</button>
+      <p id="addressName">No address saved.</p>
       <button class="btn" onclick="addNewAddress()">Add New Address</button>
     </div>
   </section>
@@ -343,8 +338,10 @@
   <!-- Order Summary -->
   <section class="card mx-auto" role="region" aria-label="Order Summary">
     <h2 class="text-base font-semibold mb-2">Order Summary</h2>
-    <div id="orderItems"></div>
-    <p class="text-sm mt-2" id="deliveryEstimate">Estimated Delivery: Loading...</p>
+    <div id="orderItems">
+      <p class="text-sm text-center text-gray-500">No items in cart.</p>
+    </div>
+    <p class="text-sm mt-2" id="deliveryEstimate">Estimated Delivery: By August 6, 2025</p>
   </section>
 
   <!-- Price Details -->
@@ -353,14 +350,14 @@
     <div class="price-details">
       <p>MRP Total: ₹<span id="mrpTotal">0.00</span></p>
       <p class="savings">Discount: -₹<span id="discountTotal">0.00</span></p>
-      <p class="delivery-charge">Delivery Charges: ₹<span id="deliveryCharge">0.00</span></p>
-      <p class="total">Total Amount: ₹<span id="totalAmount">0.00</span></p>
+      <p class="delivery-charge">Delivery Charges: ₹<span id="deliveryCharge">40.00</span></p>
+      <p class="total">Total Amount: ₹<span id="totalAmount">40.00</span></p>
     </div>
   </section>
 
   <!-- Sticky Price for Mobile -->
   <div class="sticky-price">
-    <p class="total">Total: ₹<span id="mobileTotalAmount">0.00</span></p>
+    <p class="total">Total: ₹<span id="mobileTotalAmount">40.00</span></p>
     <button class="btn-primary" onclick="document.getElementById('placeOrder').click()">Place Order Securely</button>
   </div>
 
@@ -486,7 +483,7 @@
           `;
         } else {
           addressCard.innerHTML = `
-            <p>No address saved.</p>
+            <p id="addressName">No address saved.</p>
             <button class="btn" onclick="addNewAddress()">Add New Address</button>
           `;
         }
@@ -499,9 +496,9 @@
 
     // Edit address
     window.editAddress = () => {
-      const name = prompt("Enter name:", document.getElementById("addressName").textContent);
-      const mobile = prompt("Enter mobile:", document.getElementById("addressMobile").textContent);
-      const address = prompt("Enter address:", document.getElementById("addressText").textContent);
+      const name = prompt("Enter name:", document.getElementById("addressName").textContent !== "No address saved." ? document.getElementById("addressName").textContent : "");
+      const mobile = prompt("Enter mobile:", document.getElementById("addressMobile")?.textContent || "");
+      const address = prompt("Enter address:", document.getElementById("addressText")?.textContent || "");
       if (name && mobile && address) {
         setDoc(doc(db, "users", user.uid), { address: { name, mobile, address } }, { merge: true })
           .then(() => loadAddress())
@@ -556,7 +553,7 @@
     async function loadCartItems() {
       toggleLoadingSpinner(true);
       const orderItems = document.getElementById("orderItems");
-      let mrpTotal = 0, discountTotal = 0, deliveryCharge = 0, totalAmount = 0;
+      let mrpTotal = 0, discountTotal = 0, deliveryCharge = 40, totalAmount = 0;
       try {
         const snapshot = await getDocs(collection(db, "carts", user.uid, "items"));
         orderItems.innerHTML = "";
@@ -592,7 +589,7 @@
               orderItems.appendChild(itemCard);
             }
           } else {
-            orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">No Buy Now item found.</p>';
+            orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">No items in cart.</p>';
             showError("No Buy Now item found.");
           }
         } else {
@@ -606,7 +603,7 @@
       } catch (error) {
         console.error("Error loading cart items:", error.message);
         showError("Failed to load cart items: " + error.message);
-        orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">Failed to load items.</p>';
+        orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">No items in cart.</p>';
       }
       toggleLoadingSpinner(false);
     }
