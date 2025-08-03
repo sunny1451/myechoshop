@@ -162,6 +162,7 @@
       height: 60px;
       object-fit: cover;
       border-radius: 6px;
+      loading: lazy;
     }
     .order-item-details {
       flex: 1;
@@ -274,6 +275,7 @@
     .trust-badges img {
       width: 60px;
       height: auto;
+      loading: lazy;
     }
     .loading-spinner {
       display: none;
@@ -587,6 +589,9 @@
                 </div>
               `;
               orderItems.appendChild(itemCard);
+            } else {
+              orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">No items in cart.</p>';
+              showError("No Buy Now item found.");
             }
           } else {
             orderItems.innerHTML = '<p class="text-sm text-center text-gray-500">No items in cart.</p>';
