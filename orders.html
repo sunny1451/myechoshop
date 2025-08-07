@@ -3,383 +3,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#2da44e">
-  <meta name="description" content="EchoShop Orders - View and manage your orders.">
-  <meta name="keywords" content="EchoShop, orders, user account">
+  <meta name="theme-color" content="#2563EB">
+  <meta name="description" content="Echo Shop - Track your orders.">
+  <meta name="keywords" content="Rakhi Special, orders, tracking, Echo Shop, India">
   <meta name="robots" content="index, follow">
-  <title>Orders - EchoShop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>Echo Shop - Orders</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --primary-dark: #1D3557;
+      --primary-accent: #2563EB;
+      --accent-hover: #1D4ED8;
+      --secondary-accent: #60A5FA;
+      --light-bg: #F8FAFC;
+      --text-primary: #111827;
+      --text-secondary: #6B7280;
+      --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
+      --gradient-primary: linear-gradient(135deg, #1D3557, #457B9D);
+      --gradient-accent: linear-gradient(135deg, #2563EB, #60A5FA);
+      --success-color: #22C55E;
+      --error-color: #EF4444;
     }
-
     body {
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(to bottom, #e0f7fa, #f6f8fa);
-      color: #24292f;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-primary);
+      margin: 0;
+      overflow-x: hidden;
       line-height: 1.6;
-      min-height: 100vh;
+      font-size: 1rem;
+      font-weight: 500;
     }
-
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://via.placeholder.com/100x100?text=Rakhi+Pattern') repeat;
+      opacity: 0.03;
+      z-index: -1;
+    }
     .navbar {
-      background: linear-gradient(90deg, #2da44e 0%, #218739 100%);
-      padding: 15px 20px;
+      background: var(--gradient-primary);
+      padding: 1rem 2rem;
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      border-bottom: 2px solid #ffffff33;
-    }
-
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
+      box-shadow: var(--shadow-base);
+      height: 80px;
     }
-
-    .nav-logo {
-      color: white;
-      font-size: 28px;
-      font-weight: 700;
+    .navbar-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #FFF;
       text-decoration: none;
-      letter-spacing: 1.5px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
+      transition: color 0.3s ease;
     }
-
-    .nav-logo:hover {
-      transform: scale(1.03);
+    .navbar-logo:hover {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-
-    .nav-links {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .nav-links a, .nav-links button {
-      color: white;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 8px 12px;
-      border-radius: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .nav-links a:hover, .nav-links button:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-2px);
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 80px 20px 40px;
-    }
-
-    .main-title {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .main-title h2 {
-      font-size: 28px;
+    .navbar-btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
       font-weight: 600;
-      color: #1a3c34;
-    }
-
-    .main-title p {
-      font-size: 16px;
-      color: #586069;
-    }
-
-    .filter-sort-panel {
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 10px;
+      gap: 0.4rem;
+      box-shadow: var(--shadow-base);
+      min-height: 32px;
     }
-
-    .filter-buttons button {
-      padding: 8px 16px;
-      margin-right: 10px;
-      border: 1px solid #d0d7de;
-      border-radius: 8px;
-      background-color: #f9f9f9;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.3s ease;
+    .navbar-btn:hover {
+      background: linear-gradient(135deg, #1D4ED8, #60A5FA);
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
     }
-
-    .filter-buttons button.active, .filter-buttons button:hover {
-      background-color: #2da44e;
-      color: white;
-      border-color: #2da44e;
-    }
-
-    .sort-dropdown select {
-      padding: 8px;
-      border: 1px solid #d0d7de;
-      border-radius: 8px;
-      font-size: 14px;
-      background-color: #f9f9f9;
-      cursor: pointer;
-    }
-
-    .order-card {
-      background: linear-gradient(to right, #ffffff, #f9f9f9);
-      border: 1px solid #d8dee4;
+    .card {
+      background: linear-gradient(145deg, #FFFFFF, #F1F5F9);
+      border: 1px solid rgba(0, 0, 0, 0.05);
       border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-base);
+      margin: 1rem auto;
+      max-width: 800px;
+      width: 100%;
       transition: transform 0.3s ease;
     }
-
-    .order-card:hover {
+    .card:hover {
       transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
     }
-
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .order-header span {
-      font-size: 16px;
+    .card h2 {
+      font-size: 1.25rem;
       font-weight: 600;
-      color: #1a3c34;
+      color: var(--text-primary);
     }
-
-    .order-body {
+    .order-item {
       display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #E5E7EB;
     }
-
-    .order-body img {
-      width: 100px;
-      height: 100px;
+    .order-item img {
+      width: 90px;
+      height: 90px;
       object-fit: cover;
       border-radius: 8px;
-      border: 1px solid #d8dee4;
+      border: 1px solid #E5E7EB;
     }
-
-    .order-details h4 {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .order-details p {
-      font-size: 14px;
-      color: #586069;
-      margin-bottom: 5px;
-    }
-
-    .order-status-bar {
-      display: flex;
-      justify-content: space-between;
-      margin: 15px 0;
-      padding: 10px;
-      background-color: #f0f2f5;
-      border-radius: 8px;
-    }
-
-    .status-step {
+    .order-item-details {
       flex: 1;
-      text-align: center;
-      font-size: 12px;
-      color: #586069;
-      position: relative;
+      font-size: 0.9rem;
     }
-
-    .status-step.active {
-      color: #2da44e;
-      font-weight: 600;
+    .order-item-details p {
+      margin: 0.2rem 0;
     }
-
-    .status-step::before {
-      content: '●';
-      display: block;
-      font-size: 20px;
-      color: #d0d7de;
-      margin-bottom: 5px;
-    }
-
-    .status-step.active::before {
-      color: #2da44e;
-    }
-
-    .order-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 15px;
-    }
-
-    .order-actions button {
-      padding: 8px 16px;
-      border: none;
+    .error-message {
+      background: #FEE2E2;
+      color: var(--error-color);
+      padding: 1rem;
       border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .order-actions .return-btn {
-      background-color: #f1c40f;
-      color: #24292f;
-    }
-
-    .order-actions .track-btn {
-      background-color: #2da44e;
-      color: white;
-    }
-
-    .order-actions .buy-again-btn {
-      background-color: #007bff;
-      color: white;
-    }
-
-    .order-actions .cancel-btn {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    .order-actions button:hover {
-      transform: scale(1.05);
-      opacity: 0.9;
-    }
-
-    .order-actions button:disabled {
-      background-color: #d0d7de;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .loading-spinner {
+      text-align: center;
+      margin: 1rem auto;
+      max-width: 800px;
+      font-size: 0.9rem;
       display: none;
-      text-align: center;
-      padding: 20px;
-      font-size: 16px;
-      color: #586069;
     }
-
-    .no-orders {
-      text-align: center;
-      font-size: 16px;
-      color: #586069;
-      padding: 20px;
-    }
-
     .toast {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: #2da44e;
+      background: var(--success-color);
       color: #FFF;
       padding: 1rem 1.5rem;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-base);
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.4s ease, transform 0.4s ease;
       z-index: 1000;
     }
-
     .toast.show {
       opacity: 1;
       transform: translateY(0);
     }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 60px 15px 30px;
-      }
-
-      .order-body {
+    @media (max-width: 640px) {
+      .navbar {
         flex-direction: column;
+        height: auto;
+        gap: 1rem;
+        padding: 1rem;
       }
-
-      .order-header {
-        flex-direction: column;
-        align-items: flex-start;
+      .navbar-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        min-height: 32px;
       }
-
-      .filter-sort-panel {
-        flex-direction: column;
-        align-items: flex-start;
+      .card {
+        padding: 1rem;
+        margin: 0.5rem;
       }
-
-      .filter-buttons button {
-        margin-bottom: 10px;
+      .order-item img {
+        width: 70px;
+        height: 70px;
+      }
+      .order-item-details {
+        font-size: 0.8rem;
+      }
+    }
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .card {
+        max-width: 90%;
       }
     }
   </style>
 </head>
-<body>
+<body class="min-h-screen">
+  <!-- Error Message -->
+  <div id="error-message" class="error-message">An error occurred. Please try again.</div>
+
   <!-- Toast Notification -->
   <div id="toast" class="toast">Action Completed!</div>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="nav-logo">EchoShop</a>
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="cart.html">Cart</a>
-        <a href="https://localworkers.xyz/profile.html">Profile</a>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="navbar-logo">Echo Shop</a>
+    <div class="flex items-center space-x-3">
+      <button id="auth-status" class="navbar-btn" role="link" tabindex="0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        Hello, Sign In
+      </button>
+      <a href="cart.html" class="navbar-btn" aria-label="View cart">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        Cart <span id="cart-count" class="ml-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center">0</span>
+      </a>
     </div>
   </nav>
 
-  <!-- Main Content -->
-  <div class="container">
-    <div class="main-title" data-aos="fade-down">
-      <h2>My Orders</h2>
-      <p>Here are all your recent and past orders.</p>
+  <!-- Orders Section -->
+  <section class="card" role="region" aria-label="Your Orders" data-aos="fade-up">
+    <h2 class="mb-3">Your Orders</h2>
+    <div id="ordersContainer">
+      <p class="text-sm text-center text-gray-500">No orders found.</p>
     </div>
-    <div class="loading-spinner" id="loadingSpinner">Loading orders...</div>
-    <div class="filter-sort-panel" id="filterSortPanel" style="display: none;">
-      <div class="filter-buttons">
-        <button class="active" data-filter="all">All Orders</button>
-        <button data-filter="delivered">Delivered</button>
-        <button data-filter="cancelled">Cancelled</button>
-        <button data-filter="returned">Returns</button>
-      </div>
-      <div class="sort-dropdown">
-        <select id="sortSelect">
-          <option value="latest">Sort by: Latest</option>
-          <option value="oldest">Sort by: Oldest</option>
-        </select>
-      </div>
-    </div>
-    <div id="ordersList"></div>
-    <div class="no-orders" id="noOrders" style="display: none;">No orders found.</div>
-  </div>
+  </section>
 
-  <!-- Scripts -->
+  <!-- JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
     const firebaseConfig = {
@@ -392,241 +242,148 @@
       measurementId: "G-MC8Q68G4YS"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const analytics = getAnalytics(app);
-
-    let isAuthInitialized = false;
-    let orders = [];
-    let currentFilter = 'all';
-    let currentSort = 'latest';
-    let user = null;
-
-    // Sanitize HTML to prevent XSS
-    function sanitizeHTML(str) {
-      if (!str) return '';
-      const div = document.createElement("div");
-      div.textContent = str;
-      return div.innerHTML;
+    let app, db, auth, analytics;
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+      analytics = getAnalytics(app);
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+      showToast(`Firebase initialization failed: ${error.message}`, false);
     }
 
-    // Show Toast Notification
-    function showToast(message, success = true) {
+    AOS.init({ duration: 800, once: true });
+
+    const showToast = (message, success = true) => {
       console.log(`Toast: ${message}`);
       const toast = document.getElementById('toast');
       toast.textContent = message;
-      toast.style.background = success ? '#2da44e' : '#dc3545';
+      toast.style.background = success ? '#22C55E' : '#EF4444';
       toast.classList.add('show');
       gsap.from(toast, { opacity: 0, y: 20, duration: 0.5 });
       setTimeout(() => toast.classList.remove('show'), 3000);
-    }
+    };
 
-    // Log Analytics Error
-    function logAnalyticsError(eventName, error) {
+    const logAnalyticsError = (eventName, error) => {
       console.error(`Analytics error [${eventName}]:`, error);
       logEvent(analytics, eventName, {
         error_message: error.message,
         error_code: error.code || 'unknown',
         timestamp: new Date().toISOString()
       });
-    }
+    };
 
-    // Show/Hide Loading Spinner
-    function toggleLoadingSpinner(show) {
-      console.log(`Toggle loading spinner: ${show}`);
-      const spinner = document.getElementById("loadingSpinner");
-      const ordersList = document.getElementById("ordersList");
-      const noOrders = document.getElementById("noOrders");
-      const filterSortPanel = document.getElementById("filterSortPanel");
-      spinner.style.display = show ? "block" : "none";
-      ordersList.style.display = show ? "none" : "block";
-      noOrders.style.display = "none";
-      filterSortPanel.style.display = show ? "none" : "flex";
-    }
+    const sanitizeHTML = (str) => {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    };
 
-    // Load Orders
-    async function loadOrders(userId) {
-      toggleLoadingSpinner(true);
-      try {
-        console.log("Loading orders for user:", userId);
-        const userDoc = await getDoc(doc(db, "users", userId));
-        orders = userDoc.exists() ? userDoc.data().orderDetails || [] : [];
-        if (currentSort === 'latest') {
-          orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        } else {
-          orders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        }
-        renderOrders();
-      } catch (error) {
-        console.error("Error loading orders:", error);
-        showToast("Failed to load orders: " + error.message, false);
-        logAnalyticsError('orders_load_error', error);
-      } finally {
-        toggleLoadingSpinner(false);
-      }
-    }
-
-    // Render Orders
-    function renderOrders() {
-      const ordersList = document.getElementById("ordersList");
-      const noOrders = document.getElementById("noOrders");
-      const filteredOrders = orders.filter(order => {
-        if (currentFilter === "all") return true;
-        if (currentFilter === "delivered") return order.status === "Delivered";
-        if (currentFilter === "cancelled") return order.status === "Cancelled";
-        if (currentFilter === "returned") return order.status === "Returned";
-        return false;
-      });
-
-      if (filteredOrders.length === 0) {
-        ordersList.innerHTML = "";
-        noOrders.style.display = "block";
+    window.addEventListener('load', () => {
+      console.log("Page loaded");
+      gsap.from(".card", { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 });
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
+        document.getElementById('error-message').textContent = 'This page must be served over http or https. Please run a local server and access via http://localhost.';
+        document.getElementById('error-message').style.display = 'block';
         return;
       }
+      logEvent(analytics, 'page_view', { page_title: document.title, page_location: window.location.href });
+    });
 
-      noOrders.style.display = "none";
-      ordersList.innerHTML = filteredOrders.map(order => {
-        const isDelivered = order.status === "Delivered";
-        const isCancelled = order.status === "Cancelled";
-        const isReturned = order.status === "Returned";
-        const statusSteps = ["Pending", "Shipped", "Out for Delivery", "Delivered"];
-        const currentStep = isCancelled ? "Cancelled" : isReturned ? "Returned" : order.status;
-        const stepIndex = statusSteps.indexOf(currentStep);
-        const statusBar = statusSteps.map((step, index) => {
-          const isActive = index <= stepIndex || currentStep === "Cancelled" || currentStep === "Returned";
-          return `<div class="status-step ${isActive ? 'active' : ''}">${step}</div>`;
-        }).join("");
+    onAuthStateChanged(auth, async (user) => {
+      const authStatus = document.getElementById("auth-status");
+      if (user) {
+        console.log("User authenticated:", user.displayName);
+        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, ${user.displayName || "User"}!`;
+        authStatus.onclick = () => window.location.href = "https://localworkers.xyz/profile.html";
+        try {
+          await loadOrders(user.uid);
+          updateCartCount(user.uid);
+        } catch (error) {
+          console.error("Error initializing orders:", error);
+          showToast(`Error: ${error.message}`, false);
+          logAnalyticsError('orders_init_error', error);
+        }
+      } else {
+        console.log("No user authenticated");
+        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, Sign In`;
+        authStatus.onclick = () => window.location.href = "index.html";
+        showToast("Please sign in to view orders.", false);
+        setTimeout(() => window.location.href = "index.html", 2000);
+      }
+    });
 
-        const deliveryDate = new Date(order.createdAt);
-        deliveryDate.setDate(deliveryDate.getDate() + (order.address?.pincode?.startsWith('4') ? 5 : 7));
-
-        return `
-          <div class="order-card" data-aos="fade-up">
-            <div class="order-header">
-              <span>Order #${sanitizeHTML(order.orderId)}</span>
-              <span>Placed on: ${new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-            </div>
-            <div class="order-body">
+    async function loadOrders(userId) {
+      console.log("Loading orders for user:", userId);
+      const ordersContainer = document.getElementById("ordersContainer");
+      try {
+        const userDoc = await getDoc(doc(db, "users", userId));
+        const orders = userDoc.exists() ? userDoc.data().orderDetails || [] : [];
+        if (orders.length === 0) {
+          ordersContainer.innerHTML = '<p class="text-sm text-center text-gray-500">No orders found.</p>';
+          return;
+        }
+        ordersContainer.innerHTML = '';
+        orders.forEach(order => {
+          const orderCard = document.createElement("div");
+          orderCard.className = "card mb-4";
+          orderCard.setAttribute('data-aos', 'fade-up');
+          orderCard.innerHTML = `
+            <h2 class="mb-2">Order #${sanitizeHTML(order.orderId)}</h2>
+            <p>Status: ${sanitizeHTML(order.status)}</p>
+            <p>Payment Method: Cash on Delivery</p>
+            <p>Total: ₹${order.totalAmount.toFixed(2)}</p>
+            <p>Ordered on: ${new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+            <p>Address: ${sanitizeHTML(order.address.fullName)}, ${sanitizeHTML(order.address.addressLine1)}, ${sanitizeHTML(order.address.city)}, ${sanitizeHTML(order.address.state)} - ${sanitizeHTML(order.address.pincode)}</p>
+            <div class="mt-2">
+              <h3 class="text-sm font-semibold">Items:</h3>
               ${order.items.map(item => `
-                <div style="display: flex; gap: 20px; align-items: center;">
-                  <img src="${item.imageUrls?.[0]?.url || 'https://via.placeholder.com/100?text=Image+Not+Found'}" alt="${sanitizeHTML(item.name)}" onerror="this.src='https://via.placeholder.com/100?text=Image+Not+Found'">
-                  <div class="order-details">
-                    <h4>${sanitizeHTML(item.name)}</h4>
-                    <p>Qty: ${sanitizeHTML(item.quantity.toString())}</p>
-                    <p>₹${(item.price * item.quantity).toFixed(2)}</p>
+                <div class="order-item">
+                  <img src="${item.imageUrls?.[0]?.url || 'https://via.placeholder.com/90?text=Image+Not+Found'}" alt="${sanitizeHTML(item.name)}" onerror="this.src='https://via.placeholder.com/90?text=Image+Not+Found'">
+                  <div class="order-item-details">
+                    <p class="font-semibold">${sanitizeHTML(item.name)}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                    <p>Price: ₹${(item.price * item.quantity).toFixed(2)}</p>
                     ${item.specs?.color ? `<p>Color: ${sanitizeHTML(item.specs.color)}</p>` : ''}
                     ${item.specs?.size ? `<p>Size: ${sanitizeHTML(item.specs.size)}</p>` : ''}
                   </div>
                 </div>
               `).join('')}
-              <div class="order-details">
-                <p>Total: ₹${sanitizeHTML(order.totalAmount.toFixed(2))}</p>
-                <p>Payment: ${sanitizeHTML(order.paymentMethod)}</p>
-                <p>Delivery Location: ${sanitizeHTML(order.address.fullName)}, ${sanitizeHTML(order.address.addressLine1)}, ${sanitizeHTML(order.address.city)}, ${sanitizeHTML(order.address.state)} - ${sanitizeHTML(order.address.pincode)}</p>
-                <p>Estimated Delivery: ${deliveryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-              </div>
             </div>
-            <div class="order-status-bar">${statusBar}</div>
-            <div class="order-actions">
-              <button class="return-btn" ${isDelivered ? '' : 'disabled'} onclick="handleReturn('${order.orderId}')">Return</button>
-              <button class="track-btn" ${isCancelled || isReturned ? 'disabled' : ''} onclick="handleTrack('${order.orderId}')">Track</button>
-              <button class="buy-again-btn" onclick="handleBuyAgain('${order.orderId}')">Buy Again</button>
-              <button class="cancel-btn" ${isDelivered || isCancelled || isReturned ? 'disabled' : ''} onclick="handleCancel('${order.orderId}')">Cancel</button>
-            </div>
-          </div>
-        `;
-      }).join("");
-      AOS.refresh();
+          `;
+          ordersContainer.appendChild(orderCard);
+        });
+        AOS.refresh();
+      } catch (error) {
+        console.error("Error loading orders:", error);
+        showToast(`Failed to load orders: ${error.message}`, false);
+        ordersContainer.innerHTML = '<p class="text-sm text-center text-gray-500">No orders found.</p>';
+        logAnalyticsError('orders_load_error', error);
+      }
     }
 
-    // Filter and Sort Handlers
-    document.querySelectorAll(".filter-buttons button").forEach(button => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll(".filter-buttons button").forEach(btn => btn.classList.remove("active"));
-        button.classList.add("active");
-        currentFilter = button.dataset.filter;
-        renderOrders();
+    async function updateCartCount(userId) {
+      try {
+        console.log("Updating cart count");
+        const userDoc = await getDoc(doc(db, "users", userId));
+        const cart = userDoc.exists() ? userDoc.data().cart || [] : [];
+        document.getElementById("cart-count").textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+      } catch (error) {
+        console.error("Error updating cart count:", error);
+        document.getElementById("cart-count").textContent = "0";
+      }
+    }
+
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        gsap.to(btn, { scale: 1.05, duration: 0.3, boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)' });
       });
-    });
-
-    document.getElementById("sortSelect").addEventListener("change", (e) => {
-      currentSort = e.target.value;
-      loadOrders(user.uid);
-    });
-
-    // Action Handlers
-    window.handleReturn = (orderId) => {
-      showToast(`Return initiated for Order #${orderId}. (Placeholder action)`);
-      // Implement return logic here
-    };
-
-    window.handleTrack = (orderId) => {
-      showToast(`Tracking Order #${orderId}. (Placeholder action)`);
-      // Implement tracking logic here
-    };
-
-    window.handleBuyAgain = (orderId) => {
-      showToast(`Reordering Order #${orderId}. (Placeholder action)`);
-      // Implement buy again logic here
-    };
-
-    window.handleCancel = async (orderId) => {
-      try {
-        toggleLoadingSpinner(true);
-        const userDocRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (!userDoc.exists()) {
-          throw new Error("User document not found");
-        }
-        const orderDetails = userDoc.data().orderDetails || [];
-        const updatedOrders = orderDetails.map(order => 
-          order.orderId === orderId ? { ...order, status: "Cancelled", updatedAt: new Date().toISOString() } : order
-        );
-        await updateDoc(userDocRef, { orderDetails: updatedOrders });
-        await loadOrders(user.uid);
-        showToast(`Order #${orderId} cancelled successfully.`);
-      } catch (error) {
-        console.error("Error cancelling order:", error);
-        showToast("Failed to cancel order: " + error.message, false);
-        logAnalyticsError('order_cancel_error', error);
-      } finally {
-        toggleLoadingSpinner(false);
-      }
-    };
-
-    // Logout Function
-    window.logout = async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "index.html";
-      } catch (error) {
-        console.error("Logout error:", error);
-        showToast("Error logging out: " + error.message, false);
-        logAnalyticsError('logout_error', error);
-      }
-    };
-
-    // Initialize Authentication
-    AOS.init({ duration: 800, once: true });
-    toggleLoadingSpinner(true);
-    onAuthStateChanged(auth, (currentUser) => {
-      if (!isAuthInitialized) {
-        isAuthInitialized = true;
-        if (currentUser) {
-          user = currentUser;
-          loadOrders(user.uid);
-        } else {
-          toggleLoadingSpinner(false);
-          showToast("Please sign in to access your orders.", false);
-          setTimeout(() => window.location.href = "index.html", 2000);
-        }
-      }
-    }, (error) => {
-      console.error("Auth state error:", error);
-      showToast("Authentication error: " + error.message, false);
-      logAnalyticsError('auth_state_error', error);
-      toggleLoadingSpinner(false);
+      btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, { scale: 1, duration: 0.3, boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)' });
+      });
     });
   </script>
 </body>
