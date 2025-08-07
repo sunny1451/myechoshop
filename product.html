@@ -266,6 +266,7 @@
       db = getFirestore(app);
       auth = getAuth(app);
       analytics = getAnalytics(app);
+      console.log("Firebase initialized successfully");
     } catch (error) {
       console.error("Firebase initialization error:", error);
       showToast('Failed to initialize Firebase.', false);
@@ -339,11 +340,13 @@
     onAuthStateChanged(auth, (user) => {
       const authButton = document.getElementById('auth-status');
       if (user) {
+        console.log("User signed in:", user.displayName);
         authButton.innerHTML = `
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
           ${user.displayName || 'User'}
         `;
       } else {
+        console.log("No user signed in");
         authButton.innerHTML = `
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
           Hello, Sign In
@@ -354,17 +357,21 @@
     // Handle Sign-In
     document.getElementById('auth-status').addEventListener('click', () => {
       if (!auth.currentUser) {
+        console.log("Initiating Google Sign-In");
         signInWithRedirect(auth, provider);
       } else {
+        console.log("Signing out user");
         auth.signOut().then(() => showToast('Signed out successfully!'));
       }
     });
 
     getRedirectResult(auth).then((result) => {
       if (result) {
+        console.log("Google Sign-In successful:", result.user.displayName);
         showToast(`Welcome, ${result.user.displayName}!`);
       }
     }).catch((error) => {
+      console.error("Sign-in error:", error);
       showToast(`Sign-in error: ${error.message}`, false);
       logAnalyticsError('sign_in_error', error);
     });
@@ -381,11 +388,14 @@
     // Cart Management
     const updateCartCount = () => {
       const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cart-count').textContent = cartCount;
+      console.log("Cart count updated:", cartCount);
     };
 
     // Check Environment
     if (!['http:', 'https:'].includes(window.location.protocol)) {
+      console.warn("App running on file:// protocol, Firestore disabled");
       document.getElementById("product-grid").innerHTML = '<div class="text-center text-red-500 mt-6 text-xs">This app requires a server for Firebase Firestore. Please host it using a local server (e.g., `npx serve` or `python -m http.server 8000`) or Firebase Hosting.</div>';
     } else {
       // Real-time data fetch for Rakhi products
@@ -399,10 +409,10 @@
       onSnapshot(rakhiDocRef, (doc) => {
         if (doc.exists()) {
           products = doc.data().items || [];
-          console.log("Firestore data:", products);
+          console.log("Firestore products fetched:", products);
         } else {
           products = [];
-          console.log("No Firestore data, using fallback");
+          console.log("No Firestore product data, using fallback");
         }
         if (products.length === 0) {
           products = fallbackProducts;
@@ -495,67 +505,81 @@
 
       // Add to Cart
       window.addToCart = async (productId) => {
+        console.log("Add to Cart initiated for product ID:", productId);
         const user = auth.currentUser;
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         const product = products.find(p => p.id === productId);
-        if (product) {
-          const existingItem = cart.find(item => item.id === productId);
-          const cartItem = existingItem 
-            ? { ...existingItem, quantity: existingItem.quantity + 1 }
-            : { 
-                id: productId, 
-                quantity: 1, 
-                color: product.specs?.color || 'Gold', 
-                size: product.specs?.size || '',
-                name: product.name || "Unnamed Rakhi",
-                brand: product.brand || "N/A",
-                price: product.price || 0,
-                originalPrice: product.originalPrice || 0,
-                discount: product.discount || "",
-                delivery: product.delivery || {},
-                specs: product.specs || {},
-                description: product.description || "",
-                imageUrls: product.imageUrls || [],
-                sourceLocation: product.sourceLocation || "Unknown",
-                createdAt: product.createdAt || new Date().toISOString(),
-                addedAt: new Date().toISOString()
-              };
-          if (!existingItem) {
-            cart.push(cartItem);
-          } else {
-            existingItem.quantity = cartItem.quantity;
-          }
-          localStorage.setItem('cart', JSON.stringify(cart));
-          updateCartCount();
-          
-          // Save to Firestore
-          if (user && user.displayName) {
-            try {
-              const userDocRef = doc(db, "users", user.displayName);
-              const userDoc = await getDoc(userDocRef);
-              let userCart = userDoc.exists() ? userDoc.data().cart || [] : [];
-              
-              // Update or add cart item
-              const existingCartItemIndex = userCart.findIndex(item => item.id === productId);
-              if (existingCartItemIndex >= 0) {
-                userCart[existingCartItemIndex] = cartItem;
-              } else {
-                userCart.push(cartItem);
-              }
-              
-              await updateDoc(userDocRef, { cart: userCart });
-              showToast('Added to cart and saved to Firestore!');
-            } catch (error) {
-              console.error("Error saving to Firestore:", error);
-              showToast(`Failed to save to Firestore: ${error.message}`, false);
-              logAnalyticsError('cart_save_error', error);
-            }
-          } else {
-            showToast('Please sign in to save cart to Firestore.', false);
-          }
-          
-          logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
+
+        if (!product) {
+          console.error("Product not found:", productId);
+          showToast('Product not found.', false);
+          return;
         }
+
+        console.log("Product found:", product.name);
+        const existingItem = cart.find(item => item.id === productId);
+        const cartItem = existingItem 
+          ? { ...existingItem, quantity: existingItem.quantity + 1 }
+          : { 
+              id: productId, 
+              quantity: 1, 
+              color: product.specs?.color || 'Gold', 
+              size: product.specs?.size || '',
+              name: product.name || "Unnamed Rakhi",
+              brand: product.brand || "N/A",
+              price: product.price || 0,
+              originalPrice: product.originalPrice || 0,
+              discount: product.discount || "",
+              delivery: product.delivery || {},
+              specs: product.specs || {},
+              description: product.description || "",
+              imageUrls: product.imageUrls || [],
+              sourceLocation: product.sourceLocation || "Unknown",
+              createdAt: product.createdAt || new Date().toISOString(),
+              addedAt: new Date().toISOString()
+            };
+
+        if (!existingItem) {
+          cart.push(cartItem);
+        } else {
+          existingItem.quantity = cartItem.quantity;
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        console.log("Local cart updated:", cart);
+
+        // Save to Firestore
+        if (user && user.displayName) {
+          console.log("User signed in, saving to Firestore for user:", user.displayName);
+          try {
+            const userDocRef = doc(db, "users", user.displayName);
+            const userDoc = await getDoc(userDocRef);
+            let userCart = userDoc.exists() ? userDoc.data().cart || [] : [];
+            
+            // Update or add cart item
+            const existingCartItemIndex = userCart.findIndex(item => item.id === productId);
+            if (existingCartItemIndex >= 0) {
+              userCart[existingCartItemIndex] = cartItem;
+              console.log("Updated existing cart item at index:", existingCartItemIndex);
+            } else {
+              userCart.push(cartItem);
+              console.log("Added new cart item");
+            }
+            
+            await updateDoc(userDocRef, { cart: userCart });
+            console.log("Cart saved to Firestore for user:", user.displayName);
+            showToast('Added to cart and saved to Firestore!');
+          } catch (error) {
+            console.error("Error saving cart to Firestore:", error);
+            showToast(`Failed to save cart to Firestore: ${error.message}`, false);
+            logAnalyticsError('cart_save_error', error);
+          }
+        } else {
+          console.warn("No user signed in, cart not saved to Firestore");
+          showToast('Please sign in to save cart to Firestore.', false);
+        }
+        
+        logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
       };
 
       // Event listeners
