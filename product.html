@@ -302,7 +302,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -657,7 +657,8 @@
           try {
             const userDocRef = doc(db, "users", user.displayName);
             const userDoc = await getDoc(userDocRef);
-            let userCart = userDoc.exists() ? userDoc.data().cart || [] : [];
+            let userData = userDoc.exists() ? userDoc.data() : { username: user.displayName, email: user.email, phone: "", cart: [] };
+            let userCart = userData.cart || [];
             
             // Update or add cart item
             const existingCartItemIndex = userCart.findIndex(item => item.id === productId);
@@ -669,11 +670,12 @@
               console.log("Added new cart item");
             }
             
-            await updateDoc(userDocRef, { cart: userCart });
-            console.log("Cart saved to Firestore for user:", user.displayName);
+            // Use setDoc with merge to ensure document exists
+            await setDoc(userDocRef, { ...userData, cart: userCart }, { merge: true });
+            console.log("Cart saved to Firestore for user:", user.displayName, "Cart:", userCart);
             showToast('Added to cart and saved to Firestore!');
           } catch (error) {
-            console.error("Error saving cart to Firestore:", error);
+            console.error("Error saving cart to Firestore:", error, "User:", user.displayName);
             showToast(`Failed to save cart to Firestore: ${error.message}`, false);
             logAnalyticsError('cart_save_error', error);
           }
