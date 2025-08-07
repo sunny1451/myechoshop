@@ -9,6 +9,9 @@
   <meta name="robots" content="index, follow">
   <title>Orders - EchoShop</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -285,6 +288,26 @@
       padding: 20px;
     }
 
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #2da44e;
+      color: #FFF;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 60px 15px 30px;
@@ -311,13 +334,16 @@
   </style>
 </head>
 <body>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">Action Completed!</div>
+
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="nav-container">
-      <a href="https://localworkers.xyz/" class="nav-logo">EchoShop</a>
+      <a href="index.html" class="nav-logo">EchoShop</a>
       <div class="nav-links">
-        <a href="https://localworkers.xyz/">Home</a>
-        <a href="https://localworkers.xyz/cart.html">Cart</a>
+        <a href="index.html">Home</a>
+        <a href="cart.html">Cart</a>
         <a href="https://localworkers.xyz/profile.html">Profile</a>
         <button class="logout-btn" onclick="logout()">Logout</button>
       </div>
@@ -326,7 +352,7 @@
 
   <!-- Main Content -->
   <div class="container">
-    <div class="main-title">
+    <div class="main-title" data-aos="fade-down">
       <h2>My Orders</h2>
       <p>Here are all your recent and past orders.</p>
     </div>
@@ -353,7 +379,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
@@ -362,28 +389,52 @@
       storageBucket: "myechostore.firebasestorage.app",
       messagingSenderId: "962362590691",
       appId: "1:962362590691:web:e2c86494039142d0e04cd6",
-      measurementId: "G-MC8Q68G4YS",
-      databaseURL: "https://myechostore.firebaseio.com"
+      measurementId: "G-MC8Q68G4YS"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const analytics = getAnalytics(app);
 
     let isAuthInitialized = false;
     let orders = [];
     let currentFilter = 'all';
     let currentSort = 'latest';
+    let user = null;
 
     // Sanitize HTML to prevent XSS
     function sanitizeHTML(str) {
+      if (!str) return '';
       const div = document.createElement("div");
       div.textContent = str;
       return div.innerHTML;
     }
 
+    // Show Toast Notification
+    function showToast(message, success = true) {
+      console.log(`Toast: ${message}`);
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = success ? '#2da44e' : '#dc3545';
+      toast.classList.add('show');
+      gsap.from(toast, { opacity: 0, y: 20, duration: 0.5 });
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Log Analytics Error
+    function logAnalyticsError(eventName, error) {
+      console.error(`Analytics error [${eventName}]:`, error);
+      logEvent(analytics, eventName, {
+        error_message: error.message,
+        error_code: error.code || 'unknown',
+        timestamp: new Date().toISOString()
+      });
+    }
+
     // Show/Hide Loading Spinner
     function toggleLoadingSpinner(show) {
+      console.log(`Toggle loading spinner: ${show}`);
       const spinner = document.getElementById("loadingSpinner");
       const ordersList = document.getElementById("ordersList");
       const noOrders = document.getElementById("noOrders");
@@ -395,20 +446,22 @@
     }
 
     // Load Orders
-    async function loadOrders(user) {
+    async function loadOrders(userId) {
       toggleLoadingSpinner(true);
       try {
-        const ordersRef = collection(db, `users/${user.uid}/orders`);
-        const q = query(ordersRef, orderBy("placedOn", currentSort === "latest" ? "desc" : "asc"));
-        const querySnapshot = await getDocs(q);
-        orders = [];
-        querySnapshot.forEach(doc => {
-          orders.push({ id: doc.id, ...doc.data() });
-        });
+        console.log("Loading orders for user:", userId);
+        const userDoc = await getDoc(doc(db, "users", userId));
+        orders = userDoc.exists() ? userDoc.data().orderDetails || [] : [];
+        if (currentSort === 'latest') {
+          orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        } else {
+          orders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        }
         renderOrders();
       } catch (error) {
         console.error("Error loading orders:", error);
-        alert("Failed to load orders: " + error.message);
+        showToast("Failed to load orders: " + error.message, false);
+        logAnalyticsError('orders_load_error', error);
       } finally {
         toggleLoadingSpinner(false);
       }
@@ -437,7 +490,7 @@
         const isDelivered = order.status === "Delivered";
         const isCancelled = order.status === "Cancelled";
         const isReturned = order.status === "Returned";
-        const statusSteps = ["Ordered", "Shipped", "Out for Delivery", "Delivered"];
+        const statusSteps = ["Pending", "Shipped", "Out for Delivery", "Delivered"];
         const currentStep = isCancelled ? "Cancelled" : isReturned ? "Returned" : order.status;
         const stepIndex = statusSteps.indexOf(currentStep);
         const statusBar = statusSteps.map((step, index) => {
@@ -445,34 +498,46 @@
           return `<div class="status-step ${isActive ? 'active' : ''}">${step}</div>`;
         }).join("");
 
+        const deliveryDate = new Date(order.createdAt);
+        deliveryDate.setDate(deliveryDate.getDate() + (order.address?.pincode?.startsWith('4') ? 5 : 7));
+
         return `
-          <div class="order-card">
+          <div class="order-card" data-aos="fade-up">
             <div class="order-header">
               <span>Order #${sanitizeHTML(order.orderId)}</span>
-              <span>Placed on: ${new Date(order.placedOn).toLocaleDateString()}</span>
+              <span>Placed on: ${new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
             </div>
             <div class="order-body">
-              <img src="${order.productImage || 'https://via.placeholder.com/100'}" alt="${sanitizeHTML(order.productName)}">
+              ${order.items.map(item => `
+                <div style="display: flex; gap: 20px; align-items: center;">
+                  <img src="${item.imageUrls?.[0]?.url || 'https://via.placeholder.com/100?text=Image+Not+Found'}" alt="${sanitizeHTML(item.name)}" onerror="this.src='https://via.placeholder.com/100?text=Image+Not+Found'">
+                  <div class="order-details">
+                    <h4>${sanitizeHTML(item.name)}</h4>
+                    <p>Qty: ${sanitizeHTML(item.quantity.toString())}</p>
+                    <p>₹${(item.price * item.quantity).toFixed(2)}</p>
+                    ${item.specs?.color ? `<p>Color: ${sanitizeHTML(item.specs.color)}</p>` : ''}
+                    ${item.specs?.size ? `<p>Size: ${sanitizeHTML(item.specs.size)}</p>` : ''}
+                  </div>
+                </div>
+              `).join('')}
               <div class="order-details">
-                <h4>${sanitizeHTML(order.productName)}</h4>
-                <p>Qty: ${sanitizeHTML(order.quantity.toString())}</p>
-                <p>₹${sanitizeHTML(order.price.toFixed(2))}</p>
-                <p>${order.deliveryDate ? `Delivered on: ${new Date(order.deliveryDate).toLocaleDateString()}` : 'Delivery date not set'}</p>
-                <p>Sold by: ${sanitizeHTML(order.seller)}</p>
+                <p>Total: ₹${sanitizeHTML(order.totalAmount.toFixed(2))}</p>
                 <p>Payment: ${sanitizeHTML(order.paymentMethod)}</p>
-                <p>Delivery Location: ${sanitizeHTML(order.deliveryLocation)}</p>
+                <p>Delivery Location: ${sanitizeHTML(order.address.fullName)}, ${sanitizeHTML(order.address.addressLine1)}, ${sanitizeHTML(order.address.city)}, ${sanitizeHTML(order.address.state)} - ${sanitizeHTML(order.address.pincode)}</p>
+                <p>Estimated Delivery: ${deliveryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
               </div>
             </div>
             <div class="order-status-bar">${statusBar}</div>
             <div class="order-actions">
-              <button class="return-btn" ${isDelivered ? '' : 'disabled'} onclick="handleReturn('${order.id}')">Return</button>
-              <button class="track-btn" ${isCancelled || isReturned ? 'disabled' : ''} onclick="handleTrack('${order.id}')">Track</button>
-              <button class="buy-again-btn" onclick="handleBuyAgain('${order.id}')">Buy Again</button>
-              <button class="cancel-btn" ${isDelivered || isCancelled || isReturned ? 'disabled' : ''} onclick="handleCancel('${order.id}')">Cancel</button>
+              <button class="return-btn" ${isDelivered ? '' : 'disabled'} onclick="handleReturn('${order.orderId}')">Return</button>
+              <button class="track-btn" ${isCancelled || isReturned ? 'disabled' : ''} onclick="handleTrack('${order.orderId}')">Track</button>
+              <button class="buy-again-btn" onclick="handleBuyAgain('${order.orderId}')">Buy Again</button>
+              <button class="cancel-btn" ${isDelivered || isCancelled || isReturned ? 'disabled' : ''} onclick="handleCancel('${order.orderId}')">Cancel</button>
             </div>
           </div>
         `;
       }).join("");
+      AOS.refresh();
     }
 
     // Filter and Sort Handlers
@@ -487,34 +552,44 @@
 
     document.getElementById("sortSelect").addEventListener("change", (e) => {
       currentSort = e.target.value;
-      loadOrders(auth.currentUser);
+      loadOrders(user.uid);
     });
 
-    // Action Handlers (Placeholders)
+    // Action Handlers
     window.handleReturn = (orderId) => {
-      alert(`Return initiated for Order #${orderId}. (Placeholder action)`);
+      showToast(`Return initiated for Order #${orderId}. (Placeholder action)`);
       // Implement return logic here
     };
 
     window.handleTrack = (orderId) => {
-      alert(`Tracking Order #${orderId}. (Placeholder action)`);
+      showToast(`Tracking Order #${orderId}. (Placeholder action)`);
       // Implement tracking logic here
     };
 
     window.handleBuyAgain = (orderId) => {
-      alert(`Reordering Order #${orderId}. (Placeholder action)`);
+      showToast(`Reordering Order #${orderId}. (Placeholder action)`);
       // Implement buy again logic here
     };
 
     window.handleCancel = async (orderId) => {
       try {
         toggleLoadingSpinner(true);
-        await setDoc(doc(db, `users/${auth.currentUser.uid}/orders`, orderId), { status: "Cancelled" }, { merge: true });
-        await loadOrders(auth.currentUser);
-        alert(`Order #${orderId} cancelled successfully.`);
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (!userDoc.exists()) {
+          throw new Error("User document not found");
+        }
+        const orderDetails = userDoc.data().orderDetails || [];
+        const updatedOrders = orderDetails.map(order => 
+          order.orderId === orderId ? { ...order, status: "Cancelled", updatedAt: new Date().toISOString() } : order
+        );
+        await updateDoc(userDocRef, { orderDetails: updatedOrders });
+        await loadOrders(user.uid);
+        showToast(`Order #${orderId} cancelled successfully.`);
       } catch (error) {
         console.error("Error cancelling order:", error);
-        alert("Failed to cancel order: " + error.message);
+        showToast("Failed to cancel order: " + error.message, false);
+        logAnalyticsError('order_cancel_error', error);
       } finally {
         toggleLoadingSpinner(false);
       }
@@ -524,29 +599,33 @@
     window.logout = async () => {
       try {
         await signOut(auth);
-        window.location.href = "https://localworkers.xyz/";
+        window.location.href = "index.html";
       } catch (error) {
         console.error("Logout error:", error);
-        alert("Error logging out: " + error.message);
+        showToast("Error logging out: " + error.message, false);
+        logAnalyticsError('logout_error', error);
       }
     };
 
     // Initialize Authentication
+    AOS.init({ duration: 800, once: true });
     toggleLoadingSpinner(true);
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (currentUser) => {
       if (!isAuthInitialized) {
         isAuthInitialized = true;
-        if (user) {
-          loadOrders(user);
+        if (currentUser) {
+          user = currentUser;
+          loadOrders(user.uid);
         } else {
           toggleLoadingSpinner(false);
-          alert("Please sign in to access your orders.");
-          window.location.href = "index.html";
+          showToast("Please sign in to access your orders.", false);
+          setTimeout(() => window.location.href = "index.html", 2000);
         }
       }
     }, (error) => {
       console.error("Auth state error:", error);
-      alert("Authentication error: " + error.message);
+      showToast("Authentication error: " + error.message, false);
+      logAnalyticsError('auth_state_error', error);
       toggleLoadingSpinner(false);
     });
   </script>
