@@ -154,9 +154,7 @@
       box-shadow: var(--shadow-hover);
     }
     .card img {
-      height: 96px;
-      width: 100%;
-      object-fit: cover;
+      height: 24;
     }
     .toast {
       position: fixed;
@@ -246,7 +244,7 @@
         height: 14px;
       }
       .card img {
-        height: 80px;
+        height: 20;
       }
       .container {
         padding: 0.5rem;
@@ -258,7 +256,7 @@
 <body class="font-roboto bg-white text-gray-800">
   <!-- Top Navigation Bar -->
   <nav class="navbar">
-    <a href="index.html" class="navbar-logo">Echo Store</a>
+    <a href="http://sweatshoping.shop/home.html" class="navbar-logo">Echo Store</a>
     <div class="search-bar flex items-center">
       <input id="search-bar" type="text" placeholder="Search Rakhi products..." class="text-gray-700 focus:ring-0" aria-label="Search Rakhi products" autocomplete="off">
       <button aria-label="Search">
@@ -304,7 +302,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -339,7 +337,7 @@
     const fallbackProducts = [
       {
         id: "550e8400-e29b-41d4-a716-446655440001",
-        name: "Rakhi",
+        name: "rakhi",
         brand: "Rakhi 2025",
         rating: 5.0,
         ratingsCount: 0,
@@ -355,7 +353,7 @@
       },
       {
         id: "550e8400-e29b-41d4-a716-446655440002",
-        name: "Red Rakhi",
+        name: "red rakhi",
         brand: "Modern",
         rating: 5.0,
         ratingsCount: 0,
@@ -371,7 +369,7 @@
       },
       {
         id: "550e8400-e29b-41d4-a716-446655440003",
-        name: "Hook Rakhi",
+        name: "hook rakhi",
         brand: "Rakhi 2025",
         rating: 4.0,
         ratingsCount: 0,
@@ -397,62 +395,21 @@
       setTimeout(() => toast.classList.remove('show'), 3000);
     };
 
-    // Log Errors to Firebase Analytics
-    const logAnalyticsError = (eventName, error) => {
-      logEvent(analytics, eventName, {
-        error_message: error.message,
-        error_code: error.code || 'unknown',
-        timestamp: new Date().toISOString()
-      });
-    };
-
-    // Update Cart Count
-    async function updateCartCount(username = null) {
-      const cartCountElement = document.getElementById('cart-count');
-      if (username) {
-        try {
-          const userDoc = await getDoc(doc(db, "users", username));
-          const cart = userDoc.exists() ? userDoc.data().cart || [] : [];
-          const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-          cartCountElement.textContent = cartCount;
-          console.log("Cart count updated from Firestore:", cartCount);
-        } catch (error) {
-          console.error("Error fetching cart count:", error);
-          cartCountElement.textContent = '0';
-          logAnalyticsError('cart_count_error', error);
-        }
-      } else {
-        cartCountElement.textContent = '0';
-        console.log("No user, cart count set to 0");
-      }
-    }
-
     // Authentication State
-    let currentUsername = null;
     onAuthStateChanged(auth, (user) => {
       const authButton = document.getElementById('auth-status');
       if (user) {
-        console.log("User signed in:", user.uid);
-        currentUsername = user.displayName;
-        if (!currentUsername) {
-          console.warn("User has no displayName, redirecting to signup");
-          showToast('Please complete your profile.', false);
-          setTimeout(() => window.location.href = 'signup.html', 2000);
-          return;
-        }
+        console.log("User signed in:", user.displayName);
         authButton.innerHTML = `
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-          ${currentUsername}
+          ${user.displayName || 'User'}
         `;
-        updateCartCount(currentUsername);
       } else {
         console.log("No user signed in");
-        currentUsername = null;
         authButton.innerHTML = `
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
           Hello, Sign In
         `;
-        updateCartCount();
       }
     });
 
@@ -462,11 +419,10 @@
         console.log("Signing out user");
         signOut(auth).then(() => {
           showToast('Signed out successfully!');
-          window.location.href = 'index.html';
+          window.location.href = 'https://localworkers.xyz/';
         }).catch((error) => {
           console.error("Sign-out error:", error);
           showToast(`Sign-out error: ${error.message}`, false);
-          logAnalyticsError('sign_out_error', error);
         });
       } else {
         console.log("Showing login modal");
@@ -489,16 +445,11 @@
       try {
         console.log("Attempting Email/Password sign-in with email:", email);
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("Sign-in successful:", userCredential.user.uid);
-        if (!userCredential.user.displayName) {
-          showToast('Please complete your profile.', false);
-          setTimeout(() => window.location.href = 'signup.html', 2000);
-        } else {
-          showToast(`Welcome, ${userCredential.user.displayName}!`);
-          document.getElementById('login-modal').classList.remove('show');
-          document.getElementById('login-email').value = '';
-          document.getElementById('login-password').value = '';
-        }
+        console.log("Sign-in successful:", userCredential.user.displayName);
+        showToast(`Welcome, ${userCredential.user.displayName}!`);
+        document.getElementById('login-modal').classList.remove('show');
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-password').value = '';
       } catch (error) {
         console.error("Sign-in error:", error);
         let errorMessage = 'Sign-in failed. Please try again.';
@@ -527,6 +478,23 @@
       document.getElementById('login-password').value = '';
       document.getElementById('login-error').textContent = '';
     });
+
+    // Log Errors to Firebase Analytics
+    const logAnalyticsError = (eventName, error) => {
+      logEvent(analytics, eventName, {
+        error_message: error.message,
+        error_code: error.code || 'unknown',
+        timestamp: new Date().toISOString()
+      });
+    };
+
+    // Cart Management
+    const updateCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cart-count').textContent = cartCount;
+      console.log("Cart count updated:", cartCount);
+    };
 
     // Check Environment
     if (!['http:', 'https:'].includes(window.location.protocol)) {
@@ -642,75 +610,82 @@
       window.addToCart = async (productId) => {
         console.log("Add to Cart initiated for product ID:", productId);
         const user = auth.currentUser;
-        if (!user || !currentUsername) {
-          console.warn("No user signed in or no username, showing login modal");
-          showToast('Please sign in to add to cart.', false);
-          document.getElementById('login-modal').classList.add('show');
-          return;
-        }
-
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         const product = products.find(p => p.id === productId);
-        if (!product || !product.name || !product.price) {
-          console.error("Invalid product data:", productId);
-          showToast('Product not found or invalid.', false);
+
+        if (!product) {
+          console.error("Product not found:", productId);
+          showToast('Product not found.', false);
           return;
         }
 
         console.log("Product found:", product.name);
-        try {
-          const userDocRef = doc(db, "users", currentUsername);
-          const userDoc = await getDoc(userDocRef);
-          let userData = userDoc.exists() ? userDoc.data() : {
-            username: currentUsername,
-            email: user.email,
-            uid: user.uid,
-            phone: "",
-            cart: [],
-            addresses: [],
-            paymentStatus: { method: "cod", updatedAt: new Date().toISOString() }
-          };
-          let userCart = userData.cart || [];
+        const existingItem = cart.find(item => item.id === productId);
+        const cartItem = existingItem 
+          ? { ...existingItem, quantity: existingItem.quantity + 1 }
+          : { 
+              id: productId, 
+              quantity: 1, 
+              color: product.specs?.color || 'Gold', 
+              size: product.specs?.size || '',
+              name: product.name || "Unnamed Rakhi",
+              brand: product.brand || "N/A",
+              price: product.price || 0,
+              originalPrice: product.originalPrice || 0,
+              discount: product.discount || "",
+              delivery: product.delivery || {},
+              specs: product.specs || {},
+              description: product.description || "",
+              imageUrls: product.imageUrls || [],
+              sourceLocation: product.sourceLocation || "Unknown",
+              createdAt: product.createdAt || new Date().toISOString(),
+              addedAt: new Date().toISOString()
+            };
 
-          // Update or add cart item
-          const existingCartItemIndex = userCart.findIndex(item => item.id === productId);
-          const cartItem = {
-            id: productId,
-            quantity: existingCartItemIndex >= 0 ? userCart[existingCartItemIndex].quantity + 1 : 1,
-            color: product.specs?.color || 'Gold',
-            size: product.specs?.size || '',
-            name: product.name,
-            brand: product.brand || "N/A",
-            price: product.price,
-            originalPrice: product.originalPrice || product.price,
-            discount: product.discount || "",
-            delivery: product.delivery || {},
-            specs: product.specs || {},
-            description: product.description || "",
-            imageUrls: product.imageUrls || [],
-            sourceLocation: product.sourceLocation || "Unknown",
-            createdAt: product.createdAt || new Date().toISOString(),
-            addedAt: new Date().toISOString()
-          };
-
-          if (existingCartItemIndex >= 0) {
-            userCart[existingCartItemIndex] = cartItem;
-            console.log("Updated existing cart item at index:", existingCartItemIndex);
-          } else {
-            userCart.push(cartItem);
-            console.log("Added new cart item");
-          }
-
-          // Save to Firestore
-          await setDoc(userDocRef, { ...userData, cart: userCart, uid: user.uid }, { merge: true });
-          console.log("Cart saved to Firestore for user:", currentUsername, "Cart:", userCart);
-          showToast('Added to cart!');
-          updateCartCount(currentUsername);
-          logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
-        } catch (error) {
-          console.error("Error saving cart to Firestore:", error);
-          showToast(`Failed to add to cart: ${error.message}`, false);
-          logAnalyticsError('cart_save_error', error);
+        if (!existingItem) {
+          cart.push(cartItem);
+        } else {
+          existingItem.quantity = cartItem.quantity;
         }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        console.log("Local cart updated:", cart);
+
+        // Save to Firestore
+        if (user && user.displayName) {
+          console.log("User signed in, saving to Firestore for user:", user.displayName);
+          try {
+            const userDocRef = doc(db, "users", user.displayName);
+            const userDoc = await getDoc(userDocRef);
+            let userData = userDoc.exists() ? userDoc.data() : { username: user.displayName, email: user.email, phone: "", cart: [] };
+            let userCart = userData.cart || [];
+            
+            // Update or add cart item
+            const existingCartItemIndex = userCart.findIndex(item => item.id === productId);
+            if (existingCartItemIndex >= 0) {
+              userCart[existingCartItemIndex] = cartItem;
+              console.log("Updated existing cart item at index:", existingCartItemIndex);
+            } else {
+              userCart.push(cartItem);
+              console.log("Added new cart item");
+            }
+            
+            // Use setDoc with merge to ensure document exists
+            await setDoc(userDocRef, { ...userData, cart: userCart }, { merge: true });
+            console.log("Cart saved to Firestore for user:", user.displayName, "Cart:", userCart);
+            showToast('Added to cart and saved to Firestore!');
+          } catch (error) {
+            console.error("Error saving cart to Firestore:", error, "User:", user.displayName);
+            showToast(`Failed to save cart to Firestore: ${error.message}`, false);
+            logAnalyticsError('cart_save_error', error);
+          }
+        } else {
+          console.warn("No user signed in, showing login modal");
+          showToast('Please sign in to save cart to Firestore.', false);
+          document.getElementById('login-modal').classList.add('show');
+        }
+        
+        logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
       };
 
       // Event listeners
