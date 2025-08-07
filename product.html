@@ -175,6 +175,51 @@
       opacity: 1;
       transform: translateY(0);
     }
+    .login-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-modal.show {
+      display: flex;
+    }
+    .login-modal-content {
+      background: #FFF;
+      padding: 1rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: var(--shadow-hover);
+      text-align: center;
+    }
+    .login-modal-content input {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    .login-modal-content button {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin: 0.5rem;
+    }
+    .login-modal-content button:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+    }
     @keyframes fadeIn {
       to { opacity: 1; }
     }
@@ -242,10 +287,23 @@
   <!-- Toast Notification -->
   <div id="toast" class="toast">Action completed successfully!</div>
 
+  <!-- Login Modal -->
+  <div id="login-modal" class="login-modal">
+    <div class="login-modal-content">
+      <h2>Sign In</h2>
+      <input type="email" id="login-email" placeholder="Enter your email" aria-label="Email">
+      <input type="password" id="login-password" placeholder="Enter your password" aria-label="Password">
+      <button id="login-submit" aria-label="Sign In">Sign In</button>
+      <button id="login-cancel" aria-label="Cancel">Cancel</button>
+      <p id="login-error" class="text-red-600 text-xs mt-2"></p>
+      <p>Not registered? <a href="signup.html" class="text-blue-600">Sign Up</a></p>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getFirestore, doc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
     // Firebase Configuration
@@ -261,18 +319,19 @@
 
     // Initialize Firebase
     let app, db, auth, analytics;
-    try {
-      app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-      auth = getAuth(app);
-      analytics = getAnalytics(app);
-      console.log("Firebase initialized successfully");
-    } catch (error) {
-      console.error("Firebase initialization error:", error);
-      showToast('Failed to initialize Firebase.', false);
+    function initializeFirebase() {
+      try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        analytics = getAnalytics(app);
+        console.log("Firebase initialized successfully");
+      } catch (error) {
+        console.error("Firebase initialization error:", error);
+        showToast('Failed to initialize Firebase.', false);
+      }
     }
-
-    const provider = new GoogleAuthProvider();
+    initializeFirebase();
 
     // Fallback Rakhi Product Data
     const fallbackProducts = [
@@ -354,26 +413,70 @@
       }
     });
 
-    // Handle Sign-In
+    // Handle Sign-In/Out
     document.getElementById('auth-status').addEventListener('click', () => {
-      if (!auth.currentUser) {
-        console.log("Initiating Google Sign-In");
-        signInWithRedirect(auth, provider);
-      } else {
+      if (auth.currentUser) {
         console.log("Signing out user");
-        auth.signOut().then(() => showToast('Signed out successfully!'));
+        signOut(auth).then(() => {
+          showToast('Signed out successfully!');
+          window.location.href = 'https://localworkers.xyz/';
+        }).catch((error) => {
+          console.error("Sign-out error:", error);
+          showToast(`Sign-out error: ${error.message}`, false);
+        });
+      } else {
+        console.log("Showing login modal");
+        document.getElementById('login-modal').classList.add('show');
       }
     });
 
-    getRedirectResult(auth).then((result) => {
-      if (result) {
-        console.log("Google Sign-In successful:", result.user.displayName);
-        showToast(`Welcome, ${result.user.displayName}!`);
+    // Handle Login
+    document.getElementById('login-submit').addEventListener('click', async () => {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errorElement = document.getElementById('login-error');
+      errorElement.textContent = '';
+
+      if (!email || !password) {
+        errorElement.textContent = 'Please enter both email and password.';
+        return;
       }
-    }).catch((error) => {
-      console.error("Sign-in error:", error);
-      showToast(`Sign-in error: ${error.message}`, false);
-      logAnalyticsError('sign_in_error', error);
+
+      try {
+        console.log("Attempting Email/Password sign-in with email:", email);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log("Sign-in successful:", userCredential.user.displayName);
+        showToast(`Welcome, ${userCredential.user.displayName}!`);
+        document.getElementById('login-modal').classList.remove('show');
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-password').value = '';
+      } catch (error) {
+        console.error("Sign-in error:", error);
+        let errorMessage = 'Sign-in failed. Please try again.';
+        switch (error.code) {
+          case 'auth/wrong-password':
+            errorMessage = 'Incorrect password.';
+            break;
+          case 'auth/user-not-found':
+            errorMessage = 'No user found with this email.';
+            break;
+          case 'auth/invalid-email':
+            errorMessage = 'Invalid email format.';
+            break;
+          default:
+            errorMessage = `Sign-in error: ${error.message}`;
+        }
+        errorElement.textContent = errorMessage;
+        logAnalyticsError('sign_in_error', error);
+      }
+    });
+
+    // Cancel Login
+    document.getElementById('login-cancel').addEventListener('click', () => {
+      document.getElementById('login-modal').classList.remove('show');
+      document.getElementById('login-email').value = '';
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-error').textContent = '';
     });
 
     // Log Errors to Firebase Analytics
@@ -441,7 +544,7 @@
           .slice(0, 5)
           .map(p => `<div onclick="selectSuggestion('${p.name}')">${p.name} (${p.brand || 'No Brand'})</div>`);
         searchSuggestions.innerHTML = suggestions.length ? suggestions.join("") : "<div>No matches found</div>";
-        searchSuggestions.classList.add("show");
+        searchSuggestions.classList.add('show');
       }
 
       // Select suggestion
@@ -575,8 +678,9 @@
             logAnalyticsError('cart_save_error', error);
           }
         } else {
-          console.warn("No user signed in, cart not saved to Firestore");
+          console.warn("No user signed in, showing login modal");
           showToast('Please sign in to save cart to Firestore.', false);
+          document.getElementById('login-modal').classList.add('show');
         }
         
         logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
