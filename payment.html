@@ -152,6 +152,7 @@
       gap: 1rem;
       padding: 1rem 0;
       border-bottom: 1px solid #E5E7EB;
+      align-items: center;
     }
     .order-item img {
       width: 90px;
@@ -166,6 +167,20 @@
     }
     .order-item-details p {
       margin: 0.2rem 0;
+    }
+    .remove-btn {
+      background: var(--error-color);
+      color: #FFF;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .remove-btn:hover {
+      background: #DC2626;
+      transform: scale(1.05);
     }
     .price-details p {
       font-size: 0.9rem;
@@ -370,6 +385,10 @@
       .order-item-details {
         font-size: 0.8rem;
       }
+      .remove-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+      }
       .btn-primary {
         max-width: 100%;
       }
@@ -484,7 +503,7 @@
   <!-- JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -513,6 +532,7 @@
 
     let user = null;
     let checkoutData = null;
+    let userData = {};
 
     const showToast = (message, success = true) => {
       console.log(`Toast: ${message}`);
@@ -568,13 +588,23 @@
       const authStatus = document.getElementById("auth-status");
       if (user) {
         console.log("User authenticated:", user.displayName);
-        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, ${user.displayName || "User"}!`;
+        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, ${sanitizeHTML(user.displayName || "User")}!`;
         authStatus.onclick = () => window.location.href = "https://localworkers.xyz/profile.html";
         try {
           checkoutData = JSON.parse(localStorage.getItem('checkoutData') || '{}');
           if (!checkoutData.items || !checkoutData.address) {
             showToast("Invalid checkout data. Please return to checkout.", false);
             setTimeout(() => window.location.href = "checkout.html", 2000);
+            return;
+          }
+          // Fetch user data
+          const userDocRef = doc(db, "users", user.displayName);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists() && userDoc.data().username === user.displayName) {
+            userData = userDoc.data();
+          } else {
+            showToast("User profile not found or mismatch. Please sign up.", false);
+            setTimeout(() => window.location.href = "signup.html", 2000);
             return;
           }
           await loadOrderItems();
@@ -623,7 +653,7 @@
         }
 
         orderItems.innerHTML = '';
-        checkoutData.items.forEach(item => {
+        checkoutData.items.forEach((item, index) => {
           const itemTotal = item.price * item.quantity;
           const itemOriginalTotal = item.originalPrice * item.quantity;
           mrpTotal += itemOriginalTotal;
@@ -642,6 +672,7 @@
               ${item.specs?.color ? `<p>Color: ${sanitizeHTML(item.specs.color)}</p>` : ''}
               ${item.specs?.size ? `<p>Size: ${sanitizeHTML(item.specs.size)}</p>` : ''}
             </div>
+            <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
           `;
           orderItems.appendChild(itemCard);
         });
@@ -673,6 +704,14 @@
       }
       toggleLoadingSpinner(false);
     }
+
+    window.removeItem = (index) => {
+      console.log("Removing item at index:", index);
+      checkoutData.items.splice(index, 1);
+      localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+      showToast("Item removed from order.");
+      loadOrderItems();
+    };
 
     function updatePriceDetails(mrpTotal, discountTotal, couponDiscount, totalAmount) {
       console.log(`Updating price details: MRP=${mrpTotal}, Discount=${discountTotal}, Coupon=${couponDiscount}, Total=${totalAmount}`);
@@ -743,7 +782,7 @@
           orderId: paymentId,
           userId: user.uid,
           userEmail: user.email,
-          username: user.displayName || "User",
+          username: user.displayName,
           items: orderItems,
           address: checkoutData.address,
           paymentMethod,
@@ -754,16 +793,24 @@
           totalAmount: parseFloat(document.getElementById("totalAmount").textContent),
           status: "Pending",
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
+          userDetails: {
+            username: userData.username || user.displayName,
+            email: userData.email || user.email,
+            uid: userData.uid || user.uid,
+            phone: userData.phone || "",
+            mobile: userData.mobile || "",
+            name: userData.name || "",
+            address: userData.address || "",
+            addresses: userData.addresses || []
+          }
         };
-        // Save to delivery collection
-        await setDoc(doc(db, "delivery", paymentId), orderData);
-        // Save to users collection under orderDetails array
-        await updateDoc(doc(db, "users", user.uid), {
-          orderDetails: arrayUnion(orderData),
-          cart: []
-        });
+        // Save to orders collection with username as document ID
+        await setDoc(doc(db, "orders", user.displayName), orderData);
+        // Clear cart in users collection
+        await updateDoc(doc(db, "users", user.displayName), { cart: [] });
         showToast("Order saved successfully!");
+        updateCartCount();
       } catch (error) {
         console.error("Error saving order:", error);
         showToast(`Failed to save order: ${error.message}`, false);
@@ -796,12 +843,13 @@
     async function updateCartCount() {
       try {
         console.log("Updating cart count");
-        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const userDoc = await getDoc(doc(db, "users", user.displayName));
         const cart = userDoc.exists() ? userDoc.data().cart || [] : [];
         document.getElementById("cart-count").textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
       } catch (error) {
         console.error("Error updating cart count:", error);
         document.getElementById("cart-count").textContent = "0";
+        logAnalyticsError('cart_count_error', error);
       }
     }
 
