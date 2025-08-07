@@ -186,12 +186,17 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 1rem;
+      padding: 1.2rem;
       border: 1px solid #E5E7EB;
       border-radius: 10px;
       margin: 0.75rem 0;
       cursor: pointer;
-      transition: background 0.3s ease, border-color 0.3s ease;
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      background: #FFFFFF;
+    }
+    .payment-option.active {
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 2px var(--primary-accent);
     }
     .payment-option:hover {
       background: #F1F5F9;
@@ -202,16 +207,25 @@
     }
     .payment-option label {
       font-size: 1rem;
+      font-weight: 600;
       color: var(--text-primary);
+      flex: 1;
     }
-    .upi-input, .qr-scanner {
-      display: none;
+    .payment-option img {
+      width: 24px;
+      height: 24px;
+    }
+    .payment-details {
       margin-top: 1rem;
+      padding: 1rem;
+      background: #F8FAFC;
+      border-radius: 8px;
+      display: none;
     }
-    .upi-input.active, .qr-scanner.active {
+    .payment-details.active {
       display: block;
     }
-    .upi-input input {
+    .upi-input input, .card-input input, .card-input select {
       border: 1px solid #D1D5DB;
       padding: 0.9rem;
       border-radius: 10px;
@@ -219,6 +233,12 @@
       font-size: 1rem;
       color: var(--text-primary);
       background: #FFFFFF;
+      margin-bottom: 0.75rem;
+    }
+    .card-input .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
     }
     .qr-scanner img {
       width: 220px;
@@ -230,6 +250,8 @@
     }
     .qr-scanner p {
       color: var(--text-primary);
+      text-align: center;
+      margin-top: 1rem;
     }
     .btn {
       background: var(--gradient-accent);
@@ -279,6 +301,7 @@
     }
     .sticky-price p {
       color: var(--text-primary);
+      font-weight: 600;
     }
     .trust-badges {
       display: flex;
@@ -338,10 +361,10 @@
     .success-message {
       display: none;
       text-align: center;
-      padding: 2.5rem;
+      padding: 3rem;
       background: #ECFDF5;
-      border-radius: 10px;
-      margin: 1.5rem auto;
+      border-radius: 12px;
+      margin: 2rem auto;
       max-width: 800px;
       border: 1px solid var(--success-color);
     }
@@ -350,6 +373,12 @@
     }
     .success-message h2 {
       color: var(--success-color);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .success-message p {
+      color: var(--text-primary);
+      margin: 0.5rem 0;
     }
     @media (max-width: 640px) {
       .sticky-price {
@@ -384,6 +413,9 @@
         width: 180px;
         height: 180px;
       }
+      .card-input .grid {
+        grid-template-columns: 1fr;
+      }
     }
     @media (min-width: 641px) and (max-width: 1024px) {
       .card {
@@ -401,9 +433,11 @@
 
   <!-- Success Message -->
   <div id="success-message" class="success-message">
-    <h2 class="text-lg font-semibold">Order Placed Successfully!</h2>
-    <p class="text-sm mt-2">Thank you for your order. You'll receive a confirmation soon.</p>
-    <button class="btn mt-3" onclick="window.location.href='orders.html'">View Orders</button>
+    <h2>Order Placed Successfully!</h2>
+    <p id="order-id">Order ID: #123456</p>
+    <p>Thank you for your order. You'll receive a confirmation email soon.</p>
+    <p>Estimated Delivery: <span id="success-delivery">Calculating...</span></p>
+    <button class="btn mt-4" onclick="window.location.href='orders.html'">View Orders</button>
   </div>
 
   <!-- Navbar -->
@@ -461,30 +495,59 @@
   <!-- Payment Method -->
   <section class="card" role="region" aria-label="Payment Method" data-aos="fade-up">
     <h2 class="mb-4">Payment Method</h2>
-    <div class="payment-option">
+    <div class="payment-option" data-method="upi">
       <input type="radio" name="payment" id="upi" value="upi" checked>
+      <img src="https://logodix.com/logo/1645140.png" alt="UPI Icon">
       <label for="upi">UPI (Google Pay, PhonePe, Paytm, etc.)</label>
     </div>
-    <div class="upi-input active">
+    <div class="payment-details upi-input active">
+      <select id="upiApp" aria-label="Select UPI App">
+        <option value="" disabled selected>Select UPI App</option>
+        <option value="gpay">Google Pay</option>
+        <option value="phonepe">PhonePe</option>
+        <option value="paytm">Paytm</option>
+        <option value="other">Other UPI</option>
+      </select>
       <input type="text" id="upiId" placeholder="Enter UPI ID (e.g., name@upi)" aria-label="UPI ID">
       <button class="btn mt-3" onclick="verifyUpi()">Verify UPI</button>
     </div>
-    <div class="payment-option">
+    <div class="payment-option" data-method="qr">
       <input type="radio" name="payment" id="qr" value="qr">
+      <img src="https://via.placeholder.com/24x24?text=QR" alt="QR Icon">
       <label for="qr">UPI QR Code Scanner</label>
     </div>
-    <div class="qr-scanner">
+    <div class="payment-details qr-scanner">
       <img src="https://via.placeholder.com/220x220?text=UPI+QR+Code" alt="UPI QR Code">
-      <p class="text-sm text-center mt-3">Scan this QR code using your UPI app to complete the payment.</p>
+      <p class="text-sm">Scan this QR code using your UPI app to complete the payment.</p>
       <button class="btn mt-3" onclick="confirmQrPayment()">Confirm QR Payment</button>
     </div>
-    <div class="payment-option">
+    <div class="payment-option" data-method="razorpay">
       <input type="radio" name="payment" id="razorpay" value="razorpay">
-      <label for="razorpay">Debit/Credit Card, Net Banking (Razorpay)</label>
+      <img src="https://hostbillapp.com/appstore/payment_razorpay/images/logo.png" alt="Razorpay Icon">
+      <label for="razorpay">Debit/Credit Card, Net Banking</label>
     </div>
-    <div class="payment-option">
+    <div class="payment-details card-input">
+      <div class="saved-card">
+        <p class="text-sm">Saved Card: Ending in ****1234 (Visa)</p>
+        <button class="btn mt-2" onclick="useSavedCard()">Use Saved Card</button>
+      </div>
+      <p class="text-sm mt-3">Or enter new card details:</p>
+      <input type="text" id="cardNumber" placeholder="Card Number" aria-label="Card Number">
+      <div class="grid">
+        <input type="text" id="expiry" placeholder="MM/YY" aria-label="Expiry Date">
+        <input type="text" id="cvv" placeholder="CVV" aria-label="CVV">
+      </div>
+      <input type="text" id="cardName" placeholder="Name on Card" aria-label="Name on Card">
+      <button class="btn mt-3" onclick="verifyCard()">Proceed to Payment</button>
+    </div>
+    <div class="payment-option" data-method="cod">
       <input type="radio" name="payment" id="cod" value="cod">
+      <img src="https://via.placeholder.com/24x24?text=COD" alt="COD Icon">
       <label for="cod">Cash on Delivery</label>
+    </div>
+    <div class="payment-details cod-input">
+      <p class="text-sm">Cash on Delivery is available for your pincode.</p>
+      <button class="btn mt-3" onclick="confirmCod()">Confirm COD</button>
     </div>
   </section>
 
@@ -652,6 +715,7 @@
         const deliveryDate = new Date();
         deliveryDate.setDate(deliveryDate.getDate() + 7);
         document.getElementById("deliveryEstimate").textContent = `Estimated Delivery: By ${deliveryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+        document.getElementById("success-delivery").textContent = `By ${deliveryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
         updatePriceDetails(mrpTotal, discountTotal, couponDiscount, totalAmount);
         AOS.refresh();
       } catch (error) {
@@ -674,12 +738,12 @@
 
     document.querySelectorAll('input[name="payment"]').forEach((input) => {
       input.addEventListener('change', () => {
-        document.querySelectorAll('.upi-input, .qr-scanner').forEach((el) => el.classList.remove('active'));
-        if (input.value === 'upi') {
-          document.querySelector('.upi-input').classList.add('active');
-        } else if (input.value === 'qr') {
-          document.querySelector('.qr-scanner').classList.add('active');
-        }
+        document.querySelectorAll('.payment-option').forEach((el) => el.classList.remove('active'));
+        document.querySelectorAll('.payment-details').forEach((el) => el.classList.remove('active'));
+        const selectedOption = document.querySelector(`.payment-option[data-method="${input.value}"]`);
+        const selectedDetails = document.querySelector(`.payment-details.${input.value}-input`);
+        if (selectedOption) selectedOption.classList.add('active');
+        if (selectedDetails) selectedDetails.classList.add('active');
         savePaymentStatus(input.value);
       });
     });
@@ -698,6 +762,11 @@
 
     window.verifyUpi = () => {
       const upiId = document.getElementById("upiId").value.trim();
+      const upiApp = document.getElementById("upiApp").value;
+      if (!upiApp) {
+        showToast("Please select a UPI app.", false);
+        return false;
+      }
       if (!upiId.includes('@') || upiId.length < 5) {
         showToast("Please enter a valid UPI ID (e.g., name@upi).", false);
         return false;
@@ -710,6 +779,50 @@
     window.confirmQrPayment = () => {
       showToast("QR Payment confirmed successfully!");
       savePaymentStatus('qr');
+      return true;
+    };
+
+    window.useSavedCard = () => {
+      showToast("Using saved card for payment.");
+      savePaymentStatus('razorpay');
+      return true;
+    };
+
+    window.verifyCard = () => {
+      const cardNumber = document.getElementById("cardNumber").value.trim();
+      const expiry = document.getElementById("expiry").value.trim();
+      const cvv = document.getElementById("cvv").value.trim();
+      const cardName = document.getElementById("cardName").value.trim();
+      if (!cardNumber.match(/^\d{16}$/)) {
+        showToast("Please enter a valid 16-digit card number.", false);
+        return false;
+      }
+      if (!expiry.match(/^\d{2}\/\d{2}$/)) {
+        showToast("Please enter a valid expiry date (MM/YY).", false);
+        return false;
+      }
+      if (!cvv.match(/^\d{3,4}$/)) {
+        showToast("Please enter a valid CVV.", false);
+        return false;
+      }
+      if (!cardName) {
+        showToast("Please enter the name on the card.", false);
+        return false;
+      }
+      showToast("Card details verified successfully!");
+      savePaymentStatus('razorpay');
+      return true;
+    };
+
+    window.confirmCod = async () => {
+      const userDoc = await getDoc(doc(db, "users", user.displayName));
+      const pincode = userDoc.exists() && userDoc.data().address ? userDoc.data().address.pincode : '';
+      if (!pincode.match(/^\d{6}$/)) {
+        showToast("Invalid pincode for COD. Please update your address.", false);
+        return false;
+      }
+      showToast("Cash on Delivery confirmed!");
+      savePaymentStatus('cod');
       return true;
     };
 
@@ -738,6 +851,12 @@
       if (paymentMethod === "qr" && !confirmQrPayment()) {
         return;
       }
+      if (paymentMethod === "razorpay" && !verifyCard() && !useSavedCard()) {
+        return;
+      }
+      if (paymentMethod === "cod" && !await confirmCod()) {
+        return;
+      }
       try {
         const totalAmount = parseFloat(document.getElementById("totalAmount").textContent);
         if (paymentMethod === "razorpay") {
@@ -749,7 +868,7 @@
             description: "Rakhi Order Payment",
             handler: async (response) => {
               await saveOrder(checkoutData.items, paymentMethod, response.razorpay_payment_id);
-              showSuccessMessage();
+              showSuccessMessage(response.razorpay_payment_id);
             },
             prefill: {
               name: userDoc.data().address.fullName,
@@ -768,7 +887,7 @@
           rzp.open();
         } else {
           await saveOrder(checkoutData.items, paymentMethod, null);
-          showSuccessMessage();
+          showSuccessMessage(generateOrderId());
         }
       } catch (error) {
         console.error("Error placing order:", error);
@@ -792,7 +911,7 @@
           items: orderItems,
           address: userDoc.data().address,
           paymentMethod,
-          paymentId,
+          paymentId: paymentId || generateOrderId(),
           subtotal: checkoutData.subtotal,
           discount: checkoutData.discount,
           coupon: checkoutData.coupon || null,
@@ -807,18 +926,24 @@
       }
     }
 
-    function showSuccessMessage() {
+    function generateOrderId() {
+      return 'ORD' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    }
+
+    function showSuccessMessage(paymentId) {
+      document.getElementById('order-id').textContent = `Order ID: #${paymentId || generateOrderId()}`;
       document.getElementById('success-message').classList.add('active');
       document.querySelectorAll('.card, .sticky-price').forEach(el => el.style.display = 'none');
       document.getElementById('payment-step').classList.remove('active');
       document.getElementById('order-step').classList.add('active', 'completed');
       confetti({
-        particleCount: 150,
-        spread: 90,
+        particleCount: 200,
+        spread: 100,
         origin: { y: 0.6 },
-        colors: ['#1D3557', '#2563EB', '#60A5FA']
+        colors: ['#1D3557', '#2563EB', '#60A5FA', '#22C55E']
       });
       localStorage.removeItem('checkoutData');
+      gsap.from('#success-message', { opacity: 0, scale: 0.9, duration: 0.8 });
     }
 
     async function updateCartCount() {
