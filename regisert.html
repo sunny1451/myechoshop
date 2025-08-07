@@ -238,9 +238,19 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        let app, auth, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            document.getElementById('error').textContent = 'Failed to initialize Firebase. Please try again later.';
+            document.getElementById('error').classList.add('show');
+            document.querySelector('.btn-gradient').disabled = true;
+            return;
+        }
 
         // Check for file:// protocol
         if (window.location.protocol === "file:") {
@@ -251,6 +261,7 @@
         } else {
             auth.onAuthStateChanged(user => {
                 if (user) {
+                    console.log("User already signed in:", user.displayName);
                     window.location.href = 'index.html';
                 }
             });
@@ -264,17 +275,21 @@
                     email: email,
                     phone: phone
                 };
+                console.log("Attempting to save user data:", userData);
                 await setDoc(doc(db, "users", workerId), userData, { merge: true });
-                console.log("User data saved to Firestore with document ID:", workerId);
+                console.log("User data saved successfully with document ID:", workerId);
             } catch (error) {
-                console.error("Error saving user data:", error);
+                console.error("Error saving user data to Firestore:", error);
                 throw new Error(`Failed to save user data: ${error.message}`);
             }
         }
 
         // Register Function
         window.register = async function() {
-            if (window.location.protocol === "file:") return;
+            if (window.location.protocol === "file:") {
+                console.warn("Registration blocked: Running on file:// protocol");
+                return;
+            }
 
             const emailInput = document.getElementById('email');
             const phoneInput = document.getElementById('phone');
@@ -286,6 +301,8 @@
 
             if (!emailInput || !phoneInput || !workerIdInput || !passwordInput || !errorElement || !successElement) {
                 console.error('One or more DOM elements not found.');
+                errorElement.textContent = 'Internal error: Form elements missing.';
+                errorElement.classList.add('show');
                 return;
             }
 
@@ -334,9 +351,11 @@
 
             try {
                 // Check for unique workerId
-                const q = query(collection(db, 'users'), where('workerId', '==', workerId));
+                console.log("Checking if username exists:", workerId);
+                const q = query(collection(db, 'users'), where('username', '==', workerId));
                 const querySnapshot = await getDocs(q);
                 if (!querySnapshot.empty) {
+                    console.warn("Username already exists:", workerId);
                     errorElement.textContent = 'Username already exists. Please choose a different one.';
                     errorElement.classList.add('show');
                     signupBtn.disabled = false;
@@ -344,14 +363,18 @@
                     return;
                 }
 
-                // Create user
+                // Create user with Firebase Authentication
+                console.log("Creating user with email:", email);
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
+                console.log("User created successfully:", user.uid);
 
                 // Update display name
+                console.log("Updating user profile with displayName:", workerId);
                 await updateProfile(user, { displayName: workerId });
 
                 // Save to Firestore
+                console.log("Saving user data to Firestore");
                 await saveUserData(workerId, email, phone);
 
                 // Clear form
@@ -363,6 +386,7 @@
                 // Show success
                 successElement.textContent = `Registration successful! Your Username is: ${workerId}. Redirecting to login...`;
                 successElement.classList.add('show');
+                console.log("Registration successful, redirecting to login");
 
                 // Redirect after 2 seconds
                 setTimeout(() => {
