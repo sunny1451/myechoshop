@@ -13,7 +13,6 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <style>
     :root {
@@ -222,35 +221,6 @@
     .payment-details.active {
       display: block;
     }
-    .upi-input input, .upi-input select, .card-input input, .card-input select {
-      border: 1px solid #D1D5DB;
-      padding: 0.8rem;
-      border-radius: 8px;
-      width: 100%;
-      font-size: 0.9rem;
-      color: var(--text-primary);
-      background: #FFFFFF;
-      margin-bottom: 0.5rem;
-    }
-    .card-input .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .qr-scanner img {
-      width: 200px;
-      height: 200px;
-      margin: 0 auto;
-      display: block;
-      border-radius: 8px;
-      border: 1px solid #E5E7EB;
-    }
-    .qr-scanner p {
-      color: var(--text-primary);
-      text-align: center;
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-    }
     .btn {
       background: var(--gradient-accent);
       color: #FFF;
@@ -403,17 +373,6 @@
       .btn-primary {
         max-width: 100%;
       }
-      .qr-scanner img {
-        width: 150px;
-        height: 150px;
-      }
-      .card-input .grid {
-        grid-template-columns: 1fr;
-      }
-      .payment-option img {
-        width: 18px;
-        height: 18px;
-      }
       .trust-badges img {
         width: 40px;
       }
@@ -436,7 +395,7 @@
   <div id="success-message" class="success-message">
     <h2>Order Placed Successfully!</h2>
     <p id="order-id">Order ID: #123456</p>
-    <p id="payment-method">Payment Method: Not specified</p>
+    <p id="payment-method">Payment Method: Cash on Delivery</p>
     <p>Order saved successfully in our system.</p>
     <p>Thank you for your order. You'll receive a confirmation email soon.</p>
     <p>Estimated Delivery: <span id="success-delivery">Calculating...</span></p>
@@ -493,57 +452,12 @@
   <!-- Payment Method -->
   <section class="card" role="region" aria-label="Payment Method" data-aos="fade-up">
     <h2 class="mb-3">Select Payment Method</h2>
-    <div class="payment-option active" data-method="upi">
-      <input type="radio" name="payment" id="upi" value="upi" checked>
-      <img src="https://logodix.com/logo/1645140.png" alt="UPI Icon">
-      <label for="upi">UPI (Google Pay, PhonePe, Paytm, etc.)</label>
-    </div>
-    <div class="payment-details upi-input active">
-      <select id="upiApp" aria-label="Select UPI App">
-        <option value="" disabled selected>Select UPI App</option>
-        <option value="gpay">Google Pay</option>
-        <option value="phonepe">PhonePe</option>
-        <option value="paytm">Paytm</option>
-        <option value="other">Other UPI</option>
-      </select>
-      <input type="text" id="upiId" placeholder="Enter UPI ID (e.g., name@upi)" aria-label="UPI ID">
-      <button class="btn mt-2" onclick="verifyUpi()">Verify UPI</button>
-    </div>
-    <div class="payment-option" data-method="qr">
-      <input type="radio" name="payment" id="qr" value="qr">
-      <img src="https://via.placeholder.com/20x20?text=QR" alt="QR Icon">
-      <label for="qr">UPI QR Code Scanner</label>
-    </div>
-    <div class="payment-details qr-scanner">
-      <img src="https://via.placeholder.com/200x200?text=UPI+QR+Code" alt="UPI QR Code">
-      <p class="text-sm">Scan this QR code using your UPI app to complete the payment.</p>
-      <button class="btn mt-2" onclick="confirmQrPayment()">Confirm QR Payment</button>
-    </div>
-    <div class="payment-option" data-method="razorpay">
-      <input type="radio" name="payment" id="razorpay" value="razorpay">
-      <img src="https://hostbillapp.com/appstore/payment_razorpay/images/logo.png" alt="Razorpay Icon">
-      <label for="razorpay">Debit/Credit Card, Net Banking</label>
-    </div>
-    <div class="payment-details card-input">
-      <div class="saved-card">
-        <p class="text-sm">Saved Card: Ending in ****1234 (Visa)</p>
-        <button class="btn mt-2" onclick="useSavedCard()">Use Saved Card</button>
-      </div>
-      <p class="text-sm mt-2">Or enter new card details:</p>
-      <input type="text" id="cardNumber" placeholder="Card Number" aria-label="Card Number">
-      <div class="grid">
-        <input type="text" id="expiry" placeholder="MM/YY" aria-label="Expiry Date">
-        <input type="text" id="cvv" placeholder="CVV" aria-label="CVV">
-      </div>
-      <input type="text" id="cardName" placeholder="Name on Card" aria-label="Name on Card">
-      <button class="btn mt-2" onclick="verifyCard()">Proceed to Payment</button>
-    </div>
-    <div class="payment-option" data-method="cod">
-      <input type="radio" name="payment" id="cod" value="cod">
+    <div class="payment-option active" data-method="cod">
+      <input type="radio" name="payment" id="cod" value="cod" checked>
       <img src="https://via.placeholder.com/20x20?text=COD" alt="COD Icon">
       <label for="cod">Cash on Delivery</label>
     </div>
-    <div class="payment-details cod-input">
+    <div class="payment-details cod-input active">
       <p class="text-sm">Cash on Delivery is available for your pincode.</p>
       <button class="btn mt-2" onclick="confirmCod()">Confirm COD</button>
     </div>
@@ -558,8 +472,6 @@
     <button id="placeOrder" class="btn-primary">Place Order Securely</button>
     <div class="trust-badges">
       <img src="https://whatismyipaddress.com/wp-content/uploads/ssl-image-1024x731.jpg?tr=w-50,h-50" alt="SSL Secure">
-      <img src="https://hostbillapp.com/appstore/payment_razorpay/images/logo.png?tr=w-50,h-50" alt="Razorpay">
-      <img src="https://logodix.com/logo/1645140.png?tr=w-50,h-50" alt="UPI">
     </div>
   </section>
 
@@ -572,7 +484,7 @@
   <!-- JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, collection } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -772,91 +684,6 @@
       gsap.from('.price-details', { opacity: 0, y: 20, duration: 0.5 });
     }
 
-    document.querySelectorAll('input[name="payment"]').forEach((input) => {
-      input.addEventListener('change', () => {
-        console.log(`Payment method changed to: ${input.value}`);
-        document.querySelectorAll('.payment-option').forEach((el) => el.classList.remove('active'));
-        document.querySelectorAll('.payment-details').forEach((el) => el.classList.remove('active'));
-        const selectedOption = document.querySelector(`.payment-option[data-method="${input.value}"]`);
-        const selectedDetails = document.querySelector(`.payment-details.${input.value}-input`);
-        if (selectedOption) selectedOption.classList.add('active');
-        if (selectedDetails) selectedDetails.classList.add('active');
-        savePaymentStatus(input.value);
-      });
-    });
-
-    async function savePaymentStatus(paymentMethod) {
-      try {
-        console.log(`Saving payment status: ${paymentMethod}`);
-        await setDoc(doc(db, "users", user.displayName), {
-          paymentStatus: { method: paymentMethod, updatedAt: new Date().toISOString() }
-        }, { merge: true });
-        showToast(`Payment method set to ${paymentMethod.toUpperCase()}`);
-      } catch (error) {
-        console.error("Error saving payment status:", error);
-        showToast(`Error saving payment status: ${error.message}`, false);
-        logAnalyticsError('payment_status_error', error);
-      }
-    }
-
-    window.verifyUpi = () => {
-      const upiId = document.getElementById("upiId").value.trim();
-      const upiApp = document.getElementById("upiApp").value;
-      console.log(`Verifying UPI: ${upiId}, App: ${upiApp}`);
-      if (!upiApp) {
-        showToast("Please select a UPI app.", false);
-        return false;
-      }
-      if (!upiId.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$/)) {
-        showToast("Please enter a valid UPI ID (e.g., name@upi).", false);
-        return false;
-      }
-      showToast("UPI ID verified successfully!");
-      savePaymentStatus('upi');
-      return true;
-    };
-
-    window.confirmQrPayment = () => {
-      console.log("Confirming QR payment");
-      showToast("QR Payment confirmed successfully!");
-      savePaymentStatus('qr');
-      return true;
-    };
-
-    window.useSavedCard = () => {
-      console.log("Using saved card");
-      showToast("Using saved card for payment.");
-      savePaymentStatus('razorpay');
-      return true;
-    };
-
-    window.verifyCard = () => {
-      const cardNumber = document.getElementById("cardNumber").value.trim();
-      const expiry = document.getElementById("expiry").value.trim();
-      const cvv = document.getElementById("cvv").value.trim();
-      const cardName = document.getElementById("cardName").value.trim();
-      console.log(`Verifying card: ${cardNumber.slice(-4)}, Expiry: ${expiry}, CVV: ${cvv}`);
-      if (!cardNumber.match(/^\d{16}$/)) {
-        showToast("Please enter a valid 16-digit card number.", false);
-        return false;
-      }
-      if (!expiry.match(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)) {
-        showToast("Please enter a valid expiry date (MM/YY).", false);
-        return false;
-      }
-      if (!cvv.match(/^\d{3,4}$/)) {
-        showToast("Please enter a valid CVV.", false);
-        return false;
-      }
-      if (!cardName.match(/^[a-zA-Z\s]{2,}$/)) {
-        showToast("Please enter a valid name on the card.", false);
-        return false;
-      }
-      showToast("Card details verified successfully!");
-      savePaymentStatus('razorpay');
-      return true;
-    };
-
     window.confirmCod = async () => {
       console.log("Confirming COD");
       const pincode = checkoutData.address?.pincode || '';
@@ -865,7 +692,6 @@
         return false;
       }
       showToast("Cash on Delivery confirmed successfully!");
-      savePaymentStatus('cod');
       return true;
     };
 
@@ -888,64 +714,14 @@
         showToast("No items to order.", false);
         return;
       }
-      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-      console.log(`Selected payment method: ${paymentMethod}`);
-      if (paymentMethod === "upi" && !verifyUpi()) {
-        return;
-      }
-      if (paymentMethod === "qr" && !confirmQrPayment()) {
-        return;
-      }
-      if (paymentMethod === "razorpay" && !verifyCard() && !useSavedCard()) {
-        return;
-      }
-      if (paymentMethod === "cod" && !await confirmCod()) {
+      if (!await confirmCod()) {
         return;
       }
       try {
         toggleLoadingSpinner(true);
-        const totalAmount = parseFloat(document.getElementById("totalAmount").textContent);
-        let paymentId = generateOrderId();
-        if (paymentMethod === "razorpay") {
-          console.log("Initiating Razorpay payment");
-          const options = {
-            key: "rzp_test_YOUR_RAZORPAY_KEY",
-            amount: totalAmount * 100,
-            currency: "INR",
-            name: "Echo Shop",
-            description: "Rakhi Order Payment",
-            handler: async (response) => {
-              console.log("Razorpay payment success:", response);
-              await saveOrder(checkoutData.items, paymentMethod, response.razorpay_payment_id);
-              showSuccessMessage(response.razorpay_payment_id, paymentMethod);
-            },
-            prefill: {
-              name: checkoutData.address.fullName,
-              email: user.email,
-              contact: checkoutData.address.mobile
-            },
-            theme: {
-              color: "#2563EB"
-            }
-          };
-          if (options.key === "rzp_test_YOUR_RAZORPAY_KEY") {
-            console.log("Mocking Razorpay payment");
-            paymentId = 'mock_payment_' + Math.random().toString(36).substr(2, 9);
-            await saveOrder(checkoutData.items, paymentMethod, paymentId);
-            showSuccessMessage(paymentId, paymentMethod);
-          } else {
-            const rzp = new Razorpay(options);
-            rzp.on('payment.failed', (response) => {
-              console.error("Razorpay payment failed:", response.error);
-              showToast(`Payment failed: ${response.error.description}`, false);
-              logAnalyticsError('payment_failed', response.error);
-            });
-            rzp.open();
-          }
-        } else {
-          await saveOrder(checkoutData.items, paymentMethod, paymentId);
-          showSuccessMessage(paymentId, paymentMethod);
-        }
+        const paymentId = generateOrderId();
+        await saveOrder(checkoutData.items, "cod", paymentId);
+        showSuccessMessage(paymentId, "cod");
       } catch (error) {
         console.error("Error placing order:", error);
         showToast(`Error placing order: ${error.message}`, false);
@@ -967,7 +743,7 @@
           orderId: paymentId,
           userId: user.uid,
           userEmail: user.email,
-          username: user.displayName,
+          username: user.displayName || "User",
           items: orderItems,
           address: checkoutData.address,
           paymentMethod,
@@ -976,17 +752,17 @@
           discount: parseFloat(document.getElementById("discountTotal").textContent),
           coupon: checkoutData.coupon || null,
           totalAmount: parseFloat(document.getElementById("totalAmount").textContent),
-          status: paymentMethod === 'cod' ? 'Pending' : 'Confirmed',
+          status: "Pending",
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
-        // Save to orders collection
-        const orderRef = doc(collection(db, "orders"));
-        await setDoc(orderRef, orderData);
         // Save to delivery collection
         await setDoc(doc(db, "delivery", paymentId), orderData);
-        // Clear user cart
-        await setDoc(doc(db, "users", user.displayName), { cart: [] }, { merge: true });
+        // Save to users collection under orderDetails array
+        await updateDoc(doc(db, "users", user.uid), {
+          orderDetails: arrayUnion(orderData),
+          cart: []
+        });
         showToast("Order saved successfully!");
       } catch (error) {
         console.error("Error saving order:", error);
@@ -1002,7 +778,7 @@
     function showSuccessMessage(paymentId, paymentMethod) {
       console.log("Showing success message with paymentId:", paymentId, "Payment Method:", paymentMethod);
       document.getElementById('order-id').textContent = `Order ID: #${paymentId}`;
-      document.getElementById('payment-method').textContent = `Payment Method: ${paymentMethod.toUpperCase()}`;
+      document.getElementById('payment-method').textContent = `Payment Method: Cash on Delivery`;
       document.getElementById('success-message').classList.add('active');
       document.querySelectorAll('.card:not(#success-message), .sticky-price').forEach(el => el.style.display = 'none');
       document.getElementById('payment-step').classList.remove('active');
@@ -1020,7 +796,7 @@
     async function updateCartCount() {
       try {
         console.log("Updating cart count");
-        const userDoc = await getDoc(doc(db, "users", user.displayName));
+        const userDoc = await getDoc(doc(db, "users", user.uid));
         const cart = userDoc.exists() ? userDoc.data().cart || [] : [];
         document.getElementById("cart-count").textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
       } catch (error) {
