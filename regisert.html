@@ -224,7 +224,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
         import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
-        import { getFirestore, collection, query, where, getDocs, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
 
         // Firebase configuration
         const firebaseConfig = {
@@ -257,15 +257,12 @@
         }
 
         // Save User Data to Firestore
-        async function saveUserData(user, workerId, email, phone) {
+        async function saveUserData(workerId, email, phone) {
             try {
                 const userData = {
-                    uid: user.uid,
-                    workerId: workerId,
+                    username: workerId,
                     email: email,
-                    phone: phone,
-                    createdAt: serverTimestamp(),
-                    lastLogin: serverTimestamp()
+                    phone: phone
                 };
                 await setDoc(doc(db, "users", workerId), userData, { merge: true });
                 console.log("User data saved to Firestore with document ID:", workerId);
@@ -355,7 +352,7 @@
                 await updateProfile(user, { displayName: workerId });
 
                 // Save to Firestore
-                await saveUserData(user, workerId, email, phone);
+                await saveUserData(workerId, email, phone);
 
                 // Clear form
                 emailInput.value = '';
