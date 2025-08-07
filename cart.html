@@ -464,11 +464,11 @@
     <a href="index.html" class="navbar-logo">Echo Shop</a>
     <div class="nav-links">
       <a href="https://localworkers.xyz/">Home</a>
-      <a href="https://localworkers.xyz/product.html">Products</a>
+      <a href="index.html">Products</a>
       <a href="https://localworkers.xyz/deals.html">Deals</a>
       <a href="https://localworkers.xyz/orders.html">Orders</a>
       <a href="https://localworkers.xyz/profile.html">Account</a>
-      <a href="#" id="logout">Logout</a>
+      <a href="#" id="logout" class="hidden">Logout</a>
     </div>
     <div class="search-bar flex items-center">
       <input id="search-bar" type="text" placeholder="Search Echo Shop..." class="text-gray-700 focus:ring-0" aria-label="Search products" autocomplete="off">
@@ -500,7 +500,7 @@
     <div id="cart-items" data-aos="fade-up"></div>
     <div id="empty-cart" class="empty-cart hidden">
       <p class="text-lg">Your cart is empty 🛒</p>
-      <a href="products.html" class="btn btn-continue mt-4">Continue Shopping</a>
+      <a href="index.html" class="btn btn-continue mt-4">Continue Shopping</a>
     </div>
     <div class="coupon-section" data-aos="fade-up">
       <input type="text" id="coupon-code" placeholder="Enter Coupon Code" class="focus:ring-0">
@@ -524,7 +524,7 @@
     </div>
     <div class="flex flex-col sm:flex-row gap-4 mt-4 btn-fixed">
       <button class="btn" onclick="placeOrder()">Proceed to Buy →</button>
-      <a href="products.html" class="btn btn-continue">Continue Shopping</a>
+      <a href="index.html" class="btn btn-continue">Continue Shopping</a>
     </div>
     <div class="trust-badges">
       <img src="https://whatismyipaddress.com/wp-content/uploads/ssl-image-1024x731.jpg?tr=w-40,h-40" alt="SSL Secure">
@@ -557,24 +557,10 @@
 
   <!-- Firebase and JavaScript -->
   <script type="module">
-    // Check Environment Early
-    if (!['http:', 'https:'].includes(window.location.protocol)) {
-      document.getElementById('error-message').textContent = 'This page must be served over http or https. Please run a local server (e.g., `npx serve` or `python -m http.server 8000`) and access via http://localhost.';
-      document.getElementById('error-message').classList.remove('hidden');
-      throw new Error('Unsupported protocol. Use http or https.');
-    }
-
-    if (!window.localStorage) {
-      document.getElementById('error-message').textContent = 'Web storage is not enabled in this browser.';
-      document.getElementById('error-message').classList.remove('hidden');
-      throw new Error('Web storage is not enabled.');
-    }
-
-    // Import Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, onSnapshot, deleteDoc, setDoc, getDocs, query, limit, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -584,84 +570,82 @@
       storageBucket: "myechostore.firebasestorage.app",
       messagingSenderId: "962362590691",
       appId: "1:962362590691:web:e2c86494039142d0e04cd6",
-      measurementId: "G-MC8Q68G4YS",
-      databaseURL: "https://myechostore.firebaseio.com"
+      measurementId: "G-MC8Q68G4YS"
     };
 
     // Initialize Firebase
-    let app, db, auth, analytics, provider;
+    let app, db, auth, analytics;
     try {
       app = initializeApp(firebaseConfig);
       db = getFirestore(app);
       auth = getAuth(app);
       analytics = getAnalytics(app);
-      provider = new GoogleAuthProvider();
+      console.log("Firebase initialized successfully");
     } catch (error) {
-      console.warn("Failed to initialize Firebase:", error.message);
+      console.error("Firebase initialization error:", error);
       showToast(`Firebase initialization failed: ${error.message}`, false);
-      return;
     }
 
     // Initialize AOS
     AOS.init({ duration: 800, once: true });
 
+    // Show Toast
+    const showToast = (message, success = true) => {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = success ? '#10B981' : '#EF4444';
+      toast.classList.add('show');
+      gsap.from(toast, { opacity: 0, y: 20, duration: 0.5 });
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    };
+
+    // Log Analytics Error
+    const logAnalyticsError = (eventName, error) => {
+      logEvent(analytics, eventName, {
+        error_message: error.message,
+        error_code: error.code || 'unknown',
+        timestamp: new Date().toISOString()
+      });
+    };
+
     // Load Cart Items
-    const loadCartItems = async () => {
-      if (!['http:', 'https:'].includes(window.location.protocol)) {
-        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
-        return;
-      }
-      const user = auth.currentUser;
+    const loadCartItems = async (username) => {
       const cartItemsDiv = document.getElementById('cart-items');
       const emptyCartDiv = document.getElementById('empty-cart');
-      if (!user) {
-        cartItemsDiv.innerHTML = '';
+      cartItemsDiv.innerHTML = '';
+      emptyCartDiv.classList.add('hidden');
+
+      if (!username) {
         emptyCartDiv.classList.remove('hidden');
         document.getElementById('cart-item-count').textContent = '0';
         updateCartSummary([]);
         return;
       }
-      onSnapshot(collection(db, "carts", user.uid, "items"), async (snapshot) => {
-        cartItemsDiv.innerHTML = '';
-        const items = [];
-        if (snapshot.empty) {
+
+      try {
+        const userDocRef = doc(db, "users", username);
+        const userDoc = await getDoc(userDocRef);
+        let cartItems = userDoc.exists() ? userDoc.data().cart || [] : [];
+        console.log("Cart fetched for user:", username, "Cart:", cartItems);
+
+        if (cartItems.length === 0) {
           emptyCartDiv.classList.remove('hidden');
           document.getElementById('cart-item-count').textContent = '0';
           updateCartSummary([]);
           return;
         }
-        for (const doc of snapshot.docs) {
-          const item = { id: doc.id, ...doc.data() };
-          // Fetch product details for verification
-          const productDoc = await getDoc(doc(db, "products", item.productId));
-          if (productDoc.exists()) {
-            item.imageUrl = productDoc.data().imageUrl || item.imageUrl;
-            item.name = productDoc.data().name || item.name;
-            item.brand = productDoc.data().brand || item.brand;
-            item.price = productDoc.data().price || item.price;
-            item.originalPrice = productDoc.data().originalPrice || item.originalPrice;
-            item.discount = productDoc.data().discount || item.discount;
-            item.delivery = productDoc.data().delivery || item.delivery;
-            item.description = productDoc.data().description || item.description;
-            item.sourceLocation = productDoc.data().sourceLocation || item.sourceLocation;
-            item.rating = productDoc.data().rating || item.rating;
-            item.ratingsCount = productDoc.data().ratingsCount || item.ratingsCount;
-            item.offers = productDoc.data().offers || item.offers;
-            item.specs = productDoc.data().specs || item.specs;
-            item.emi = productDoc.data().emi || item.emi;
-          }
-          items.push(item);
+
+        cartItems.forEach((item, index) => {
           const cartItem = document.createElement('div');
           cartItem.className = 'cart-item';
           cartItem.setAttribute('data-aos', 'fade-up');
-          const createdAt = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleString() : 'N/A';
-          const timestamp = item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleString() : 'N/A';
+          const addedAt = item.addedAt ? new Date(item.addedAt).toLocaleString() : 'N/A';
           cartItem.innerHTML = `
             <div class="flex flex-col sm:flex-row">
-              <img src="${item.imageUrl || 'https://via.placeholder.com/150'}?tr=w-150,h-150,q-80" alt="${item.name || 'Product'}" />
+              <img src="${item.imageUrls?.[0]?.url || 'https://via.placeholder.com/150'}?tr=w-150,h-150,q-80" alt="${item.name || 'Product'}" />
               <div class="flex-1">
-                <a href="https://sunny1451.github.io/myechoshop/mainproduct.html?id=${item.productId}" class="text-lg font-semibold text-blue-600 hover:underline">${item.name || 'N/A'}</a>
-                <p class="text-sm text-gray-600">Added on: ${createdAt}</p>
+                <a href="http://sweatshoping.shop/mainproduct.html?id=${item.id}" class="text-lg font-semibold text-blue-600 hover:underline">${item.name || 'N/A'}</a>
+                <p class="text-sm text-gray-600">Added on: ${addedAt}</p>
 
                 <!-- General Information -->
                 <div data-aos="fade-up">
@@ -683,40 +667,12 @@
                     <span class="detail-value">${item.discount || 'None'}</span>
                   </div>
                   <div class="detail-row">
-                    <span class="detail-label">EMI</span>
-                    <span class="detail-value">${item.emi || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Rating</span>
-                    <span class="detail-value">${item.rating || 0} (${item.ratingsCount || 0} ratings)</span>
-                  </div>
-                  <div class="detail-row">
                     <span class="detail-label">Source Location</span>
                     <span class="detail-value">${item.sourceLocation || 'N/A'}</span>
                   </div>
                   <div class="detail-row">
                     <span class="detail-label">Description</span>
                     <span class="detail-value">${item.description || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">User Email</span>
-                    <span class="detail-value">${item.userEmail || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">User ID</span>
-                    <span class="detail-value">${item.userId || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Product ID</span>
-                    <span class="detail-value">${item.productId || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Timestamp</span>
-                    <span class="detail-value">${timestamp}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Quantity</span>
-                    <span class="detail-value">${item.quantity || 1}</span>
                   </div>
                 </div>
 
@@ -741,41 +697,12 @@
                   </div>
                 </div>
 
-                <!-- Offer Details -->
-                <div data-aos="fade-up">
-                  <h3 class="section-title">Offer Details</h3>
-                  <div class="detail-row">
-                    <span class="detail-label">Bank Offer</span>
-                    <span class="detail-value">${item.offers?.bank || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Cashback</span>
-                    <span class="detail-value">${item.offers?.cashback || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Partner Offer</span>
-                    <span class="detail-value">${item.offers?.partner || 'N/A'}</span>
-                  </div>
-                </div>
-
                 <!-- Specifications -->
                 <div data-aos="fade-up">
                   <h3 class="section-title">Specifications</h3>
                   <div class="detail-row">
-                    <span class="detail-label">Brand</span>
-                    <span class="detail-value">${item.specs?.brand || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
                     <span class="detail-label">Color</span>
                     <span class="detail-value">${item.specs?.color || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Dimensions</span>
-                    <span class="detail-value">${item.specs?.dimensions || 'N/A'}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Finish</span>
-                    <span class="detail-value">${item.specs?.finish || 'N/A'}</span>
                   </div>
                   <div class="detail-row">
                     <span class="detail-label">Material</span>
@@ -790,8 +717,8 @@
                     <span class="detail-value">${item.specs?.specialFeature || 'N/A'}</span>
                   </div>
                   <div class="detail-row">
-                    <span class="detail-label">Theme</span>
-                    <span class="detail-value">${item.specs?.theme || 'N/A'}</span>
+                    <span class="detail-label">Finish</span>
+                    <span class="detail-value">${item.specs?.finish || 'N/A'}</span>
                   </div>
                 </div>
 
@@ -807,19 +734,19 @@
             </div>
           `;
           cartItemsDiv.appendChild(cartItem);
-        }
-        emptyCartDiv.classList.add('hidden');
-        document.getElementById('cart-item-count').textContent = items.length;
-        updateCartSummary(items);
+        });
+        document.getElementById('cart-item-count').textContent = cartItems.length;
+        updateCartSummary(cartItems);
         updateCartCount();
         AOS.refresh();
-      }, (error) => {
-        console.warn("Error loading cart:", error.message);
+      } catch (error) {
+        console.error("Error loading cart:", error);
         showToast(`Error loading cart: ${error.message}`, false);
         cartItemsDiv.innerHTML = '';
         emptyCartDiv.classList.remove('hidden');
         updateCartSummary([]);
-      });
+        logAnalyticsError('cart_fetch_error', error);
+      }
     };
 
     // Update Quantity
@@ -829,9 +756,9 @@
         return;
       }
       const user = auth.currentUser;
-      if (!user) {
+      if (!user || !user.displayName) {
         showToast("Sign-in required to update cart.", false);
-        await signInWithRedirect(auth, provider);
+        document.getElementById('auth-status').click();
         return;
       }
       if (newQuantity < 1) {
@@ -839,21 +766,26 @@
         return;
       }
       try {
-        const itemDoc = await getDoc(doc(db, "carts", user.uid, "items", itemId));
-        if (!itemDoc.exists()) {
+        const userDocRef = doc(db, "users", user.displayName);
+        const userDoc = await getDoc(userDocRef);
+        if (!userDoc.exists()) {
+          showToast("User data not found.", false);
+          return;
+        }
+        let cart = userDoc.data().cart || [];
+        const itemIndex = cart.findIndex(item => item.id === itemId);
+        if (itemIndex === -1) {
           showToast("Item not found in cart.", false);
           return;
         }
-        const productDoc = await getDoc(doc(db, "products", itemId));
-        if (productDoc.exists() && productDoc.data().stock < newQuantity) {
-          showToast("Requested quantity exceeds available stock.", false);
-          return;
-        }
-        await setDoc(doc(db, "carts", user.uid, "items", itemId), { quantity: newQuantity }, { merge: true });
+        cart[itemIndex].quantity = newQuantity;
+        await setDoc(userDocRef, { cart }, { merge: true });
         showToast("Quantity updated!");
+        loadCartItems(user.displayName);
       } catch (error) {
-        console.warn("Error updating quantity:", error.message);
+        console.error("Error updating quantity:", error);
         showToast(`Error: ${error.message}`, false);
+        logAnalyticsError('cart_update_error', error);
       }
     };
 
@@ -864,17 +796,27 @@
         return;
       }
       const user = auth.currentUser;
-      if (!user) {
+      if (!user || !user.displayName) {
         showToast("Sign-in required to update cart.", false);
-        await signInWithRedirect(auth, provider);
+        document.getElementById('auth-status').click();
         return;
       }
       try {
-        await deleteDoc(doc(db, "carts", user.uid, "items", itemId));
+        const userDocRef = doc(db, "users", user.displayName);
+        const userDoc = await getDoc(userDocRef);
+        if (!userDoc.exists()) {
+          showToast("User data not found.", false);
+          return;
+        }
+        let cart = userDoc.data().cart || [];
+        cart = cart.filter(item => item.id !== itemId);
+        await setDoc(userDocRef, { cart }, { merge: true });
         showToast("Item removed from cart!");
+        loadCartItems(user.displayName);
       } catch (error) {
-        console.warn("Error removing item:", error.message);
+        console.error("Error removing item:", error);
         showToast(`Error: ${error.message}`, false);
+        logAnalyticsError('cart_remove_error', error);
       }
     };
 
@@ -901,10 +843,16 @@
           showToast("Coupon has expired.", false);
           return;
         }
-        const snapshot = await getDocs(collection(db, "carts", auth.currentUser.uid, "items"));
+        const user = auth.currentUser;
+        if (!user || !user.displayName) {
+          showToast("Sign-in required to apply coupon.", false);
+          document.getElementById('auth-status').click();
+          return;
+        }
+        const userDoc = await getDoc(doc(db, "users", user.displayName));
+        let cart = userDoc.exists() ? userDoc.data().cart || [] : [];
         let subtotal = 0;
-        snapshot.forEach(doc => {
-          const item = doc.data();
+        cart.forEach(item => {
           subtotal += item.price * item.quantity;
         });
         if (subtotal < coupon.minCartValue) {
@@ -913,49 +861,31 @@
         }
         appliedCoupon = coupon;
         showToast("Coupon applied successfully!");
-        updateCartSummary(null);
+        updateCartSummary(cart);
       } catch (error) {
-        console.warn("Error applying coupon:", error.message);
+        console.error("Error applying coupon:", error);
         showToast(`Error: ${error.message}`, false);
+        logAnalyticsError('coupon_apply_error', error);
       }
     };
 
     // Update Cart Summary
-    const updateCartSummary = async (items = null) => {
-      if (!['http:', 'https:'].includes(window.location.protocol)) {
-        return;
-      }
-      if (!items) {
-        const snapshot = await getDocs(collection(db, "carts", auth.currentUser?.uid || "anonymous", "items"));
-        items = [];
-        for (const doc of snapshot.docs) {
-          const item = { id: doc.id, ...doc.data() };
-          const productDoc = await getDoc(doc(db, "products", item.productId));
-          if (productDoc.exists()) {
-            item.imageUrl = productDoc.data().imageUrl || item.imageUrl;
-            item.name = productDoc.data().name || item.name;
-            item.brand = productDoc.data().brand || item.brand;
-            item.price = productDoc.data().price || item.price;
-            item.originalPrice = productDoc.data().originalPrice || item.originalPrice;
-            item.discount = productDoc.data().discount || item.discount;
-            item.delivery = productDoc.data().delivery || item.delivery;
-          }
-          items.push(item);
-        }
-      }
+    const updateCartSummary = (items) => {
       let subtotal = 0;
       let discount = 0;
       let shipping = 0;
-      items.forEach(item => {
-        subtotal += item.price * item.quantity;
-        if (item.discount) {
-          const discountPercent = parseFloat(item.discount.replace('%', '')) / 100;
-          discount += (item.originalPrice - item.price) * item.quantity;
-        }
-        if (!item.delivery.freeDelivery) {
-          shipping += 50;
-        }
-      });
+      if (items && items.length > 0) {
+        items.forEach(item => {
+          subtotal += item.price * item.quantity;
+          if (item.discount) {
+            const discountPercent = parseFloat(item.discount.replace('%', '')) / 100;
+            discount += (item.originalPrice - item.price) * item.quantity;
+          }
+          if (!item.delivery.freeDelivery) {
+            shipping += 50;
+          }
+        });
+      }
       if (appliedCoupon) {
         if (appliedCoupon.discountType === 'percentage') {
           discount += subtotal * (appliedCoupon.discount / 100);
@@ -965,7 +895,7 @@
       }
       const tax = subtotal * 0.08;
       const grandTotal = subtotal + tax + shipping - discount;
-      document.getElementById('summary-item-count').textContent = items.length;
+      document.getElementById('summary-item-count').textContent = items ? items.length : 0;
       document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
       document.getElementById('shipping').textContent = `₹${shipping.toFixed(2)}`;
       document.getElementById('discount').textContent = `-₹${discount.toFixed(2)}`;
@@ -982,36 +912,23 @@
         return;
       }
       const user = auth.currentUser;
-      if (!user) {
+      if (!user || !user.displayName) {
         showToast("Sign-in required to proceed to checkout.", false);
-        await signInWithRedirect(auth, provider);
+        document.getElementById('auth-status').click();
         return;
       }
       try {
-        const snapshot = await getDocs(collection(db, "carts", user.uid, "items"));
-        const items = [];
-        for (const doc of snapshot.docs) {
-          const item = { id: doc.id, ...doc.data() };
-          const productDoc = await getDoc(doc(db, "products", item.productId));
-          if (productDoc.exists()) {
-            item.imageUrl = productDoc.data().imageUrl || item.imageUrl;
-            item.name = productDoc.data().name || item.name;
-            item.brand = productDoc.data().brand || item.brand;
-            item.price = productDoc.data().price || item.price;
-            item.originalPrice = productDoc.data().originalPrice || item.originalPrice;
-            item.discount = productDoc.data().discount || item.discount;
-            item.delivery = productDoc.data().delivery || item.delivery;
-          }
-          items.push(item);
-        }
-        if (items.length === 0) {
+        const userDocRef = doc(db, "users", user.displayName);
+        const userDoc = await getDoc(userDocRef);
+        const cart = userDoc.exists() ? userDoc.data().cart || [] : [];
+        if (cart.length === 0) {
           showToast("Your cart is empty.", false);
           return;
         }
         let subtotal = 0;
         let discount = 0;
         let shipping = 0;
-        items.forEach(item => {
+        cart.forEach(item => {
           subtotal += item.price * item.quantity;
           if (item.discount) {
             const discountPercent = parseFloat(item.discount.replace('%', '')) / 100;
@@ -1033,7 +950,8 @@
         const orderData = {
           userId: user.uid,
           userEmail: user.email,
-          items,
+          username: user.displayName,
+          items: cart,
           subtotal,
           discount,
           tax,
@@ -1045,16 +963,11 @@
           createdAt: new Date(),
           updatedAt: new Date()
         };
-        // Save to orders collection
-        await addDoc(collection(db, "orders"), orderData);
-        // Clear cart
-        for (const item of snapshot.docs) {
-          await deleteDoc(doc(db, "carts", user.uid, "items", item.id));
-        }
+        await setDoc(doc(db, "orders", `${user.uid}_${Date.now()}`), orderData);
+        await setDoc(userDocRef, { cart: [] }, { merge: true });
         showToast("Order placed successfully!");
-        // Prepare checkout data for compatibility with existing checkout.html
         const checkoutData = {
-          items,
+          items: cart,
           subtotal,
           discount,
           tax,
@@ -1068,8 +981,9 @@
           window.location.href = 'checkout.html';
         }, 1500);
       } catch (error) {
-        console.warn("Error placing order:", error.message);
+        console.error("Error placing order:", error);
         showToast(`Error: ${error.message}`, false);
+        logAnalyticsError('order_place_error', error);
       }
     };
 
@@ -1080,48 +994,42 @@
         return;
       }
       const user = auth.currentUser;
-      if (!user) {
+      if (!user || !user.displayName) {
         showToast("Sign-in required to update address.", false);
-        await signInWithRedirect(auth, provider);
+        document.getElementById('auth-status').click();
         return;
       }
       const newAddress = prompt("Enter new delivery address:");
       if (newAddress) {
         try {
-          await setDoc(doc(db, "users", user.uid), { address: newAddress }, { merge: true });
+          await setDoc(doc(db, "users", user.displayName), { address: newAddress }, { merge: true });
           document.getElementById('delivery-address').textContent = newAddress;
           showToast("Address updated!");
         } catch (error) {
-          console.warn("Error updating address:", error.message);
+          console.error("Error updating address:", error);
           showToast(`Error: ${error.message}`, false);
+          logAnalyticsError('address_update_error', error);
         }
       }
     };
 
-    // Show Toast
-    const showToast = (message, success = true) => {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.style.background = success ? '#10B981' : '#EF4444';
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    };
-
     // Update Cart Count
-    const updateCartCount = () => {
+    const updateCartCount = async () => {
       if (!['http:', 'https:'].includes(window.location.protocol)) {
         return;
       }
       const user = auth.currentUser;
-      if (user) {
-        onSnapshot(collection(db, "carts", user.uid, "items"), (snapshot) => {
-          document.getElementById("cart-count").textContent = snapshot.size;
-        }, (error) => {
-          console.warn("Error updating cart count:", error.message);
-        });
+      if (user && user.displayName) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.displayName));
+          const cart = userDoc.exists() ? userDoc.data().cart || [] : [];
+          document.getElementById("cart-count").textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        } catch (error) {
+          console.error("Error updating cart count:", error);
+        }
       } else {
-        const cart = JSON.parse(localStorage.getItem("cart") || "{}");
-        const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
         document.getElementById("cart-count").textContent = count;
       }
     };
@@ -1131,8 +1039,8 @@
       const authStatus = document.getElementById("auth-status");
       const logoutLink = document.getElementById("logout");
       if (user) {
-        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, ${user.email || "User"}!`;
-        authStatus.onclick = () => window.location.href = "profile.html";
+        authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, ${user.displayName || "User"}!`;
+        authStatus.onclick = () => window.location.href = "https://localworkers.xyz/profile.html";
         logoutLink.classList.remove('hidden');
         logoutLink.onclick = async () => {
           try {
@@ -1140,41 +1048,34 @@
             showToast("Logged out successfully!");
             window.location.reload();
           } catch (error) {
-            console.warn("Error logging out:", error.message);
+            console.error("Error logging out:", error);
             showToast(`Error: ${error.message}`, false);
+            logAnalyticsError('logout_error', error);
           }
         };
         try {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
+          const userDoc = await getDoc(doc(db, "users", user.displayName));
           if (userDoc.exists() && userDoc.data().address) {
             document.getElementById('delivery-address').textContent = userDoc.data().address;
           }
+          loadCartItems(user.displayName);
         } catch (error) {
-          console.warn("Error fetching user address:", error.message);
+          console.error("Error fetching user data:", error);
+          showToast(`Error: ${error.message}`, false);
+          logAnalyticsError('user_fetch_error', error);
         }
       } else {
         authStatus.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, Sign In`;
-        authStatus.onclick = () => signInWithRedirect(auth, provider);
+        authStatus.onclick = () => {
+          document.getElementById('login-modal').classList.add('show');
+        };
         logoutLink.classList.add('hidden');
         document.getElementById('cart-items').innerHTML = '';
         document.getElementById('empty-cart').classList.remove('hidden');
         document.getElementById('cart-item-count').textContent = '0';
         updateCartSummary([]);
       }
-      loadCartItems();
       updateCartCount();
-    });
-
-    // Handle Redirect Result
-    getRedirectResult(auth).then((result) => {
-      if (result) {
-        showToast("Signed in successfully!");
-        loadCartItems();
-        updateCartCount();
-      }
-    }).catch((error) => {
-      console.warn("Error handling redirect result:", error.message);
-      showToast(`Sign-in error: ${error.message}`, false);
     });
 
     // Search Functionality
@@ -1189,25 +1090,26 @@
         return;
       }
       try {
-        const q = query(collection(db, "products"), limit(5));
-        const snapshot = await getDocs(q);
+        const productDoc = await getDoc(doc(db, "products", "Rakhi"));
+        const products = productDoc.exists() ? productDoc.data().items || [] : [];
         suggestions.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const product = doc.data();
-          if (product.name.toLowerCase().includes(searchTerm)) {
+        products
+          .filter(product => product.name.toLowerCase().includes(searchTerm) || product.brand.toLowerCase().includes(searchTerm))
+          .slice(0, 5)
+          .forEach(product => {
             const div = document.createElement("div");
             div.className = "p-2 hover:bg-gray-100 cursor-pointer";
-            div.textContent = product.name;
+            div.textContent = `${product.name} (${product.brand || 'No Brand'})`;
             div.onclick = () => {
-              window.location.href = `https://localworkers.xyz/mainproduct.html?id=${doc.id}`;
+              window.location.href = `http://sweatshoping.shop/mainproduct.html?id=${product.id}`;
             };
             suggestions.appendChild(div);
-          }
-        });
+          });
         suggestions.classList.remove('hidden');
       } catch (error) {
-        console.warn("Error searching products:", error.message);
+        console.error("Error searching products:", error);
         showToast(`Search error: ${error.message}`, false);
+        logAnalyticsError('search_error', error);
       }
     });
 
@@ -1221,9 +1123,99 @@
       });
     });
 
+    // Login Modal
+    const loginModal = document.createElement('div');
+    loginModal.id = 'login-modal';
+    loginModal.className = 'login-modal';
+    loginModal.innerHTML = `
+      <div class="login-modal-content bg-white p-4 rounded-lg shadow-lg max-w-md w-full text-center">
+        <h2 class="text-lg font-semibold">Sign In</h2>
+        <input type="email" id="login-email" placeholder="Enter your email" class="w-full p-2 mb-2 border rounded" aria-label="Email">
+        <input type="password" id="login-password" placeholder="Enter your password" class="w-full p-2 mb-2 border rounded" aria-label="Password">
+        <button id="login-submit" class="bg-blue-600 text-white p-2 rounded w-full mb-2" aria-label="Sign In">Sign In</button>
+        <button id="login-cancel" class="bg-gray-600 text-white p-2 rounded w-full" aria-label="Cancel">Cancel</button>
+        <p id="login-error" class="text-red-600 text-sm mt-2"></p>
+        <p class="text-sm mt-2">Not registered? <a href="signup.html" class="text-blue-600">Sign Up</a></p>
+      </div>
+    `;
+    document.body.appendChild(loginModal);
+
+    // Login Modal Styles
+    const style = document.createElement('style');
+    style.textContent = `
+      .login-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+      }
+      .login-modal.show {
+        display: flex;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Handle Login
+    document.getElementById('login-submit').addEventListener('click', async () => {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errorElement = document.getElementById('login-error');
+      errorElement.textContent = '';
+
+      if (!email || !password) {
+        errorElement.textContent = 'Please enter both email and password.';
+        return;
+      }
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        showToast(`Welcome, ${userCredential.user.displayName}!`);
+        document.getElementById('login-modal').classList.remove('show');
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-password').value = '';
+      } catch (error) {
+        console.error("Sign-in error:", error);
+        let errorMessage = 'Sign-in failed. Please try again.';
+        switch (error.code) {
+          case 'auth/wrong-password':
+            errorMessage = 'Incorrect password.';
+            break;
+          case 'auth/user-not-found':
+            errorMessage = 'No user found with this email.';
+            break;
+          case 'auth/invalid-email':
+            errorMessage = 'Invalid email format.';
+            break;
+          default:
+            errorMessage = `Sign-in error: ${error.message}`;
+        }
+        errorElement.textContent = errorMessage;
+        logAnalyticsError('sign_in_error', error);
+      }
+    });
+
+    // Cancel Login
+    document.getElementById('login-cancel').addEventListener('click', () => {
+      document.getElementById('login-modal').classList.remove('show');
+      document.getElementById('login-email').value = '';
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-error').textContent = '';
+    });
+
     // Initialize
-    loadCartItems();
-    updateCartCount();
+    if (!['http:', 'https:'].includes(window.location.protocol)) {
+      document.getElementById('error-message').textContent = 'This page must be served over http or https. Please run a local server (e.g., `npx serve` or `python -m http.server 8000`) and access via http://localhost.';
+      document.getElementById('error-message').classList.remove('hidden');
+    } else {
+      updateCartCount();
+      logEvent(analytics, 'page_view', { page_title: document.title, page_location: window.location.href });
+    }
   </script>
 </body>
 </html>
