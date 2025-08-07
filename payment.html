@@ -436,6 +436,8 @@
   <div id="success-message" class="success-message">
     <h2>Order Placed Successfully!</h2>
     <p id="order-id">Order ID: #123456</p>
+    <p id="payment-method">Payment Method: Not specified</p>
+    <p>Order saved successfully in our system.</p>
     <p>Thank you for your order. You'll receive a confirmation email soon.</p>
     <p>Estimated Delivery: <span id="success-delivery">Calculating...</span></p>
     <button class="btn mt-2" onclick="window.location.href='orders.html'">View Orders</button>
@@ -789,6 +791,7 @@
         await setDoc(doc(db, "users", user.displayName), {
           paymentStatus: { method: paymentMethod, updatedAt: new Date().toISOString() }
         }, { merge: true });
+        showToast(`Payment method set to ${paymentMethod.toUpperCase()}`);
       } catch (error) {
         console.error("Error saving payment status:", error);
         showToast(`Error saving payment status: ${error.message}`, false);
@@ -856,13 +859,12 @@
 
     window.confirmCod = async () => {
       console.log("Confirming COD");
-      const userDoc = await getDoc(doc(db, "users", user.displayName));
       const pincode = checkoutData.address?.pincode || '';
       if (!pincode.match(/^\d{6}$/)) {
         showToast("Invalid pincode for COD. Please update your address.", false);
         return false;
       }
-      showToast("Cash on Delivery confirmed!");
+      showToast("Cash on Delivery confirmed successfully!");
       savePaymentStatus('cod');
       return true;
     };
@@ -901,7 +903,9 @@
         return;
       }
       try {
+        toggleLoadingSpinner(true);
         const totalAmount = parseFloat(document.getElementById("totalAmount").textContent);
+        let paymentId = generateOrderId();
         if (paymentMethod === "razorpay") {
           console.log("Initiating Razorpay payment");
           const options = {
@@ -913,7 +917,7 @@
             handler: async (response) => {
               console.log("Razorpay payment success:", response);
               await saveOrder(checkoutData.items, paymentMethod, response.razorpay_payment_id);
-              showSuccessMessage(response.razorpay_payment_id);
+              showSuccessMessage(response.razorpay_payment_id, paymentMethod);
             },
             prefill: {
               name: checkoutData.address.fullName,
@@ -924,12 +928,11 @@
               color: "#2563EB"
             }
           };
-          // Mock Razorpay for testing (since key is placeholder)
           if (options.key === "rzp_test_YOUR_RAZORPAY_KEY") {
             console.log("Mocking Razorpay payment");
-            const mockResponse = { razorpay_payment_id: 'mock_payment_' + Math.random().toString(36).substr(2, 9) };
-            await saveOrder(checkoutData.items, paymentMethod, mockResponse.razorpay_payment_id);
-            showSuccessMessage(mockResponse.razorpay_payment_id);
+            paymentId = 'mock_payment_' + Math.random().toString(36).substr(2, 9);
+            await saveOrder(checkoutData.items, paymentMethod, paymentId);
+            showSuccessMessage(paymentId, paymentMethod);
           } else {
             const rzp = new Razorpay(options);
             rzp.on('payment.failed', (response) => {
@@ -940,14 +943,15 @@
             rzp.open();
           }
         } else {
-          const orderId = generateOrderId();
-          await saveOrder(checkoutData.items, paymentMethod, orderId);
-          showSuccessMessage(orderId);
+          await saveOrder(checkoutData.items, paymentMethod, paymentId);
+          showSuccessMessage(paymentId, paymentMethod);
         }
       } catch (error) {
         console.error("Error placing order:", error);
         showToast(`Error placing order: ${error.message}`, false);
         logAnalyticsError('order_place_error', error);
+      } finally {
+        toggleLoadingSpinner(false);
       }
     });
 
@@ -959,26 +963,34 @@
     async function saveOrder(orderItems, paymentMethod, paymentId) {
       try {
         console.log("Saving order:", { paymentMethod, paymentId });
-        const orderRef = doc(collection(db, "orders"));
-        await setDoc(orderRef, {
+        const orderData = {
+          orderId: paymentId,
           userId: user.uid,
           userEmail: user.email,
           username: user.displayName,
           items: orderItems,
           address: checkoutData.address,
           paymentMethod,
-          paymentId: paymentId || generateOrderId(),
+          paymentId,
           subtotal: parseFloat(document.getElementById("mrpTotal").textContent),
           discount: parseFloat(document.getElementById("discountTotal").textContent),
           coupon: checkoutData.coupon || null,
           totalAmount: parseFloat(document.getElementById("totalAmount").textContent),
-          status: "Pending",
+          status: paymentMethod === 'cod' ? 'Pending' : 'Confirmed',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
-        });
+        };
+        // Save to orders collection
+        const orderRef = doc(collection(db, "orders"));
+        await setDoc(orderRef, orderData);
+        // Save to delivery collection
+        await setDoc(doc(db, "delivery", paymentId), orderData);
+        // Clear user cart
         await setDoc(doc(db, "users", user.displayName), { cart: [] }, { merge: true });
+        showToast("Order saved successfully!");
       } catch (error) {
         console.error("Error saving order:", error);
+        showToast(`Failed to save order: ${error.message}`, false);
         throw new Error("Failed to save order: " + error.message);
       }
     }
@@ -987,9 +999,10 @@
       return 'ORD' + Math.random().toString(36).substr(2, 9).toUpperCase();
     }
 
-    function showSuccessMessage(paymentId) {
-      console.log("Showing success message with paymentId:", paymentId);
-      document.getElementById('order-id').textContent = `Order ID: #${paymentId || generateOrderId()}`;
+    function showSuccessMessage(paymentId, paymentMethod) {
+      console.log("Showing success message with paymentId:", paymentId, "Payment Method:", paymentMethod);
+      document.getElementById('order-id').textContent = `Order ID: #${paymentId}`;
+      document.getElementById('payment-method').textContent = `Payment Method: ${paymentMethod.toUpperCase()}`;
       document.getElementById('success-message').classList.add('active');
       document.querySelectorAll('.card:not(#success-message), .sticky-price').forEach(el => el.style.display = 'none');
       document.getElementById('payment-step').classList.remove('active');
