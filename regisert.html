@@ -239,18 +239,20 @@
 
         // Initialize Firebase
         let app, auth, db;
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            console.log("Firebase initialized successfully");
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-            document.getElementById('error').textContent = 'Failed to initialize Firebase. Please try again later.';
-            document.getElementById('error').classList.add('show');
-            document.querySelector('.btn-gradient').disabled = true;
-            return;
+        function initializeFirebase() {
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                console.log("Firebase initialized successfully");
+            } catch (error) {
+                console.error("Firebase initialization error:", error);
+                document.getElementById('error').textContent = 'Failed to initialize Firebase. Please try again later.';
+                document.getElementById('error').classList.add('show');
+                document.querySelector('.btn-gradient').disabled = true;
+            }
         }
+        initializeFirebase();
 
         // Check for file:// protocol
         if (window.location.protocol === "file:") {
@@ -258,7 +260,7 @@
             errorElement.textContent = 'This app requires a server for Firebase Authentication. Please host it using a local server or Firebase Hosting.';
             errorElement.classList.add('show');
             document.querySelector('.btn-gradient').disabled = true;
-        } else {
+        } else if (auth) {
             auth.onAuthStateChanged(user => {
                 if (user) {
                     console.log("User already signed in:", user.displayName);
@@ -273,7 +275,8 @@
                 const userData = {
                     username: workerId,
                     email: email,
-                    phone: phone
+                    phone: phone,
+                    cart: [] // Initialize empty cart array
                 };
                 console.log("Attempting to save user data:", userData);
                 await setDoc(doc(db, "users", workerId), userData, { merge: true });
@@ -288,6 +291,12 @@
         window.register = async function() {
             if (window.location.protocol === "file:") {
                 console.warn("Registration blocked: Running on file:// protocol");
+                return;
+            }
+            if (!db || !auth) {
+                console.error("Firebase not initialized properly");
+                document.getElementById('error').textContent = 'Firebase initialization failed. Please try again later.';
+                document.getElementById('error').classList.add('show');
                 return;
             }
 
