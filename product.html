@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#1E40AF">
-  <meta name="description" content="Echo Store - Browse premium Rakhi products with fast delivery and exclusive deals.">
-  <meta name="keywords" content="Rakhi, Raksha Bandhan, online shopping, Echo Store, India">
+  <meta name="description" content="Echo Store - Manage your cart and proceed to secure checkout.">
+  <meta name="keywords" content="Rakhi, Raksha Bandhan, cart, checkout, Echo Store, India">
   <meta name="robots" content="index, follow">
-  <title>Echo Store - Rakhi Products</title>
+  <title>Echo Store - Your Cart</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -141,20 +141,166 @@
     .search-suggestions div:hover {
       background: #F3F4F6;
     }
-    .card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
-      opacity: 0;
-      animation: fadeIn 0.5s forwards;
-      border-radius: 8px;
-      overflow: hidden;
-      padding: 0.5rem;
+    .cart-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 0.8rem;
     }
-    .card:hover {
+    .cart-item {
+      background: #FFF;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      transition: transform 0.3s ease;
+    }
+    .cart-item:hover {
       transform: scale(1.03);
       box-shadow: var(--shadow-hover);
     }
-    .card img {
-      height: 24;
+    .cart-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-right: 1rem;
+    }
+    .section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+      color: var(--primary-accent);
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #E5E7EB;
+      font-size: 0.75rem;
+    }
+    .detail-label {
+      font-weight: 500;
+      color: var(--text-secondary);
+      width: 40%;
+    }
+    .detail-value {
+      color: var(--text-primary);
+      width: 60%;
+    }
+    .cart-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .cart-controls button {
+      background: #E5E7EB;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      transition: background 0.3s ease;
+    }
+    .cart-controls button:hover {
+      background: #D1D5DB;
+    }
+    .cart-controls .remove {
+      color: #EF4444;
+      font-size: 0.75rem;
+      text-decoration: none;
+    }
+    .cart-controls .remove:hover {
+      text-decoration: underline;
+    }
+    .coupon-section {
+      background: #FFF;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+      padding: 0.8rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .coupon-section input {
+      border: 1px solid #E5E7EB;
+      padding: 0.4rem;
+      border-radius: 6px;
+      flex: 1;
+      font-size: 0.75rem;
+    }
+    .coupon-section button {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: transform 0.3s ease;
+    }
+    .coupon-section button:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+    }
+    .cart-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      background: #FFF;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+      padding: 0.8rem;
+      margin-top: 1rem;
+    }
+    .cart-summary h3, .delivery-info h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .btn {
+      background: var(--gradient-accent);
+      color: #FFF;
+      padding: 0.4rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, background 0.3s ease;
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+      transform: scale(1.05);
+    }
+    .btn-continue {
+      background: #6B7280;
+      color: #FFF;
+    }
+    .btn-continue:hover {
+      background: #4B5563;
+    }
+    .empty-cart {
+      text-align: center;
+      padding: 1rem;
+      background: #FFF;
+      border-radius: 8px;
+      box-shadow: var(--shadow-base);
+    }
+    .trust-badges {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+      align-items: center;
+    }
+    .trust-badges img {
+      width: 24px;
+      height: 24px;
     }
     .toast {
       position: fixed;
@@ -175,6 +321,17 @@
       opacity: 1;
       transform: translateY(0);
     }
+    .error-message {
+      background: #FEE2E2;
+      color: #EF4444;
+      padding: 0.5rem;
+      border-radius: 6px;
+      text-align: center;
+      margin: 1rem auto;
+      max-width: 400px;
+      display: none;
+      font-size: 0.75rem;
+    }
     .login-modal {
       display: none;
       position: fixed;
@@ -194,9 +351,9 @@
       background: #FFF;
       padding: 1rem;
       border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
       box-shadow: var(--shadow-hover);
+      max-width: 400px;
+      width: 90%;
       text-align: center;
     }
     .login-modal-content input {
@@ -220,8 +377,17 @@
     .login-modal-content button:hover {
       background: linear-gradient(135deg, #1E3A8A, #3B82F6);
     }
-    @keyframes fadeIn {
-      to { opacity: 1; }
+    .loading-placeholder {
+      background: #F3F4F6;
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
     }
     @media (max-width: 640px) {
       .navbar {
@@ -243,19 +409,75 @@
         width: 14px;
         height: 14px;
       }
-      .card img {
-        height: 20;
+      .cart-container {
+        padding: 3rem 0.5rem;
       }
-      .container {
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .cart-item img {
+        width: 100%;
+        height: auto;
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+      .cart-controls button {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+      }
+      .coupon-section {
+        flex-direction: column;
+      }
+      .coupon-section input {
+        width: 100%;
+      }
+      .coupon-section button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.7rem;
+      }
+      .cart-summary {
+        grid-template-columns: 1fr;
+      }
+      .btn {
+        padding: 0.4rem;
+        font-size: 0.7rem;
+      }
+      .btn-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
         padding: 0.5rem;
-        padding-top: 60px;
+        background: #FFF;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+      .login-modal-content {
+        padding: 0.8rem;
+        max-width: 90%;
+      }
+      .login-modal-content button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+      }
+    }
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .cart-summary {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body class="font-roboto bg-white text-gray-800">
-  <!-- Top Navigation Bar -->
-  <nav class="navbar">
+  <!-- Error Message -->
+  <div id="error-message" class="error-message">An error occurred. Please try again.</div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">Action Completed!</div>
+
+  <!-- Header -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
     <a href="http://sweatshoping.shop/home.html" class="navbar-logo">Echo Store</a>
     <div class="search-bar flex items-center">
       <input id="search-bar" type="text" placeholder="Search Rakhi products..." class="text-gray-700 focus:ring-0" aria-label="Search Rakhi products" autocomplete="off">
@@ -276,37 +498,69 @@
     </div>
   </nav>
 
-  <!-- Product Grid Display -->
-  <div class="container mx-auto pt-12 pb-4 px-2">
-    <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
-    <div id="empty-state" class="empty-state hidden text-center text-gray-500 mt-6 text-xs">
-      😢 No Rakhi products found.<br>Try adjusting your search or check back later.
+  <!-- Cart Section -->
+  <section class="cart-container" role="region" aria-label="Shopping cart">
+    <h1 class="text-lg font-semibold mb-2">✅ You have <span id="cart-item-count">0</span> items in your cart.</h1>
+    <div id="cart-items">
+      <div class="loading-placeholder" id="cart-loading">Loading cart items...</div>
     </div>
-  </div>
-
-  <!-- Toast Notification -->
-  <div id="toast" class="toast">Action completed successfully!</div>
+    <div id="empty-cart" class="empty-cart hidden">
+      <p class="text-sm">Your cart is empty 🛒</p>
+      <p class="text-xs text-gray-600">Please sign in to view your cart or add items.</p>
+      <a href="index.html" class="btn btn-continue mt-2">Continue Shopping</a>
+    </div>
+    <div class="coupon-section">
+      <input type="text" id="coupon-code" placeholder="Enter Coupon Code" class="focus:ring-0">
+      <button onclick="applyCoupon()">Apply Coupon</button>
+    </div>
+    <div class="cart-summary">
+      <div>
+        <h3>Cart Summary</h3>
+        <p class="text-sm">Subtotal (<span id="summary-item-count">0</span> items): <span id="subtotal">₹0.00</span></p>
+        <p class="text-sm">Shipping Charges: <span id="shipping">₹0.00</span></p>
+        <p class="text-sm">Discounts: <span id="discount">₹0.00</span></p>
+        <p class="text-sm">Estimated Tax (8%): <span id="tax">₹0.00</span></p>
+        <p class="text-sm font-bold">Grand Total: <span id="grand-total">₹0.00</span></p>
+      </div>
+      <div class="delivery-info">
+        <h3>Delivery Info</h3>
+        <p class="text-sm">Delivered to: <span id="delivery-address">Not set</span></p>
+        <button class="text-blue-600 text-xs hover:underline" onclick="changeAddress()">📍 Change Address</button>
+        <p class="text-xs text-green-600 mt-1" id="delivery-status">📦 Free Delivery ✅</p>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-2 mt-2 btn-fixed">
+      <button class="btn" onclick="placeOrder()">Proceed to Buy →</button>
+      <a href="index.html" class="btn btn-continue">Continue Shopping</a>
+    </div>
+    <div class="trust-badges">
+      <img src="https://whatismyipaddress.com/wp-content/uploads/ssl-image-1024x731.jpg?tr=w-24,h-24" alt="SSL Secure">
+      <img src="https://hostbillapp.com/appstore/payment_razorpay/images/logo.png?tr=w-24,h-24" alt="Razorpay">
+      <img src="https://logodix.com/logo/1645140.png?tr=w-24,h-24" alt="UPI">
+      <p class="text-xs">Payment through Razorpay/UPI/Pay on Delivery</p>
+    </div>
+  </section>
 
   <!-- Login Modal -->
   <div id="login-modal" class="login-modal">
     <div class="login-modal-content">
-      <h2>Sign In</h2>
+      <h2 class="text-sm font-semibold">Sign In</h2>
       <input type="email" id="login-email" placeholder="Enter your email" aria-label="Email">
       <input type="password" id="login-password" placeholder="Enter your password" aria-label="Password">
       <button id="login-submit" aria-label="Sign In">Sign In</button>
       <button id="login-cancel" aria-label="Cancel">Cancel</button>
       <p id="login-error" class="text-red-600 text-xs mt-2"></p>
-      <p>Not registered? <a href="signup.html" class="text-blue-600">Sign Up</a></p>
+      <p class="text-xs">Not registered? <a href="signup.html" class="text-blue-600">Sign Up</a></p>
     </div>
   </div>
 
+  <!-- Firebase and JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
-    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAWzOziU-FlMQ7SZLZZTWQMxwFq23tWcwM",
       authDomain: "myechostore.firebaseapp.com",
@@ -317,139 +571,581 @@
       measurementId: "G-MC8Q68G4YS"
     };
 
-    // Initialize Firebase
     let app, db, auth, analytics;
-    function initializeFirebase() {
-      try {
-        app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-        analytics = getAnalytics(app);
-        console.log("Firebase initialized successfully");
-      } catch (error) {
-        console.error("Firebase initialization error:", error);
-        showToast('Failed to initialize Firebase.', false);
-      }
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+      analytics = getAnalytics(app);
+      console.log("Firebase initialized successfully");
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+      showToast(`Firebase initialization failed: ${error.message}`, false);
     }
-    initializeFirebase();
 
-    // Fallback Rakhi Product Data
-    const fallbackProducts = [
-      {
-        id: "550e8400-e29b-41d4-a716-446655440001",
-        name: "rakhi",
-        brand: "Rakhi 2025",
-        rating: 5.0,
-        ratingsCount: 0,
-        price: 12,
-        originalPrice: 22,
-        discount: "45%",
-        delivery: { freeDelivery: true, payOnDelivery: false, returnable: "", amazonDelivered: false },
-        specs: { material: "stones", color: "red", occasion: "Raksha Bandhan", specialFeature: "Minimalist, traditional Indian design", finish: "N/A" },
-        description: "A minimalist Rakhi with traditional Indian design for Raksha Bandhan",
-        imageUrls: [{ name: "rakhi.jpg", url: "https://via.placeholder.com/150" }],
-        sourceLocation: "KPHB",
-        createdAt: "2025-08-02T15:40:00.000Z"
-      },
-      {
-        id: "550e8400-e29b-41d4-a716-446655440002",
-        name: "red rakhi",
-        brand: "Modern",
-        rating: 5.0,
-        ratingsCount: 0,
-        price: 60,
-        originalPrice: 120,
-        discount: "50%",
-        delivery: { freeDelivery: true, payOnDelivery: false, returnable: "", amazonDelivered: false },
-        specs: { material: "stones", color: "red", occasion: "Raksha Bandhan", specialFeature: "6 Rakhis", finish: "N/A" },
-        description: "A set of 6 red Rakhis for Raksha Bandhan",
-        imageUrls: [{ name: "red_rakhi.jpg", url: "https://via.placeholder.com/150" }],
-        sourceLocation: "KPHB",
-        createdAt: "2025-08-02T15:40:00.000Z"
-      },
-      {
-        id: "550e8400-e29b-41d4-a716-446655440003",
-        name: "hook rakhi",
-        brand: "Rakhi 2025",
-        rating: 4.0,
-        ratingsCount: 0,
-        price: 20,
-        originalPrice: 40,
-        discount: "50%",
-        delivery: { freeDelivery: true, payOnDelivery: false, returnable: "", amazonDelivered: false },
-        specs: { material: "stones", color: "N/A", occasion: "Raksha Bandhan", specialFeature: "stone made", finish: "metal finish" },
-        description: "A stone-made Rakhi with metal finish for Raksha Bandhan",
-        imageUrls: [{ name: "hook_rakhi.jpg", url: "https://via.placeholder.com/150" }],
-        sourceLocation: "KPHB",
-        createdAt: "2025-08-02T15:40:00.000Z"
-      }
-    ];
-
-    // Show Toast
     const showToast = (message, success = true) => {
+      console.log(`Toast: ${message}`);
       const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.style.background = success ? '#10B981' : '#EF4444';
-      toast.classList.add('show');
-      gsap.from(toast, { opacity: 0, y: 20, duration: 0.5 });
-      setTimeout(() => toast.classList.remove('show'), 3000);
+      if (toast) {
+        toast.textContent = message;
+        toast.style.background = success ? '#10B981' : '#EF4444';
+        toast.classList.add('show');
+        gsap.from(toast, { opacity: 0, y: 20, duration: 0.5 });
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      } else {
+        console.warn("Toast element not found");
+      }
     };
 
-    // Authentication State
-    onAuthStateChanged(auth, (user) => {
-      const authButton = document.getElementById('auth-status');
-      if (user) {
-        console.log("User signed in:", user.displayName);
-        authButton.innerHTML = `
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-          ${user.displayName || 'User'}
-        `;
-      } else {
-        console.log("No user signed in");
-        authButton.innerHTML = `
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-          Hello, Sign In
-        `;
+    const logAnalyticsError = (eventName, error) => {
+      console.error(`Analytics error [${eventName}]:`, error);
+      logEvent(analytics, eventName, {
+        error_message: error.message,
+        error_code: error.code || 'unknown',
+        timestamp: new Date().toISOString()
+      });
+    };
+
+    const sanitizeHTML = (str) => {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    };
+
+    window.addEventListener('load', () => {
+      console.log("Page loaded");
+      gsap.from(".cart-container", { opacity: 0, y: 20, duration: 0.5 });
+      if (!['http:', 'https:'].includes(window.location.protocol)) {
+        showToast("This page must be served over http or https. Run a local server (e.g., `npx serve` or `python -m http.server 8000`).", false);
+        const errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+          errorMessage.textContent = 'This page must be served over http or https. Please run a local server and access via http://localhost.';
+          errorMessage.style.display = 'block';
+        }
+        return;
       }
+      logEvent(analytics, 'page_view', { page_title: document.title, page_location: window.location.href });
     });
 
-    // Handle Sign-In/Out
-    document.getElementById('auth-status').addEventListener('click', () => {
-      if (auth.currentUser) {
-        console.log("Signing out user");
-        signOut(auth).then(() => {
+    const loadCartItems = async (username) => {
+      console.log("Loading cart for username:", username);
+      const cartItemsDiv = document.getElementById('cart-items');
+      const emptyCartDiv = document.getElementById('empty-cart');
+      const cartLoading = document.getElementById('cart-loading');
+      const cartItemCount = document.getElementById('cart-item-count');
+      if (!cartItemsDiv || !emptyCartDiv || !cartLoading || !cartItemCount) {
+        console.error("Cart DOM elements missing");
+        showToast("Page error: Cart elements not found.", false);
+        return;
+      }
+      cartItemsDiv.innerHTML = '';
+      cartLoading.style.display = 'block';
+      emptyCartDiv.classList.add('hidden');
+      try {
+        if (!username) {
+          cartLoading.style.display = 'none';
+          emptyCartDiv.classList.remove('hidden');
+          cartItemCount.textContent = '0';
+          updateCartSummary([]);
+          showToast("Please sign in to view your cart.", false);
+          document.getElementById('login-modal').classList.add('show');
+          return;
+        }
+        const userDocRef = doc(db, "users", username);
+        const userDoc = await getDoc(userDocRef);
+        let cartItems = userDoc.exists() ? userDoc.data().cart || [] : [];
+        console.log("Cart fetched:", cartItems);
+        cartLoading.style.display = 'none';
+        if (cartItems.length === 0) {
+          emptyCartDiv.classList.remove('hidden');
+          cartItemCount.textContent = '0';
+          updateCartSummary([]);
+          return;
+        }
+        cartItems.forEach((item, index) => {
+          const cartItem = document.createElement('div');
+          cartItem.className = 'cart-item';
+          const addedAt = item.addedAt ? new Date(item.addedAt).toLocaleString() : 'N/A';
+          cartItem.innerHTML = `
+            <div class="flex flex-col sm:flex-row">
+              <img src="${sanitizeHTML(item.imageUrls?.[0]?.url || 'https://via.placeholder.com/150')}?tr=w-100,h-100,q-80" alt="${sanitizeHTML(item.name)}" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'" />
+              <div class="flex-1">
+                <a href="http://sweatshoping.shop/mainproduct.html?id=${sanitizeHTML(item.id)}" class="text-sm font-semibold text-blue-600 hover:underline">${sanitizeHTML(item.name || 'N/A')}</a>
+                <p class="text-xs text-gray-600">Added on: ${sanitizeHTML(addedAt)}</p>
+                <div>
+                  <h3 class="section-title">General Information</h3>
+                  <div class="detail-row">
+                    <span class="detail-label">Brand</span>
+                    <span class="detail-value">${sanitizeHTML(item.brand || 'N/A')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Price</span>
+                    <span class="detail-value">₹${item.price ? item.price.toFixed(2) : 'N/A'}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Original Price</span>
+                    <span class="detail-value">₹${item.originalPrice ? item.originalPrice.toFixed(2) : 'N/A'}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Discount</span>
+                    <span class="detail-value">${sanitizeHTML(item.discount || 'None')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Source Location</span>
+                    <span class="detail-value">${sanitizeHTML(item.sourceLocation || 'N/A')}</span>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="section-title">Specifications</h3>
+                  <div class="detail-row">
+                    <span class="detail-label">Color</span>
+                    <span class="detail-value">${sanitizeHTML(item.specs?.color || 'N/A')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Material</span>
+                    <span class="detail-value">${sanitizeHTML(item.specs?.material || 'N/A')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Occasion</span>
+                    <span class="detail-value">${sanitizeHTML(item.specs?.occasion || 'N/A')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Special Feature</span>
+                    <span class="detail-value">${sanitizeHTML(item.specs?.specialFeature || 'N/A')}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Finish</span>
+                    <span class="detail-value">${sanitizeHTML(item.specs?.finish || 'N/A')}</span>
+                  </div>
+                </div>
+                <div class="cart-controls">
+                  <button onclick="updateQuantity('${sanitizeHTML(item.id)}', ${item.quantity - 1})">-</button>
+                  <span>${item.quantity || 1}</span>
+                  <button onclick="updateQuantity('${sanitizeHTML(item.id)}', ${item.quantity + 1})">+</button>
+                  <a href="#" class="remove" onclick="removeItem('${sanitizeHTML(item.id)}')">Remove ❌</a>
+                </div>
+                <div class="text-right text-sm font-semibold mt-1">Total: ₹${(item.price * item.quantity).toFixed(2)}</div>
+              </div>
+            </div>
+          `;
+          cartItemsDiv.appendChild(cartItem);
+        });
+        cartItemCount.textContent = cartItems.length;
+        updateCartSummary(cartItems);
+        updateCartCount();
+      } catch (error) {
+        console.error("Error loading cart:", error);
+        showToast(`Error loading cart: ${error.message}`, false);
+        cartLoading.style.display = 'none';
+        emptyCartDiv.classList.remove('hidden');
+        cartItemCount.textContent = '0';
+        updateCartSummary([]);
+        logAnalyticsError('cart_fetch_error', error);
+      }
+    };
+
+    window.updateQuantity = async (itemId, newQuantity) => {
+      const user = auth.currentUser;
+      if (!user || !user.displayName) {
+        showToast("Please sign in to update cart.", false);
+        document.getElementById('login-modal').classList.add('show');
+        return;
+      }
+      if (newQuantity < 1) {
+        await removeItem(itemId);
+        return;
+      }
+      try {
+        const userDocRef = doc(db, "users", user.displayName);
+        const userDoc = await getDoc(userDocRef);
+        if (!userDoc.exists()) {
+          showToast("User data not found.", false);
+          return;
+        }
+        let cart = userDoc.data().cart || [];
+        const itemIndex = cart.findIndex(item => item.id === itemId);
+        if (itemIndex === -1) {
+          showToast("Item not found in cart.", false);
+          return;
+        }
+        cart[itemIndex].quantity = newQuantity;
+        await setDoc(userDocRef, { cart }, { merge: true });
+        showToast("Quantity updated!");
+        loadCartItems(user.displayName);
+        logEvent(analytics, 'update_cart_quantity', { product_id: itemId, quantity: newQuantity });
+      } catch (error) {
+        console.error("Error updating quantity:", error);
+        showToast(`Error: ${error.message}`, false);
+        logAnalyticsError('cart_update_error', error);
+      }
+    };
+
+    window.removeItem = async (itemId) => {
+      const user = auth.currentUser;
+      if (!user || !user.displayName) {
+        showToast("Please sign in to update cart.", false);
+        document.getElementById('login-modal').classList.add('show');
+        return;
+      }
+      try {
+        const userDocRef = doc(db, "users", user.displayName);
+        const userDoc = await getDoc(userDocRef);
+        if (!userDoc.exists()) {
+          showToast("User data not found.", false);
+          return;
+        }
+        let cart = userDoc.data().cart || [];
+        cart = cart.filter(item => item.id !== itemId);
+        await setDoc(userDocRef, { cart }, { merge: true });
+        showToast("Item removed from cart!");
+        loadCartItems(user.displayName);
+        logEvent(analytics, 'remove_from_cart', { product_id: itemId });
+      } catch (error) {
+        console.error("Error removing item:", error);
+        showToast(`Error: ${error.message}`, false);
+        logAnalyticsError('cart_remove_error', error);
+      }
+    };
+
+    let appliedCoupon = null;
+    window.applyCoupon = async () => {
+      const user = auth.currentUser;
+      if (!user || !user.displayName) {
+        showToast("Please sign in to apply coupon.", false);
+        document.getElementById('login-modal').classList.add('show');
+        return;
+      }
+      const couponCode = document.getElementById('coupon-code')?.value.trim().toUpperCase();
+      if (!couponCode) {
+        showToast("Please enter a coupon code.", false);
+        return;
+      }
+      try {
+        const couponDoc = await getDoc(doc(db, "coupons", couponCode));
+        if (!couponDoc.exists()) {
+          showToast("Invalid coupon code.", false);
+          return;
+        }
+        const coupon = couponDoc.data();
+        if (coupon.validUntil && coupon.validUntil.toDate() < new Date()) {
+          showToast("Coupon has expired.", false);
+          return;
+        }
+        const userDoc = await getDoc(doc(db, "users", user.displayName));
+        let cart = userDoc.exists() ? userDoc.data().cart || [] : [];
+        let subtotal = 0;
+        cart.forEach(item => {
+          subtotal += item.price * item.quantity;
+        });
+        if (subtotal < coupon.minCartValue) {
+          showToast(`Minimum cart value of ₹${coupon.minCartValue} required.`, false);
+          return;
+        }
+        appliedCoupon = coupon;
+        showToast("Coupon applied successfully!");
+        updateCartSummary(cart);
+        logEvent(analytics, 'apply_coupon', { coupon_code: couponCode });
+      } catch (error) {
+        console.error("Error applying coupon:", error);
+        showToast(`Error: ${error.message}`, false);
+        logAnalyticsError('coupon_apply_error', error);
+      }
+    };
+
+    const updateCartSummary = (items) => {
+      const summaryElements = {
+        count: document.getElementById('summary-item-count'),
+        subtotal: document.getElementById('subtotal'),
+        shipping: document.getElementById('shipping'),
+        discount: document.getElementById('discount'),
+        tax: document.getElementById('tax'),
+        grandTotal: document.getElementById('grand-total'),
+        deliveryStatus: document.getElementById('delivery-status')
+      };
+      if (Object.values(summaryElements).some(el => !el)) {
+        console.error("Cart summary elements missing");
+        showToast("Page error: Summary elements not found.", false);
+        return;
+      }
+      let subtotal = 0;
+      let discount = 0;
+      let shipping = 0;
+      if (items && items.length > 0) {
+        items.forEach(item => {
+          subtotal += item.price * item.quantity;
+          if (item.discount) {
+            const discountPercent = parseFloat(item.discount.replace('%', '')) / 100;
+            discount += (item.originalPrice - item.price) * item.quantity;
+          }
+          if (!item.delivery?.freeDelivery) {
+            shipping += 50;
+          }
+        });
+      }
+      if (appliedCoupon) {
+        if (appliedCoupon.discountType === 'percentage') {
+          discount += subtotal * (appliedCoupon.discount / 100);
+        } else {
+          discount += appliedCoupon.discount;
+        }
+      }
+      const tax = subtotal * 0.08;
+      const grandTotal = subtotal + tax + shipping - discount;
+      summaryElements.count.textContent = items ? items.length : 0;
+      summaryElements.subtotal.textContent = `₹${subtotal.toFixed(2)}`;
+      summaryElements.shipping.textContent = `₹${shipping.toFixed(2)}`;
+      summaryElements.discount.textContent = `-₹${discount.toFixed(2)}`;
+      summaryElements.tax.textContent = `₹${tax.toFixed(2)}`;
+      summaryElements.grandTotal.textContent = `₹${grandTotal.toFixed(2)}`;
+      summaryElements.deliveryStatus.textContent = shipping === 0 ? '📦 Free Delivery ✅' : '📦 Shipping Applied';
+      gsap.from('.cart-summary', { opacity: 0, y: 20, duration: 0.5 });
+    };
+
+    window.placeOrder = async () => {
+      const user = auth.currentUser;
+      if (!user || !user.displayName) {
+        showToast("Please sign in to proceed to checkout.", false);
+        document.getElementById('login-modal').classList.add('show');
+        return;
+      }
+      try {
+        const userDocRef = doc(db, "users", user.displayName);
+        const userDoc = await getDoc(userDocRef);
+        const cart = userDoc.exists() ? userDoc.data().cart || [] : [];
+        if (cart.length === 0) {
+          showToast("Your cart is empty.", false);
+          return;
+        }
+        let subtotal = 0;
+        let discount = 0;
+        let shipping = 0;
+        cart.forEach(item => {
+          subtotal += item.price * item.quantity;
+          if (item.discount) {
+            const discountPercent = parseFloat(item.discount.replace('%', '')) / 100;
+            discount += (item.originalPrice - item.price) * item.quantity;
+          }
+          if (!item.delivery?.freeDelivery) {
+            shipping += 50;
+          }
+        });
+        if (appliedCoupon) {
+          if (appliedCoupon.discountType === 'percentage') {
+            discount += subtotal * (appliedCoupon.discount / 100);
+          } else {
+            discount += appliedCoupon.discount;
+          }
+        }
+        const tax = subtotal * 0.08;
+        const grandTotal = subtotal + tax + shipping - discount;
+        const orderData = {
+          orderId: `ORD${Date.now()}`,
+          userId: user.uid,
+          userEmail: user.email,
+          username: user.displayName,
+          items: cart,
+          address: {
+            fullName: userDoc.data().name || user.displayName,
+            addressLine1: userDoc.data().address || 'Not set',
+            city: 'Not set',
+            state: 'Not set',
+            pincode: 'Not set',
+            mobile: userDoc.data().mobile || 'Not set'
+          },
+          paymentMethod: 'cod',
+          paymentId: `PAY${Date.now()}`,
+          subtotal,
+          discount,
+          coupon: appliedCoupon ? appliedCoupon.code : null,
+          totalAmount: grandTotal,
+          status: 'Pending',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          userDetails: {
+            username: user.displayName,
+            email: user.email,
+            uid: user.uid,
+            phone: userDoc.data().phone || '',
+            mobile: userDoc.data().mobile || '',
+            name: userDoc.data().name || '',
+            address: userDoc.data().address || '',
+            addresses: userDoc.data().addresses || []
+          }
+        };
+        await setDoc(doc(db, "orders", user.displayName), orderData);
+        await setDoc(userDocRef, { cart: [] }, { merge: true });
+        showToast("Order placed successfully!");
+        const checkoutData = {
+          items: cart,
+          subtotal,
+          discount,
+          tax,
+          shipping,
+          total: grandTotal,
+          address: orderData.address,
+          coupon: appliedCoupon ? appliedCoupon.code : null
+        };
+        localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+        logEvent(analytics, 'place_order', { order_id: orderData.orderId, total: grandTotal });
+        setTimeout(() => {
+          window.location.href = 'payment.html';
+        }, 1500);
+      } catch (error) {
+        console.error("Error placing order:", error);
+        showToast(`Error: ${error.message}`, false);
+        logAnalyticsError('order_place_error', error);
+      }
+    };
+
+    window.changeAddress = async () => {
+      const user = auth.currentUser;
+      if (!user || !user.displayName) {
+        showToast("Please sign in to update address.", false);
+        document.getElementById('login-modal').classList.add('show');
+        return;
+      }
+      const newAddress = prompt("Enter new delivery address:");
+      if (newAddress) {
+        try {
+          await setDoc(doc(db, "users", user.displayName), { address: newAddress }, { merge: true });
+          const deliveryAddress = document.getElementById('delivery-address');
+          if (deliveryAddress) {
+            deliveryAddress.textContent = sanitizeHTML(newAddress);
+          }
+          showToast("Address updated!");
+          logEvent(analytics, 'update_address');
+        } catch (error) {
+          console.error("Error updating address:", error);
+          showToast(`Error: ${error.message}`, false);
+          logAnalyticsError('address_update_error', error);
+        }
+      }
+    };
+
+    const updateCartCount = async () => {
+      const cartCount = document.getElementById("cart-count");
+      if (!cartCount) {
+        console.error("cart-count element not found");
+        return;
+      }
+      const user = auth.currentUser;
+      if (user && user.displayName) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.displayName));
+          const cart = userDoc.exists() ? userDoc.data().cart || [] : [];
+          cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        } catch (error) {
+          console.error("Error updating cart count:", error);
+          cartCount.textContent = "0";
+          logAnalyticsError('cart_count_error', error);
+        }
+      } else {
+        cartCount.textContent = "0";
+      }
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      const authStatus = document.getElementById("auth-status");
+      if (!authStatus) {
+        console.error("auth-status element not found");
+        showToast("Page error: Navigation elements missing.", false);
+        return;
+      }
+      if (user) {
+        console.log("User authenticated:", user.displayName);
+        authStatus.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>${sanitizeHTML(user.displayName || "User")}`;
+        authStatus.onclick = () => signOut(auth).then(() => {
           showToast('Signed out successfully!');
-          window.location.href = 'https://localworkers.xyz/';
+          window.location.href = 'http://sweatshoping.shop/';
         }).catch((error) => {
           console.error("Sign-out error:", error);
           showToast(`Sign-out error: ${error.message}`, false);
+          logAnalyticsError('sign_out_error', error);
         });
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.displayName));
+          if (userDoc.exists() && userDoc.data().address) {
+            const deliveryAddress = document.getElementById('delivery-address');
+            if (deliveryAddress) {
+              deliveryAddress.textContent = sanitizeHTML(userDoc.data().address);
+            }
+          }
+          loadCartItems(user.displayName);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          showToast(`Error: ${error.message}`, false);
+          logAnalyticsError('user_fetch_error', error);
+        }
       } else {
-        console.log("Showing login modal");
-        document.getElementById('login-modal').classList.add('show');
+        console.log("No user authenticated");
+        authStatus.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>Hello, Sign In`;
+        authStatus.onclick = () => document.getElementById('login-modal').classList.add('show');
+        const cartItemsDiv = document.getElementById('cart-items');
+        const emptyCartDiv = document.getElementById('empty-cart');
+        const cartLoading = document.getElementById('cart-loading');
+        if (cartItemsDiv && emptyCartDiv && cartLoading) {
+          cartItemsDiv.innerHTML = '';
+          cartLoading.style.display = 'none';
+          emptyCartDiv.classList.remove('hidden');
+          document.getElementById('cart-item-count').textContent = '0';
+          updateCartSummary([]);
+          showToast("Please sign in to view your cart.", false);
+          document.getElementById('login-modal').classList.add('show');
+        }
+      }
+      updateCartCount();
+    });
+
+    document.getElementById("search-bar")?.addEventListener("input", async (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const suggestions = document.getElementById("search-suggestions");
+      if (!suggestions) return;
+      if (searchTerm.length < 3) {
+        suggestions.classList.remove("show");
+        return;
+      }
+      try {
+        const productDoc = await getDoc(doc(db, "products", "Rakhi"));
+        const products = productDoc.exists() ? productDoc.data().items || [] : [];
+        suggestions.innerHTML = "";
+        products
+          .filter(product => product.name.toLowerCase().includes(searchTerm) || product.brand.toLowerCase().includes(searchTerm))
+          .slice(0, 5)
+          .forEach(product => {
+            const div = document.createElement("div");
+            div.className = "p-2 hover:bg-gray-100 cursor-pointer";
+            div.textContent = `${product.name} (${product.brand || 'No Brand'})`;
+            div.onclick = () => {
+              window.location.href = `http://sweatshoping.shop/mainproduct.html?id=${product.id}`;
+            };
+            suggestions.appendChild(div);
+          });
+        suggestions.classList.add('show');
+      } catch (error) {
+        console.error("Error searching products:", error);
+        showToast(`Search error: ${error.message}`, false);
+        logAnalyticsError('search_error', error);
       }
     });
 
-    // Handle Login
-    document.getElementById('login-submit').addEventListener('click', async () => {
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value;
+    document.getElementById("search-bar")?.addEventListener("blur", () => {
+      setTimeout(() => document.getElementById("search-suggestions")?.classList.remove("show"), 200);
+    });
+
+    document.getElementById('login-submit')?.addEventListener('click', async () => {
+      const email = document.getElementById('login-email')?.value.trim();
+      const password = document.getElementById('login-password')?.value;
       const errorElement = document.getElementById('login-error');
+      if (!email || !password || !errorElement) return;
       errorElement.textContent = '';
-
-      if (!email || !password) {
-        errorElement.textContent = 'Please enter both email and password.';
-        return;
-      }
-
       try {
-        console.log("Attempting Email/Password sign-in with email:", email);
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("Sign-in successful:", userCredential.user.displayName);
         showToast(`Welcome, ${userCredential.user.displayName}!`);
         document.getElementById('login-modal').classList.remove('show');
         document.getElementById('login-email').value = '';
         document.getElementById('login-password').value = '';
+        logEvent(analytics, 'sign_in', { method: 'email' });
       } catch (error) {
         console.error("Sign-in error:", error);
         let errorMessage = 'Sign-in failed. Please try again.';
@@ -471,239 +1167,25 @@
       }
     });
 
-    // Cancel Login
-    document.getElementById('login-cancel').addEventListener('click', () => {
-      document.getElementById('login-modal').classList.remove('show');
-      document.getElementById('login-email').value = '';
-      document.getElementById('login-password').value = '';
-      document.getElementById('login-error').textContent = '';
+    document.getElementById('login-cancel')?.addEventListener('click', () => {
+      const loginModal = document.getElementById('login-modal');
+      if (loginModal) loginModal.classList.remove('show');
+      const loginEmail = document.getElementById('login-email');
+      const loginPassword = document.getElementById('login-password');
+      const loginError = document.getElementById('login-error');
+      if (loginEmail) loginEmail.value = '';
+      if (loginPassword) loginPassword.value = '';
+      if (loginError) loginError.textContent = '';
     });
 
-    // Log Errors to Firebase Analytics
-    const logAnalyticsError = (eventName, error) => {
-      logEvent(analytics, eventName, {
-        error_message: error.message,
-        error_code: error.code || 'unknown',
-        timestamp: new Date().toISOString()
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        gsap.to(btn, { scale: 1.05, duration: 0.3, boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)' });
       });
-    };
-
-    // Cart Management
-    const updateCartCount = () => {
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-      document.getElementById('cart-count').textContent = cartCount;
-      console.log("Cart count updated:", cartCount);
-    };
-
-    // Check Environment
-    if (!['http:', 'https:'].includes(window.location.protocol)) {
-      console.warn("App running on file:// protocol, Firestore disabled");
-      document.getElementById("product-grid").innerHTML = '<div class="text-center text-red-500 mt-6 text-xs">This app requires a server for Firebase Firestore. Please host it using a local server (e.g., `npx serve` or `python -m http.server 8000`) or Firebase Hosting.</div>';
-    } else {
-      // Real-time data fetch for Rakhi products
-      const rakhiDocRef = doc(db, "products", "Rakhi");
-      const productGrid = document.getElementById("product-grid");
-      const emptyState = document.getElementById("empty-state");
-      const searchBar = document.getElementById("search-bar");
-      const searchSuggestions = document.getElementById("search-suggestions");
-      let products = [];
-
-      onSnapshot(rakhiDocRef, (doc) => {
-        if (doc.exists()) {
-          products = doc.data().items || [];
-          console.log("Firestore products fetched:", products);
-        } else {
-          products = [];
-          console.log("No Firestore product data, using fallback");
-        }
-        if (products.length === 0) {
-          products = fallbackProducts;
-        }
-        renderProducts();
-      }, (error) => {
-        console.error("Error fetching Rakhi products:", error);
-        showToast('Failed to load Rakhi products.', false);
-        products = fallbackProducts;
-        renderProducts();
-        logAnalyticsError('rakhi_fetch_error', error);
+      btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, { scale: 1, duration: 0.3, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)' });
       });
-
-      // Show search suggestions
-      function showSuggestions(query) {
-        if (!query) {
-          searchSuggestions.classList.remove("show");
-          searchSuggestions.innerHTML = "";
-          return;
-        }
-        const suggestions = products
-          .filter(p => 
-            (p.name && p.name.toLowerCase().includes(query.toLowerCase())) || 
-            (p.brand && p.brand.toLowerCase().includes(query.toLowerCase()))
-          )
-          .slice(0, 5)
-          .map(p => `<div onclick="selectSuggestion('${p.name}')">${p.name} (${p.brand || 'No Brand'})</div>`);
-        searchSuggestions.innerHTML = suggestions.length ? suggestions.join("") : "<div>No matches found</div>";
-        searchSuggestions.classList.add('show');
-      }
-
-      // Select suggestion
-      window.selectSuggestion = (value) => {
-        searchBar.value = value;
-        searchSuggestions.classList.remove("show");
-        renderProducts();
-      };
-
-      // Render Rakhi products with search
-      function renderProducts() {
-        const searchQuery = searchBar.value.toLowerCase();
-        const filteredProducts = products.filter(p => {
-          return !searchQuery || 
-            (p.name && p.name.toLowerCase().includes(searchQuery)) || 
-            (p.brand && p.brand.toLowerCase().includes(searchQuery));
-        });
-
-        console.log("Filtered products:", filteredProducts);
-
-        productGrid.innerHTML = "";
-        if (filteredProducts.length === 0) {
-          emptyState.classList.remove("hidden");
-        } else {
-          emptyState.classList.add("hidden");
-          filteredProducts.forEach((product, index) => {
-            const card = document.createElement("div");
-            card.className = "card bg-white p-1.5 rounded-lg shadow-md";
-            card.style.animationDelay = `${index * 0.1}s`;
-            card.innerHTML = `
-              <img src="${product.imageUrls?.[0]?.url || 'https://via.placeholder.com/150'}" alt="${product.name}" class="w-full h-24 object-cover rounded-md mb-1 lazy">
-              <h3 class="text-sm font-semibold text-gray-900">${product.name || "Unnamed Rakhi"}</h3>
-              <p class="text-xs text-gray-600">Brand: ${product.brand || "N/A"}</p>
-              <div class="flex items-center mt-0.5">
-                <span class="text-yellow-500 text-xs">⭐ ${product.rating || 0}.0</span>
-                <span class="text-xs text-gray-500 ml-1">(${product.ratingsCount || 0} ratings)</span>
-              </div>
-              <div class="flex items-center mt-0.5">
-                <span class="text-sm font-bold text-gray-900">₹${product.price || 0}</span>
-                <span class="text-xs text-gray-500 line-through ml-1">₹${product.originalPrice || 0}</span>
-                <span class="text-xs text-green-600 ml-1">${product.discount || ""}</span>
-              </div>
-              <p class="text-xs text-green-600 mt-0.5">${product.delivery?.freeDelivery ? "✅ Free Delivery" : ""}</p>
-              <p class="text-xs text-gray-600 mt-0.5">${product.delivery?.returnable ? `🔁 ${product.delivery.returnable}` : ""}</p>
-              <p class="text-xs text-gray-600 mt-0.5">📍 ${product.sourceLocation || "Unknown"}</p>
-              <p class="text-xs text-gray-600 mt-0.5">Material: ${product.specs?.material || "N/A"}</p>
-              <p class="text-xs text-gray-600 mt-0.5">Color: ${product.specs?.color || "N/A"}</p>
-              <p class="text-xs text-gray-600 mt-0.5">Occasion: ${product.specs?.occasion || "Raksha Bandhan"}</p>
-              <p class="text-xs text-gray-600 mt-0.5">Features: ${product.specs?.specialFeature || "N/A"}</p>
-              <p class="text-xs text-gray-600 mt-0.5">Finish: ${product.specs?.finish || "N/A"}</p>
-              <div class="mt-1 space-x-1 flex">
-                <a href="http://sweatshoping.shop/mainproduct.html?id=${product.id}&category=Rakhi" class="bg-blue-600 text-white px-2 py-0.5 rounded text-xs hover:bg-blue-700">View Details</a>
-                <button class="bg-green-600 text-white px-2 py-0.5 rounded text-xs hover:bg-green-700" onclick="addToCart('${product.id}')">Add to Cart</button>
-              </div>
-            `;
-            productGrid.appendChild(card);
-            gsap.from(card, { opacity: 0, y: 20, duration: 0.5, delay: index * 0.1 });
-          });
-        }
-      }
-
-      // Add to Cart
-      window.addToCart = async (productId) => {
-        console.log("Add to Cart initiated for product ID:", productId);
-        const user = auth.currentUser;
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const product = products.find(p => p.id === productId);
-
-        if (!product) {
-          console.error("Product not found:", productId);
-          showToast('Product not found.', false);
-          return;
-        }
-
-        console.log("Product found:", product.name);
-        const existingItem = cart.find(item => item.id === productId);
-        const cartItem = existingItem 
-          ? { ...existingItem, quantity: existingItem.quantity + 1 }
-          : { 
-              id: productId, 
-              quantity: 1, 
-              color: product.specs?.color || 'Gold', 
-              size: product.specs?.size || '',
-              name: product.name || "Unnamed Rakhi",
-              brand: product.brand || "N/A",
-              price: product.price || 0,
-              originalPrice: product.originalPrice || 0,
-              discount: product.discount || "",
-              delivery: product.delivery || {},
-              specs: product.specs || {},
-              description: product.description || "",
-              imageUrls: product.imageUrls || [],
-              sourceLocation: product.sourceLocation || "Unknown",
-              createdAt: product.createdAt || new Date().toISOString(),
-              addedAt: new Date().toISOString()
-            };
-
-        if (!existingItem) {
-          cart.push(cartItem);
-        } else {
-          existingItem.quantity = cartItem.quantity;
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        console.log("Local cart updated:", cart);
-
-        // Save to Firestore
-        if (user && user.displayName) {
-          console.log("User signed in, saving to Firestore for user:", user.displayName);
-          try {
-            const userDocRef = doc(db, "users", user.displayName);
-            const userDoc = await getDoc(userDocRef);
-            let userData = userDoc.exists() ? userDoc.data() : { username: user.displayName, email: user.email, phone: "", cart: [] };
-            let userCart = userData.cart || [];
-            
-            // Update or add cart item
-            const existingCartItemIndex = userCart.findIndex(item => item.id === productId);
-            if (existingCartItemIndex >= 0) {
-              userCart[existingCartItemIndex] = cartItem;
-              console.log("Updated existing cart item at index:", existingCartItemIndex);
-            } else {
-              userCart.push(cartItem);
-              console.log("Added new cart item");
-            }
-            
-            // Use setDoc with merge to ensure document exists
-            await setDoc(userDocRef, { ...userData, cart: userCart }, { merge: true });
-            console.log("Cart saved to Firestore for user:", user.displayName, "Cart:", userCart);
-            showToast('Added to cart and saved to Firestore!');
-          } catch (error) {
-            console.error("Error saving cart to Firestore:", error, "User:", user.displayName);
-            showToast(`Failed to save cart to Firestore: ${error.message}`, false);
-            logAnalyticsError('cart_save_error', error);
-          }
-        } else {
-          console.warn("No user signed in, showing login modal");
-          showToast('Please sign in to save cart to Firestore.', false);
-          document.getElementById('login-modal').classList.add('show');
-        }
-        
-        logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
-      };
-
-      // Event listeners
-      searchBar.addEventListener("input", () => {
-        showSuggestions(searchBar.value);
-        renderProducts();
-      });
-      searchBar.addEventListener("focus", () => {
-        showSuggestions(searchBar.value);
-      });
-      searchBar.addEventListener("blur", () => {
-        setTimeout(() => searchSuggestions.classList.remove("show"), 200);
-      });
-
-      // Initialize
-      updateCartCount();
-      logEvent(analytics, 'page_view', { page_title: document.title, page_location: window.location.href });
-    }
+    });
   </script>
 </body>
 </html>
