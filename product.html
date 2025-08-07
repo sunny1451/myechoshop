@@ -244,7 +244,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
@@ -494,19 +494,66 @@
       }
 
       // Add to Cart
-      window.addToCart = (productId) => {
+      window.addToCart = async (productId) => {
+        const user = auth.currentUser;
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         const product = products.find(p => p.id === productId);
         if (product) {
           const existingItem = cart.find(item => item.id === productId);
-          if (existingItem) {
-            existingItem.quantity += 1;
+          const cartItem = existingItem 
+            ? { ...existingItem, quantity: existingItem.quantity + 1 }
+            : { 
+                id: productId, 
+                quantity: 1, 
+                color: product.specs?.color || 'Gold', 
+                size: product.specs?.size || '',
+                name: product.name || "Unnamed Rakhi",
+                brand: product.brand || "N/A",
+                price: product.price || 0,
+                originalPrice: product.originalPrice || 0,
+                discount: product.discount || "",
+                delivery: product.delivery || {},
+                specs: product.specs || {},
+                description: product.description || "",
+                imageUrls: product.imageUrls || [],
+                sourceLocation: product.sourceLocation || "Unknown",
+                createdAt: product.createdAt || new Date().toISOString(),
+                addedAt: new Date().toISOString()
+              };
+          if (!existingItem) {
+            cart.push(cartItem);
           } else {
-            cart.push({ id: productId, quantity: 1, color: product.specs?.color || 'Gold', size: product.specs?.size || '' });
+            existingItem.quantity = cartItem.quantity;
           }
           localStorage.setItem('cart', JSON.stringify(cart));
           updateCartCount();
-          showToast('Added to cart!');
+          
+          // Save to Firestore
+          if (user && user.displayName) {
+            try {
+              const userDocRef = doc(db, "users", user.displayName);
+              const userDoc = await getDoc(userDocRef);
+              let userCart = userDoc.exists() ? userDoc.data().cart || [] : [];
+              
+              // Update or add cart item
+              const existingCartItemIndex = userCart.findIndex(item => item.id === productId);
+              if (existingCartItemIndex >= 0) {
+                userCart[existingCartItemIndex] = cartItem;
+              } else {
+                userCart.push(cartItem);
+              }
+              
+              await updateDoc(userDocRef, { cart: userCart });
+              showToast('Added to cart and saved to Firestore!');
+            } catch (error) {
+              console.error("Error saving to Firestore:", error);
+              showToast(`Failed to save to Firestore: ${error.message}`, false);
+              logAnalyticsError('cart_save_error', error);
+            }
+          } else {
+            showToast('Please sign in to save cart to Firestore.', false);
+          }
+          
           logEvent(analytics, 'add_to_cart', { product_id: productId, quantity: 1 });
         }
       };
@@ -530,4 +577,3 @@
   </script>
 </body>
 </html>
-
